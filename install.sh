@@ -380,6 +380,15 @@ else
   echo "WARN: $SCRIPT not found in repo. Make sure scripts/disco-relay exists." >&2
 fi
 
+# disco-messages runs as the freeswitch user (no sudo); just needs to be runnable.
+MSG_SCRIPT="${FS_DIR}/scripts/disco-messages"
+if [ -f "$MSG_SCRIPT" ]; then
+  chown "${FS_USER}:${FS_GROUP}" "$MSG_SCRIPT" 2>/dev/null || true
+  chmod 0755 "$MSG_SCRIPT" || true
+else
+  echo "WARN: $MSG_SCRIPT not found in repo. Make sure scripts/disco-messages exists." >&2
+fi
+
 tmp_sudoers_file=$(mktemp)
 cat >"${tmp_sudoers_file}" <<EOF
 bella ALL=(root) NOPASSWD: $SCRIPT
@@ -409,7 +418,8 @@ fi
 
 echo "==> Installing IVR fallback prompt symlinks if needed"
 DISCO_SOUND_DIR="${FS_DIR}/recordings"
-mkdir -p "${DISCO_SOUND_DIR}"
+MESSAGES_DIR="${DISCO_SOUND_DIR}/messages"
+mkdir -p "${DISCO_SOUND_DIR}" "${MESSAGES_DIR}"
 FALLBACK="${FS_DIR}/sounds/en/us/callie/ivr/ivr-welcome_to_freeswitch.wav"
 if [ -f "${FALLBACK}" ]; then
   [ -e "${DISCO_SOUND_DIR}/main-menu.wav" ] || ln -s "${FALLBACK}" "${DISCO_SOUND_DIR}/main-menu.wav"
@@ -432,7 +442,7 @@ echo "==> Validating installed config file presence"
 test -f "${FS_DIR}/conf/freeswitch.xml"
 test -f "${FS_DIR}/conf/autoload_configs/modules.conf.xml"
 test -f "${FS_DIR}/conf/sip_profiles/ata.xml"
-test -f "${FS_DIR}/conf/ivr_menus/disco_main_menu.xml"
+test -f "${FS_DIR}/conf/dialplan/default/00_disco_control.xml"
 
 if [ "${DO_RESTART}" -eq 1 ]; then
   echo "==> Enabling and restarting FreeSWITCH"
@@ -466,10 +476,12 @@ ATA settings:
   Optional off-hook auto-dial: 700
 
 IVR options:
-  1 = call the other phone
-  2 = raise actuator
-  3 = lower actuator
-  4 = stop / brake
+  1   = call the other phone
+  2   = leave a message (max 60s)
+  3   = listen to messages (newest 10; 1 = previous, 2 = next)
+  911 = raise the disco ball
+  411 = lower the disco ball
+  #   = stop the disco ball
 
 Relay command:
   /usr/local/freeswitch/scripts/disco-relay status

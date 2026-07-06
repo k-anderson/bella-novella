@@ -2,7 +2,7 @@
   <!-- ===================================================================
        Message features for the Bella Novella IVR.
 
-       Option 2 (DISCO_LEAVE):  play a prompt, beep, record up to 15s.
+       Option 2 (DISCO_LEAVE):  play a prompt, beep, record up to 60s.
        Option 3 (DISCO_LISTEN): play stored messages oldest-first with
                                 1 = previous, 2 = next, auto-advance at the
                                 end of a message, and no other actions.
@@ -23,8 +23,8 @@
       <!-- Discard recordings shorter than 2s (treated as no speech). -->
       <action application="set" data="record_min_sec=2"/>
       <action application="set" data="playback_terminators=none"/>
-      <!-- 15s cap; lenient silence detection (threshold 300, 5 silence hits). -->
-      <action application="record" data="$${messages_dir}/msg_${strftime(%Y%m%d%H%M%S)}_${uuid}.wav 15 300 5"/>
+      <!-- 60s cap; lenient silence detection (threshold 300, 5 silence hits). -->
+      <action application="record" data="$${messages_dir}/msg_${strftime(%Y%m%d%H%M%S)}_${uuid}.wav 60 300 5"/>
       <!-- Prune empties and keep only the newest 10. -->
       <action application="set" data="disco_rotate=${system($${disco_messages} rotate)}"/>
       <!-- Placeholder prompt: "saved". -->
@@ -62,7 +62,7 @@
            '*' terminator keeps input to the two nav keys; anything else or no
            input leaves msg_nav empty and auto-advances. -->
       <anti-action application="play_and_get_digits"
-                   data="0 1 1 3000 * ${msg_file} '' msg_nav '^(1|2)$' 3000"/>
+                   data="0 1 1 3000 * ${msg_file} silence_stream://100 msg_nav '^(1|2)$' 3000"/>
       <anti-action application="transfer" data="DISCO_MSG_NAV XML default"/>
     </condition>
   </extension>

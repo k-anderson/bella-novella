@@ -64,8 +64,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/vars.xml`](conf/vars.xml) | Global settings: paths, the `192.168.50.1` bind IP, `PCMU` codec, and the `disco_raise`/`disco_lower` actuator commands. |
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
-| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing (see the dialplan section). |
-| [`conf/ivr_menus/disco_main_menu.xml`](conf/ivr_menus/disco_main_menu.xml) | The voice menu definition and digit→action mapping. |
+| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
+| [`scripts/disco-messages`](scripts/disco-messages) | Message-store helper for the IVR (record rotation, playback navigation). |
 | [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`disco_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
 
 ---
@@ -75,43 +75,51 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 Every call from the ATA lands in the IVR, and each menu digit `transfer`s to a virtual
 destination handled by the dialplan.
 
-### 3.1 Entry — any call → IVR
-[`99_all_calls_to_ivr.xml`](conf/dialplan/default/99_all_calls_to_ivr.xml): dialing `700`, or
-**any** number from the ATA, answers the call and runs the `disco_main_menu` IVR.
+### 3.1 Entry — any call → the menu
+[`99_all_calls_to_ivr.xml`](conf/dialplan/default/99_all_calls_to_ivr.xml): dialing `700` (the
+ATA off-hook auto-dial), or **any** number from the ATA, is routed to the main menu at `700`.
 
 ### 3.2 The menu
-[`disco_main_menu.xml`](conf/ivr_menus/disco_main_menu.xml) plays the greeting
-(`recordings/main-menu.wav`) and maps single digits:
+[`00_disco_control.xml`](conf/dialplan/default/00_disco_control.xml) plays the greeting
+(`recordings/main-menu.wav`) and collects the option with `play_and_get_digits` (1–3 digits, `*`
+terminator, validated to the set below). The collected option is dispatched on a second routing
+pass:
 
-| Digit | Transfers to | Action |
+| Dial | Transfers to | Action |
 |---|---|---|
 | **1** | `DISCO_CALL_OTHER` | Intercom the *other* line |
-| **2** | `DISCO_RAISE` | Raise the actuator (rejected if one is already moving) |
-| **3** | `DISCO_LOWER` | Lower the actuator (rejected if one is already moving) |
-| **4** | `DISCO_STOP` | Stop / brake — cancels any movement in progress |
-| **9** | `DISCO_RECORD_GREETING` | Re-record the menu greeting (hidden/admin) |
+| **2** | `DISCO_LEAVE` | Leave a message (max 60s) |
+| **3** | `DISCO_LISTEN` | Listen to stored messages |
+| **911** | `DISCO_RAISE` | Raise the disco ball |
+| **411** | `DISCO_LOWER` | Lower the disco ball |
+| **#** | `DISCO_STOP` | Stop the disco ball |
+
+Anything else plays **one of six random "invalid" prompts** (from
+[`scripts/disco-messages`](scripts/disco-messages) `invalid-prompt`). **Every** action — valid or
+invalid — returns to the main menu.
 
 ### 3.3 The actions
 [`00_disco_control.xml`](conf/dialplan/default/00_disco_control.xml):
 
 - **Intercom (`DISCO_CALL_OTHER`)** — checks the caller's SIP user: from **101** it bridges to
-  **102**, from **102** it bridges to **101** (with an "invalid entry" fallback for anything
-  else). `hangup_after_bridge` ends the call when the parties hang up.
-- **Raise (`DISCO_RAISE`)** — captures `${system($${disco_raise})}` (→
-  `sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15`). The relay script returns
-  immediately with `started` or `busy`; on `busy` (a movement is already running) the caller
-  hears the **invalid entry** prompt, otherwise a **rising** tone sweep. Either way the call then
-  hangs up.
-- **Lower (`DISCO_LOWER`)** — same busy/started handling as raise (→ `disco-relay lower 5 15`),
-  with a **falling** tone sweep on success.
-- **Stop (`DISCO_STOP`)** — runs `system $${disco_stop}` (→ `disco-relay brake`), which cancels
-  any in-progress movement and stops the motor, then plays a short confirmation tone and hangs up.
+  **102**, from **102** it bridges to **101** (with an "invalid entry" fallback). When the bridge
+  ends it returns to the menu.
+- **Raise / Lower / Stop (`DISCO_RAISE` / `DISCO_LOWER` / `DISCO_STOP`)** — each plays a prompt,
+  runs the relay via `${system(...)}` (`disco-relay raise|lower|brake`), then returns to the menu.
+  Concurrency is handled inside `disco-relay` (a movement already running is a no-op), so no
+  busy prompt is needed here.
 
-[`10_disco_record_greeting.xml`](conf/dialplan/default/10_disco_record_greeting.xml):
+[`20_disco_messages.xml`](conf/dialplan/default/20_disco_messages.xml):
 
-- **Record greeting (`DISCO_RECORD_GREETING`)** — plays a start tone, records up to 30s over the
-  existing `main-menu.wav`, plays it back for review, then returns to the menu (`700`) so you can
-  hear it live.
+- **Leave (`DISCO_LEAVE`)** — plays a prompt and a beep, then records up to **60 s** to
+  `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech
+  recordings. Messages are **kept on disk**; `disco-messages rotate` only prunes the oldest when
+  free space runs low.
+- **Listen (`DISCO_LISTEN`)** — plays the **newest 10** messages **oldest-first**. During a
+  message, **1 = previous** and **2 = next**; when a message finishes with no key it
+  **auto-advances**, and after the last one it returns to the menu. No other actions on messages
+  are possible. The browse loop (`DISCO_MSG_PLAY` → `DISCO_MSG_NAV`) uses `disco-messages`
+  `resolve`/`step` to map the index to a file.
 
 ### 3.4 The relay controller
 [`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status` into
@@ -123,13 +131,20 @@ timed GPIO relay states on the Waveshare HAT:
   percentage of the travel time.
 - `raise`/`lower` take a **non-blocking** `flock` and run the movement in the **background**: if
   the lock is already held they print `busy` and change nothing, otherwise they print `started`.
-  This is what lets the dialplan reject a second request instead of queueing it.
 - `brake` **preempts** — it signals the in-progress movement (tracked via
   `/run/disco-relay.pid`) to stop, then forces the motor off. `status` reports the relay states
   and whether a movement is running.
 
 `disco_raise=... raise 5 15` means: drive for **5 seconds**, switching the spot lights at **15%**
 of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).
+
+### 3.5 The message store
+[`scripts/disco-messages`](scripts/disco-messages) manages `recordings/messages/` for the IVR
+(runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback in
+the order received, discards no-speech files, resolves an index to a file for playback, steps the
+next/previous index, and returns a random invalid prompt. Older messages are **kept on disk** and
+pruned oldest-first only when free space is low. All output is newline-free for use in
+`${system(...)}`.
 
 ---
 
@@ -612,7 +627,7 @@ chown -R freeswitch:freeswitch /usr/local/freeswitch/conf /usr/local/freeswitch/
 test -f /usr/local/freeswitch/conf/freeswitch.xml
 test -f /usr/local/freeswitch/conf/autoload_configs/modules.conf.xml
 test -f /usr/local/freeswitch/conf/sip_profiles/ata.xml
-test -f /usr/local/freeswitch/conf/ivr_menus/disco_main_menu.xml
+test -f /usr/local/freeswitch/conf/dialplan/default/00_disco_control.xml
 
 systemctl enable freeswitch
 systemctl restart freeswitch

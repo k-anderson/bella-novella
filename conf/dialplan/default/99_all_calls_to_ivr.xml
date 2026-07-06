@@ -1,21 +1,11 @@
 <include>
-  <!-- ATA off-hook auto-dial can call 700; direct dialing 700 also enters the IVR. -->
-  <extension name="disco-ivr-explicit">
-    <condition field="destination_number" expression="^700$">
-      <action application="answer"/>
-      <action application="sleep" data="100"/>
-      <action application="ivr" data="disco_main_menu"/>
-      <action application="hangup" data="NORMAL_CLEARING"/>
-    </condition>
-  </extension>
-
-  <!-- Any other inbound call from the ATA also enters the IVR. -->
-  <extension name="disco-all-calls-to-ivr">
-    <condition field="destination_number" expression="^.+$">
-      <action application="answer"/>
-      <action application="sleep" data="100"/>
-      <action application="ivr" data="disco_main_menu"/>
-      <action application="hangup" data="NORMAL_CLEARING"/>
+  <!-- Any inbound call from the ATA (off-hook auto-dial 700, or any dialed
+       number) is routed to the main menu at 700. The numeric pattern here does
+       not match the internal DISCO_* targets (which contain letters), so those
+       are handled by their own extensions above without being re-routed. -->
+  <extension name="disco-all-calls-to-menu">
+    <condition field="destination_number" expression="^[0-9*#]+$">
+      <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
 </include>
