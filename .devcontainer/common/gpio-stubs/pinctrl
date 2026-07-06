@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Fake `pinctrl` for Codespaces — there is no Raspberry Pi GPIO here.
+#
+# The real disco-relay script probes for `pinctrl` (preferred) or `raspi-gpio`
+# via `command -v` and then calls:
+#     pinctrl set <gpio> op <dl|dh>     # drive low/high
+#     pinctrl get <gpio>                # read state (used only by `status`)
+#
+# This stub honours that interface so the UNMODIFIED disco-relay script runs
+# end to end: it logs every "set" (so the raise/lower/K3 timing is observable
+# in syslog and stdout) and returns a plausible, parseable line for "get".
+set -euo pipefail
+
+# Shared, tail-able record of simulated GPIO activity. bgsystem swallows
+# disco-relay's stdout and syslog is usually absent in the container, so this
+# file is how you observe the K1/K2/K3 (raise/lower/aux) transitions.
+GPIO_LOG="${DISCO_GPIO_LOG:-/var/log/disco-gpio.log}"
+stamp() { date +%H:%M:%S 2>/dev/null || echo "--:--:--"; }
+
+cmd="${1:-}"
+
+case "$cmd" in
+  set)
+    # pinctrl set <gpio> op <dl|dh>
+    gpio="${2:-?}"
+    level="${4:-?}"   # dl (drive low) or dh (drive high)
+    echo "$(stamp) pinctrl set gpio=${gpio} ${*:3}" >>"$GPIO_LOG" 2>/dev/null || true
+    logger -t pinctrl-stub "set gpio=${gpio} ${*:3}" 2>/dev/null || true
+    echo "pinctrl(stub): set ${gpio} ${*:3}"
+    ;;
+  get)
+    # pinctrl get <gpio> — mimic real output format: "<n>: <func>  <level> ..."
+    gpio="${2:-0}"
+    echo "${gpio}: op -- pd | hi // GPIO${gpio} = output (stub)"
+    ;;
+  *)
+    echo "pinctrl(stub): ${*:-<no args>}"
+    ;;
+esac

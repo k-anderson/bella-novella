@@ -1,0 +1,20 @@
+{
+  // Lightweight native x86_64 container for editing config/scripts in the
+  // browser. No FreeSWITCH runtime — use this when QEMU/arm64 emulation is
+  // unavailable on your Codespaces host, or when you only need to edit.
+  //
+  // For running/testing FreeSWITCH, create the Codespace with the
+  // "Disco - FreeSWITCH (arm64 emulated)" configuration instead.
+  "name": "Disco - Editor only",
+
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.vscode-xml",
+        "timonwong.shellcheck"
+      ]
+    }
+  }
+}

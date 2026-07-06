@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Fake `raspi-gpio` for Codespaces — no Raspberry Pi GPIO here.
+#
+# disco-relay falls back to `raspi-gpio` if `pinctrl` is absent, calling:
+#     raspi-gpio set <gpio> op <dl|dh>
+#     raspi-gpio get <gpio>
+# We keep both stubs so either code path works. See ./pinctrl for details.
+set -euo pipefail
+
+GPIO_LOG="${DISCO_GPIO_LOG:-/var/log/disco-gpio.log}"
+stamp() { date +%H:%M:%S 2>/dev/null || echo "--:--:--"; }
+
+cmd="${1:-}"
+
+case "$cmd" in
+  set)
+    gpio="${2:-?}"
+    echo "$(stamp) raspi-gpio set gpio=${gpio} ${*:3}" >>"$GPIO_LOG" 2>/dev/null || true
+    logger -t raspi-gpio-stub "set gpio=${gpio} ${*:3}" 2>/dev/null || true
+    echo "raspi-gpio(stub): set ${gpio} ${*:3}"
+    ;;
+  get)
+    gpio="${2:-0}"
+    echo "GPIO ${gpio}: level=1 fsel=1 func=OUTPUT (stub)"
+    ;;
+  *)
+    echo "raspi-gpio(stub): ${*:-<no args>}"
+    ;;
+esac

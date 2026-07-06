@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Launch the repo's own FreeSWITCH binary against the repo's config tree.
+#
+# The committed binary is aarch64; in the freeswitch-arm64 Codespace it runs
+# under QEMU emulation. libfreeswitch.so lives in the repo's lib/, so it must
+# be on the library path.
+#
+# Usage:
+#   fs-start              # foreground console (-c), Ctrl-C to stop
+#   fs-start -nc          # no console; run in background
+#   fs-start <any freeswitch flags...>
+set -euo pipefail
+
+FS_ROOT="/usr/local/freeswitch"
+
+export LD_LIBRARY_PATH="${FS_ROOT}/lib:${LD_LIBRARY_PATH:-}"
+
+# Default to a foreground console if the caller passes nothing.
+if [ "$#" -eq 0 ]; then
+  set -- -c
+fi
+
+exec "${FS_ROOT}/bin/freeswitch" \
+  -base "${FS_ROOT}" \
+  -conf "${FS_ROOT}/conf" \
+  -log "${FS_ROOT}/log" \
+  -db "${FS_ROOT}/db" \
+  -run "${FS_ROOT}/run" \
+  -mod "${FS_ROOT}/mod" \
+  -nonat \
+  "$@"

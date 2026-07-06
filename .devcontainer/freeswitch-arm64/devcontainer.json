@@ -1,0 +1,43 @@
+{
+  // Runs the repo's own aarch64 FreeSWITCH binaries on an x86_64 Codespaces
+  // host via QEMU emulation of an arm64 Debian bookworm container.
+  //
+  // If this container fails to build or start (the QEMU/binfmt step below may
+  // be disallowed on some hosts), create the Codespace with the "Disco -
+  // Editor only" configuration instead. See CODESPACES.md.
+  "name": "Disco - FreeSWITCH (arm64 emulated)",
+
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // Register the QEMU aarch64 binfmt handler on the host VM so the arm64 image
+  // can build and run. This is the emulation linchpin. `|| true` keeps create
+  // going if it is already registered.
+  "initializeCommand": "docker run --privileged --rm tonistiigi/binfmt --install arm64 || true",
+
+  // NET_ADMIN lets setup.sh add the 192.168.50.1 alias to lo so mod_sofia can
+  // bind the isolated ATA address and the softphones can register.
+  "runArgs": ["--cap-add=NET_ADMIN"],
+
+  // root simplifies the lo alias, /run lock file, GPIO stubs, and the
+  // `sudo disco-relay` the dialplan invokes.
+  "remoteUser": "root",
+
+  "postCreateCommand": "bash .devcontainer/common/setup.sh",
+
+  // Event socket (fs_cli). SIP/RTP are UDP and stay internal to the container.
+  "forwardPorts": [8021],
+  "portsAttributes": {
+    "8021": { "label": "FreeSWITCH ESL", "onAutoForward": "silent" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.vscode-xml",
+        "timonwong.shellcheck"
+      ]
+    }
+  }
+}
