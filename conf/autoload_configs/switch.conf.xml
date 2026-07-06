@@ -1,0 +1,44 @@
+<configuration name="switch.conf" description="Core configuration">
+  <settings>
+    <param name="max-sessions" value="10"/>
+    <param name="sessions-per-second" value="5"/>
+    <param name="max-audio-channels" value="5"/>
+    <param name="enable-early-hangup" value="false"/>
+
+    <param name="rtp-start-port" value="$${rtp_start_port}"/>
+    <param name="rtp-end-port" value="$${rtp_end_port}"/>
+
+    <param name="loglevel" value="info"/>
+    <param name="debug-level" value="0"/>
+    <param name="colorize-console" value="true"/>
+
+    <param name="api-expansion" value="true"/>
+    <param name="auto-create-schemas" value="true"/>
+
+    <param name="core-db-name" value="core.db"/>
+    <param name="core-db-dsn" value=""/>
+
+    <param name="crash-protection" value="false"/>
+    <param name="dump-cores" value="false"/>
+    <param name="verbose-events" value="false"/>
+
+    <param name="enable-clock-nanosleep" value="true"/>
+    <param name="enable-softtimer-timerfd" value="false"/>
+
+    <param name="rtp-enable-zrtp" value="false"/>
+    <param name="rtp-retain-crypto-keys" value="false"/>
+  </settings>
+
+  <cli-keybindings>
+    <key name="1" value="help"/>
+    <key name="2" value="status"/>
+    <key name="3" value="show channels"/>
+    <key name="4" value="show registrations"/>
+    <key name="5" value="sofia status profile ata"/>
+    <key name="6" value="reloadxml"/>
+  </cli-keybindings>
+
+  <default-ptimes>
+    <codec name="PCMU" ptime="20"/>
+  </default-ptimes>
+</configuration>

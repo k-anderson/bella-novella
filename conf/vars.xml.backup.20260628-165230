@@ -1,0 +1,34 @@
+<include>
+  <!-- Core paths -->
+  <X-PRE-PROCESS cmd="set" data="base_dir=/usr/local/freeswitch"/>
+  <X-PRE-PROCESS cmd="set" data="conf_dir=$${base_dir}/conf"/>
+  <X-PRE-PROCESS cmd="set" data="log_dir=$${base_dir}/log"/>
+  <X-PRE-PROCESS cmd="set" data="run_dir=$${base_dir}/run"/>
+  <X-PRE-PROCESS cmd="set" data="db_dir=$${base_dir}/db"/>
+  <X-PRE-PROCESS cmd="set" data="mod_dir=$${base_dir}/mod"/>
+  <X-PRE-PROCESS cmd="set" data="sounds_dir=$${base_dir}/sounds"/>
+
+  <!-- Isolated ATA Ethernet network -->
+  <X-PRE-PROCESS cmd="set" data="domain=192.168.50.1"/>
+  <X-PRE-PROCESS cmd="set" data="bind_server_ip=192.168.50.1"/>
+  <X-PRE-PROCESS cmd="set" data="ata_network_cidr=192.168.50.0/24"/>
+
+  <!-- Small RTP range for local two-line appliance use -->
+  <X-PRE-PROCESS cmd="set" data="rtp_start_port=16384"/>
+  <X-PRE-PROCESS cmd="set" data="rtp_end_port=16484"/>
+
+  <!-- POTS ATA audio -->
+  <X-PRE-PROCESS cmd="set" data="global_codec_prefs=PCMU@40i"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU@40i"/>
+
+  <!-- Sounds -->
+  <X-PRE-PROCESS cmd="set" data="default_language=en"/>
+  <X-PRE-PROCESS cmd="set" data="default_dialect=us"/>
+  <X-PRE-PROCESS cmd="set" data="default_voice=callie"/>
+  <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
+  <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://moh"/>
+
+  <!-- Linear actuator relay commands -->
+  <X-PRE-PROCESS cmd="set" data="disco_raise=/usr/bin/sudo /usr/local/bin/disco-relay raise 10 15"/>
+  <X-PRE-PROCESS cmd="set" data="disco_lower=/usr/bin/sudo /usr/local/bin/disco-relay lower 10 15"/>
+</include>

@@ -1,0 +1,7 @@
+<configuration name="acl.conf" description="Access control lists">
+  <network-lists>
+    <list name="disco_ata_only" default="deny">
+      <node type="allow" cidr="$${ata_network_cidr}"/>
+    </list>
+  </network-lists>
+</configuration>

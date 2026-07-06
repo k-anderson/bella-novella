@@ -1,0 +1,453 @@
+<document type="freeswitch/xml">
+  <!-- Core paths -->
+
+  <!-- Isolated ATA Ethernet network -->
+
+  <!-- Small RTP range for local two-line appliance use -->
+
+  <!-- POTS ATA audio -->
+
+  <!-- Sounds -->
+
+  <!-- Linear actuator relay commands -->
+
+  <section name="configuration" description="Module configuration">
+<configuration name="acl.conf" description="Access control lists">
+  <network-lists>
+    <list name="disco_ata_only" default="deny">
+      <node type="allow" cidr="192.168.50.0/24"/>
+    </list>
+  </network-lists>
+</configuration>
+<configuration name="console.conf" description="Console logger">
+  <mappings>
+    <map name="all" value="console,info,notice,warning,err,crit,alert"/>
+  </mappings>
+
+  <settings>
+    <param name="colorize" value="true"/>
+    <param name="loglevel" value="info"/>
+  </settings>
+</configuration>
+<configuration name="event_socket.conf" description="Event socket">
+  <settings>
+    <param name="nat-map" value="false"/>
+    <param name="listen-ip" value="127.0.0.1"/>
+    <param name="listen-port" value="8021"/>
+    <param name="password" value="ClueCon"/>
+    <param name="apply-inbound-acl" value=""/>
+    <param name="stop-on-bind-error" value="true"/>
+  </settings>
+</configuration>
+<configuration name="ivr.conf" description="IVR menus">
+  <menus>
+  <menu name="disco_main_menu"
+        greet-long="/usr/local/freeswitch/sounds/en/us/callie/disco/main-menu.wav"
+        greet-short="/usr/local/freeswitch/sounds/en/us/callie/disco/main-menu-short.wav"
+        invalid-sound="ivr/ivr-that_was_an_invalid_entry.wav"
+        exit-sound="voicemail/vm-goodbye.wav"
+        timeout="7000"
+        inter-digit-timeout="2000"
+        max-failures="3"
+        max-timeouts="3"
+        digit-len="1">
+    <entry action="menu-exec-app" digits="1" param="transfer DISCO_CALL_OTHER XML default"/>
+    <entry action="menu-exec-app" digits="2" param="transfer DISCO_RAISE XML default"/>
+    <entry action="menu-exec-app" digits="3" param="transfer DISCO_LOWER XML default"/>
+    <entry action="menu-exec-app" digits="9" param="transfer DISCO_RECORD_GREETING XML default"/>
+  </menu>
+  </menus>
+</configuration>
+<configuration name="local_stream.conf" description="Local stream files">
+  <directory name="moh" path="/usr/local/freeswitch/sounds/music/8000">
+    <param name="rate" value="8000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="1"/>
+    <param name="interval" value="20"/>
+    <param name="timer-name" value="soft"/>
+  </directory>
+</configuration>
+<configuration name="logfile.conf" description="File logger">
+  <settings>
+    <param name="rotate-on-hup" value="true"/>
+  </settings>
+
+  <profiles>
+    <profile name="default">
+      <settings>
+        <param name="logfile" value="/usr/local/freeswitch/log/freeswitch.log"/>
+        <param name="rollover" value="10485760"/>
+        <param name="maximum-rotate" value="8"/>
+        <param name="uuid" value="true"/>
+      </settings>
+      <mappings>
+        <map name="all" value="debug,info,notice,warning,err,crit,alert"/>
+      </mappings>
+    </profile>
+  </profiles>
+</configuration>
+<configuration name="modules.conf" description="Loaded modules">
+  <modules>
+    <!-- Loggers -->
+    <load module="mod_console"/>
+    <load module="mod_logfile"/>
+    <load module="mod_timerfd"/>
+
+    <!-- Local fs_cli / ESL; bound to 127.0.0.1 only. -->
+    <load module="mod_event_socket"/>
+
+    <!-- SIP endpoint -->
+    <load module="mod_sofia"/>
+
+    <!-- Dialplan engine and applications -->
+    <load module="mod_dialplan_xml"/>
+    <load module="mod_commands"/>
+    <load module="mod_dptools"/>
+
+    <!-- Media playback -->
+    <load module="mod_local_stream"/>
+    <load module="mod_native_file"/>
+    <load module="mod_sndfile"/>
+    <load module="mod_tone_stream"/>
+
+    <!-- English prompt support if available. -->
+    <load module="mod_say_en"/>
+  </modules>
+</configuration>
+<configuration name="sofia.conf" description="Sofia SIP endpoint">
+  <global_settings>
+    <param name="log-level" value="0"/>
+    <param name="debug-presence" value="0"/>
+    <param name="auto-restart" value="true"/>
+    <param name="capture-server" value=""/>
+    <param name="sip-trace" value="false"/>
+  </global_settings>
+
+  <profiles>
+  <profile name="ata">
+    <settings>
+      <!-- Bind only to the isolated Ethernet ATA address. -->
+      <param name="sip-ip" value="192.168.50.1"/>
+      <param name="rtp-ip" value="192.168.50.1"/>
+      <param name="ext-sip-ip" value="192.168.50.1"/>
+      <param name="ext-rtp-ip" value="192.168.50.1"/>
+      <param name="sip-port" value="5060"/>
+      <param name="bind-params" value="transport=udp"/>
+      <param name="tls-only" value="false"/>
+      <param name="tls-sip-port" value="5061"/>
+      <param name="ws-binding" value=""/>
+      <param name="wss-binding" value=""/>
+
+      <!-- Routing -->
+      <param name="context" value="default"/>
+      <param name="dialplan" value="XML"/>
+      <param name="sip-domain" value="192.168.50.1"/>
+      <param name="challenge-realm" value="auto_to"/>
+
+      <!-- Isolated-network trust model -->
+      <param name="auth-calls" value="false"/>
+      <param name="auth-all-packets" value="false"/>
+      <param name="auth-messages" value="false"/>
+      <param name="accept-blind-auth" value="true"/>
+      <param name="accept-blind-reg" value="true"/>
+      <param name="disable-register" value="false"/>
+      <param name="log-auth-failures" value="true"/>
+
+      <!-- Defense in depth -->
+      <param name="apply-inbound-acl" value="disco_ata_only"/>
+      <param name="apply-register-acl" value="disco_ata_only"/>
+      <param name="local-network-acl" value="disco_ata_only"/>
+
+      <!-- Registration model -->
+      <param name="force-register-domain" value="192.168.50.1"/>
+      <param name="force-register-db-domain" value="192.168.50.1"/>
+      <param name="multiple-registrations" value="false"/>
+      <param name="max-registrations-per-extension" value="1"/>
+      <param name="registration-thread-frequency" value="30"/>
+      <param name="inbound-reg-force-matching-username" value="false"/>
+      <param name="inbound-reg-in-new-thread" value="false"/>
+      <param name="send-message-query-on-register" value="false"/>
+      <param name="send-presence-on-register" value="false"/>
+      <param name="presence-probe-on-register" value="false"/>
+      <param name="all-reg-options-ping" value="false"/>
+      <param name="nat-options-ping" value="false"/>
+      <param name="unregister-on-options-fail" value="false"/>
+
+      <!-- POTS/ATA media -->
+      <param name="inbound-codec-prefs" value="PCMU@20i"/>
+      <param name="outbound-codec-prefs" value="PCMU@20i"/>
+      <param name="codec-prefs" value="PCMU@20i"/>
+      <param name="inbound-codec-negotiation" value="scrooge"/>
+      <param name="inbound-late-negotiation" value="false"/>
+      <param name="disable-transcoding" value="false"/>
+      <param name="dtmf-type" value="rfc2833"/>
+      <param name="rfc2833-pt" value="101"/>
+      <param name="dtmf-duration" value="2000"/>
+      <param name="pass-rfc2833" value="true"/>
+      <param name="liberal-dtmf" value="true"/>
+      <param name="suppress-cng" value="true"/>
+      <param name="cng-pt" value="13"/>
+      <param name="vad" value="none"/>
+      <param name="hold-music" value="local_stream://moh"/>
+      <param name="disable-hold" value="false"/>
+      <param name="renegotiate-codec-on-hold" value="false"/>
+      <param name="renegotiate-codec-on-reinvite" value="false"/>
+      <param name="inbound-bypass-media" value="false"/>
+      <param name="inbound-proxy-media" value="false"/>
+      <param name="inbound-no-media" value="false"/>
+      <param name="require-secure-rtp" value="false"/>
+      <param name="t38-passthru" value="false"/>
+
+      <!-- RTP timing/liveness -->
+      <param name="rtp-timer-name" value="timerfd"/>
+      <param name="rtp-autofix-timing" value="false"/>
+      <param name="rtp-rewrite-timestamps" value="false"/>
+      <param name="rtp-notimer-during-bridge" value="false"/>
+      <param name="rtp-timeout-sec" value="60"/>
+      <param name="rtp-hold-timeout-sec" value="300"/>
+      <param name="rtcp-audio-interval-msec" value="5000"/>
+      <param name="rtp-digit-delay" value="40"/>
+      <param name="disable-rtp-auto-adjust" value="false"/>
+
+      <!-- SIP timers/options -->
+      <param name="enable-timer" value="false"/>
+      <param name="minimum-session-expires" value="120"/>
+      <param name="session-timeout" value="0"/>
+      <param name="timer-T1" value="500"/>
+      <param name="timer-T1X64" value="32000"/>
+      <param name="timer-T2" value="4000"/>
+      <param name="timer-T4" value="4000"/>
+      <param name="sip-expires-max-deviation" value="600"/>
+      <param name="sip-expires-late-margin" value="60"/>
+      <param name="sip-force-expires" value="0"/>
+      <param name="sip-options-respond-503-on-busy" value="false"/>
+      <param name="sip-messages-respond-200-ok" value="false"/>
+
+      <!-- No NAT or external DNS behavior -->
+      <param name="aggressive-nat-detection" value="false"/>
+      <param name="disable-srv" value="true"/>
+      <param name="disable-naptr" value="true"/>
+      <param name="disable-srv503" value="true"/>
+      <param name="NDLB-force-rport" value="safe"/>
+      <param name="NDLB-received-in-nat-reg-contact" value="false"/>
+      <param name="NDLB-expires-in-register-response" value="false"/>
+
+      <!-- Disable nonessential presence/message behaviors -->
+      <param name="manage-presence" value="false"/>
+      <param name="manage-shared-appearance" value="false"/>
+      <param name="presence-disable-early" value="true"/>
+      <param name="presence-privacy" value="true"/>
+      <param name="fire-message-events" value="false"/>
+      <param name="in-dialog-chat" value="false"/>
+      <param name="forward-unsolicited-mwi-notify" value="false"/>
+      <param name="mwi-use-reg-callid" value="false"/>
+
+      <!-- Diagnostics -->
+      <param name="sip-trace" value="false"/>
+      <param name="tracelevel" value="0"/>
+      <param name="log-level" value="0"/>
+      <param name="debug-presence" value="0"/>
+      <param name="debug-sla" value="0"/>
+      <param name="parse-all-invite-headers" value="false"/>
+      <param name="extended-info-parsing" value="false"/>
+      <param name="track-calls" value="false"/>
+      <param name="user-agent-string" value="Disco-FreeSWITCH"/>
+      <param name="dbname" value="sofia_reg_ata"/>
+      <param name="shutdown-on-fail" value="true"/>
+      <param name="profile-standby" value="false"/>
+      <param name="auto-restart" value="true"/>
+    </settings>
+
+    <gateways>
+      <!-- No gateways. -->
+    </gateways>
+
+    <aliases>
+      <!-- No aliases. -->
+    </aliases>
+  </profile>
+  </profiles>
+</configuration>
+<configuration name="switch.conf" description="Core configuration">
+  <settings>
+    <param name="max-sessions" value="10"/>
+    <param name="sessions-per-second" value="5"/>
+    <param name="max-audio-channels" value="5"/>
+    <param name="enable-early-hangup" value="false"/>
+
+    <param name="rtp-start-port" value="16384"/>
+    <param name="rtp-end-port" value="16484"/>
+
+    <param name="loglevel" value="info"/>
+    <param name="debug-level" value="0"/>
+    <param name="colorize-console" value="true"/>
+
+    <param name="api-expansion" value="true"/>
+    <param name="auto-create-schemas" value="true"/>
+
+    <param name="core-db-name" value="core.db"/>
+    <param name="core-db-dsn" value=""/>
+
+    <param name="crash-protection" value="false"/>
+    <param name="dump-cores" value="false"/>
+    <param name="verbose-events" value="false"/>
+
+    <param name="enable-clock-nanosleep" value="true"/>
+    <param name="enable-softtimer-timerfd" value="false"/>
+
+    <param name="rtp-enable-zrtp" value="false"/>
+    <param name="rtp-retain-crypto-keys" value="false"/>
+  </settings>
+
+  <cli-keybindings>
+    <key name="1" value="help"/>
+    <key name="2" value="status"/>
+    <key name="3" value="show channels"/>
+    <key name="4" value="show registrations"/>
+    <key name="5" value="sofia status profile ata"/>
+    <key name="6" value="reloadxml"/>
+  </cli-keybindings>
+
+  <default-ptimes>
+    <codec name="PCMU" ptime="20"/>
+  </default-ptimes>
+</configuration>
+  </section>
+
+  <section name="dialplan" description="Dialplan">
+    <context name="default">
+  <!-- IVR option 1 when caller is line 101: call line 102. -->
+  <extension name="disco-call-other-from-101">
+    <condition field="destination_number" expression="^DISCO_CALL_OTHER$"/>
+    <condition field="${sip_from_user}" expression="^101$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="effective_caller_id_number=101"/>
+      <action application="set" data="effective_caller_id_name=Line 101"/>
+      <action application="bridge" data="${sofia_contact(102@192.168.50.1)}"/>
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="NO_USER_RESPONSE"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 1 when caller is line 102: call line 101. -->
+  <extension name="disco-call-other-from-102">
+    <condition field="destination_number" expression="^DISCO_CALL_OTHER$"/>
+    <condition field="${sip_from_user}" expression="^102$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="effective_caller_id_number=102"/>
+      <action application="set" data="effective_caller_id_name=Line 102"/>
+      <action application="bridge" data="${sofia_contact(101@192.168.50.1)}"/>
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="NO_USER_RESPONSE"/>
+    </condition>
+  </extension>
+
+  <!-- Safety fallback if option 1 is selected from an unexpected SIP user. -->
+  <extension name="disco-call-other-unknown-line">
+    <condition field="destination_number" expression="^DISCO_CALL_OTHER$">
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="CALL_REJECTED"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 2: raise/extend actuator for configured time, then brake. -->
+  <extension name="disco-raise">
+    <condition field="destination_number" expression="^DISCO_RAISE$">
+      <action application="bgsystem" data="/usr/bin/sudo /usr/local/bin/disco-relay raise 5 15"/>
+      <action application="playback" data="tone_stream://%(300,100,700);%(300,100,900);%(300,100,1100)"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 3: lower/retract actuator for configured time, then brake. -->
+  <extension name="disco-lower">
+    <condition field="destination_number" expression="^DISCO_LOWER$">
+      <action application="bgsystem" data="/usr/bin/sudo /usr/local/bin/disco-relay lower 5 15"/>
+      <action application="playback" data="tone_stream://%(300,100,1100);%(300,100,900);%(300,100,700)"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+  <!-- Hidden/admin IVR option 9: record a new main IVR greeting. -->
+  <extension name="disco-record-greeting">
+    <condition field="destination_number" expression="^DISCO_RECORD_GREETING$">
+      <action application="answer"/>
+
+      <!-- Start tones. Begin speaking after the tones. -->
+      <action application="playback" data="tone_stream://%(250,100,800);%(250,100,1000);%(500,100,1200)"/>
+
+      <!-- Record up to 30 seconds. Stops earlier after detected silence. -->
+      <action application="record" data="/usr/local/freeswitch/sounds/en/us/callie/disco/main-menu.wav 30 200 5"/>
+
+      <!-- Playback the newly recorded greeting for review. -->
+      <action application="sleep" data="500"/>
+      <action application="playback" data="/usr/local/freeswitch/sounds/en/us/callie/disco/main-menu.wav"/>
+      <action application="sleep" data="500"/>
+
+      <!-- Return to the IVR so you can test it immediately. -->
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+  <!-- ATA off-hook auto-dial can call 700; direct dialing 700 also enters the IVR. -->
+  <extension name="disco-ivr-explicit">
+    <condition field="destination_number" expression="^700$">
+      <action application="answer"/>
+      <action application="sleep" data="100"/>
+      <action application="ivr" data="disco_main_menu"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+
+  <!-- Any other inbound call from the ATA also enters the IVR. -->
+  <extension name="disco-all-calls-to-ivr">
+    <condition field="destination_number" expression="^.+$">
+      <action application="answer"/>
+      <action application="sleep" data="100"/>
+      <action application="ivr" data="disco_main_menu"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+    </context>
+  </section>
+
+  <section name="directory" description="Local directory">
+    <domain name="192.168.50.1">
+      <params>
+        <!-- Auth is intentionally unused; the isolated ATA profile accepts blind registration. -->
+      </params>
+      <variables>
+        <variable name="domain_name" value="192.168.50.1"/>
+        <variable name="user_context" value="default"/>
+      </variables>
+      <groups>
+        <group name="default">
+          <users>
+  <user id="101">
+    <params>
+      <param name="password" value="not-used"/>
+    </params>
+    <variables>
+      <variable name="user_context" value="default"/>
+      <variable name="accountcode" value="101"/>
+      <variable name="effective_caller_id_number" value="101"/>
+      <variable name="effective_caller_id_name" value="Line 101"/>
+    </variables>
+  </user>
+  <user id="102">
+    <params>
+      <param name="password" value="not-used"/>
+    </params>
+    <variables>
+      <variable name="user_context" value="default"/>
+      <variable name="accountcode" value="102"/>
+      <variable name="effective_caller_id_number" value="102"/>
+      <variable name="effective_caller_id_name" value="Line 102"/>
+    </variables>
+  </user>
+          </users>
+        </group>
+      </groups>
+    </domain>
+  </section>
+</document>

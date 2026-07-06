@@ -1,0 +1,21 @@
+<include>
+  <!-- ATA off-hook auto-dial can call 700; direct dialing 700 also enters the IVR. -->
+  <extension name="disco-ivr-explicit">
+    <condition field="destination_number" expression="^700$">
+      <action application="answer"/>
+      <action application="sleep" data="100"/>
+      <action application="ivr" data="disco_main_menu"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+
+  <!-- Any other inbound call from the ATA also enters the IVR. -->
+  <extension name="disco-all-calls-to-ivr">
+    <condition field="destination_number" expression="^.+$">
+      <action application="answer"/>
+      <action application="sleep" data="100"/>
+      <action application="ivr" data="disco_main_menu"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+</include>

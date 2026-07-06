@@ -1,0 +1,55 @@
+<include>
+  <!-- IVR option 1 when caller is line 101: call line 102. -->
+  <extension name="disco-call-other-from-101">
+    <condition field="destination_number" expression="^DISCO_CALL_OTHER$"/>
+    <condition field="${sip_from_user}" expression="^101$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="effective_caller_id_number=101"/>
+      <action application="set" data="effective_caller_id_name=Line 101"/>
+      <action application="bridge" data="${sofia_contact(102@$${domain})}"/>
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="NO_USER_RESPONSE"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 1 when caller is line 102: call line 101. -->
+  <extension name="disco-call-other-from-102">
+    <condition field="destination_number" expression="^DISCO_CALL_OTHER$"/>
+    <condition field="${sip_from_user}" expression="^102$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="effective_caller_id_number=102"/>
+      <action application="set" data="effective_caller_id_name=Line 102"/>
+      <action application="bridge" data="${sofia_contact(101@$${domain})}"/>
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="NO_USER_RESPONSE"/>
+    </condition>
+  </extension>
+
+  <!-- Safety fallback if option 1 is selected from an unexpected SIP user. -->
+  <extension name="disco-call-other-unknown-line">
+    <condition field="destination_number" expression="^DISCO_CALL_OTHER$">
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="CALL_REJECTED"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 2: raise/extend actuator for configured time, then brake. -->
+  <extension name="disco-raise">
+    <condition field="destination_number" expression="^DISCO_RAISE$">
+      <action application="bgsystem" data="$${disco_raise}"/>
+      <action application="playback" data="tone_stream://%(300,100,700);%(300,100,900);%(300,100,1100)"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 3: lower/retract actuator for configured time, then brake. -->
+  <extension name="disco-lower">
+    <condition field="destination_number" expression="^DISCO_LOWER$">
+      <action application="bgsystem" data="$${disco_lower}"/>
+      <action application="playback" data="tone_stream://%(300,100,1100);%(300,100,900);%(300,100,700)"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+</include>

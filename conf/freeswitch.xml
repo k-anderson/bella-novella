@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<document type="freeswitch/xml">
+  <X-PRE-PROCESS cmd="include" data="vars.xml"/>
+
+  <section name="configuration" description="Module configuration">
+    <X-PRE-PROCESS cmd="include" data="autoload_configs/*.xml"/>
+  </section>
+
+  <section name="dialplan" description="Dialplan">
+    <context name="default">
+      <X-PRE-PROCESS cmd="include" data="dialplan/default/*.xml"/>
+    </context>
+  </section>
+
+  <section name="directory" description="Local directory">
+    <domain name="$${domain}">
+      <params>
+        <!-- Auth is intentionally unused; the isolated ATA profile accepts blind registration. -->
+      </params>
+      <variables>
+        <variable name="domain_name" value="$${domain}"/>
+        <variable name="user_context" value="default"/>
+      </variables>
+      <groups>
+        <group name="default">
+          <users>
+            <X-PRE-PROCESS cmd="include" data="directory/default/*.xml"/>
+          </users>
+        </group>
+      </groups>
+    </domain>
+  </section>
+</document>

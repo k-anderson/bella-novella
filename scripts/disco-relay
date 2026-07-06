@@ -1,0 +1,417 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Disco relay control for Waveshare 3-relay HAT.
+#
+# Wiring assumption:
+#   K1 COM -> actuator terminal A
+#   K1 NC  -> 0V
+#   K1 NO  -> +V
+#
+#   K2 COM -> actuator terminal B
+#   K2 NC  -> 0V
+#   K2 NO  -> +V
+#
+# Therefore:
+#   brake/default: K1 OFF, K2 OFF = A 0V, B 0V
+#   raise/extend:  K1 ON,  K2 OFF = A +V, B 0V
+#   lower/retract: K1 OFF, K2 ON  = A 0V, B +V
+#
+# Relay 3 behavior:
+#   raise <seconds> [percent]:
+#     K3 turns ON after <percent>% of the raise time.
+#     K3 stays ON after the raise finishes.
+#
+#   lower <seconds> [percent]:
+#     K3 remains ON at the start of lowering.
+#     K3 turns OFF after <percent>% of the lower time.
+#     K3 stays OFF after the lower finishes.
+#
+#   initialize <seconds> [percent]:
+#     K3 turns OFF immediately.
+#     actuator lowers for <seconds>.
+#     K1/K2 return to brake/default.
+#     K3 is forced OFF again.
+#
+# Waveshare relay HAT mapping:
+#   K1 / Relay 1: P25 / BCM 26 / physical pin 37
+#   K2 / Relay 2: P28 / BCM 20 / physical pin 38
+#   K3 / Relay 3: P29 / BCM 21 / physical pin 40
+#
+# Waveshare relay input behavior:
+#   GPIO LOW  = relay ON / energized
+#   GPIO HIGH = relay OFF / de-energized
+
+K1_GPIO=26
+K2_GPIO=20
+K3_GPIO=21
+
+LOCK_FILE="/run/disco-relay.lock"
+LOG_TAG="disco-relay"
+SETTLE_TIME="0.15"
+
+K3_RAISE_ON_AFTER_PERCENT_DEFAULT=50
+K3_LOWER_OFF_AFTER_PERCENT_DEFAULT=50
+INITIALIZE_SECONDS_DEFAULT=10
+INITIALIZE_K3_OFF_AFTER_PERCENT_DEFAULT=0
+
+usage() {
+  cat <<USAGE
+Usage:
+  disco-relay brake
+  disco-relay raise <seconds> [k3_on_after_percent]
+  disco-relay lower <seconds> [k3_off_after_percent]
+  disco-relay initialize [seconds] [k3_off_after_percent]
+  disco-relay raised
+  disco-relay lowered
+  disco-relay status
+
+Aliases:
+  brake:      stop, default
+  raise:      up, extend
+  lower:      down, retract
+  initialize: init, home, startup
+  raised:     open, extended
+  lowered:    closed, retracted
+
+Examples:
+  disco-relay brake
+  disco-relay raise 10 40
+  disco-relay lower 10 60
+  disco-relay initialize
+  disco-relay initialize 12 0
+  disco-relay status
+
+Startup initialize:
+  disco-relay initialize 10 0
+
+  Meaning:
+    force K3 OFF immediately
+    lower for 10 seconds
+    keep/force K3 OFF
+    return K1/K2 to brake/default
+USAGE
+}
+
+have_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+gpio_set_raw() {
+  local gpio="$1"
+  local raw="$2"   # dl or dh
+
+  if have_cmd pinctrl; then
+    pinctrl set "$gpio" op "$raw"
+  elif have_cmd raspi-gpio; then
+    raspi-gpio set "$gpio" op "$raw"
+  else
+    echo "ERROR: neither pinctrl nor raspi-gpio was found." >&2
+    exit 1
+  fi
+}
+
+gpio_get() {
+  local gpio="$1"
+
+  if have_cmd pinctrl; then
+    pinctrl get "$gpio"
+  elif have_cmd raspi-gpio; then
+    raspi-gpio get "$gpio"
+  else
+    echo "ERROR: neither pinctrl nor raspi-gpio was found." >&2
+    exit 1
+  fi
+}
+
+relay_on() {
+  # active-low: ON = GPIO low
+  gpio_set_raw "$1" dl
+}
+
+relay_off() {
+  # active-low: OFF = GPIO high
+  gpio_set_raw "$1" dh
+}
+
+is_number() {
+  local value="$1"
+  awk -v v="$value" 'BEGIN { exit !(v ~ /^[0-9]+([.][0-9]+)?$/) }'
+}
+
+valid_seconds() {
+  local value="$1"
+
+  if ! is_number "$value"; then
+    echo "ERROR: seconds must be numeric, got '$value'" >&2
+    exit 2
+  fi
+
+  awk -v v="$value" 'BEGIN { exit !(v > 0) }' || {
+    echo "ERROR: seconds must be greater than 0, got '$value'" >&2
+    exit 2
+  }
+}
+
+valid_percent() {
+  local name="$1"
+  local value="$2"
+
+  if ! is_number "$value"; then
+    echo "ERROR: ${name} must be numeric, got '$value'" >&2
+    exit 2
+  fi
+
+  awk -v v="$value" 'BEGIN { exit !(v >= 0 && v <= 100) }' || {
+    echo "ERROR: ${name} must be between 0 and 100, got '$value'" >&2
+    exit 2
+  }
+}
+
+calc() {
+  awk "BEGIN { printf \"%.3f\", $* }"
+}
+
+state_brake() {
+  relay_off "$K1_GPIO"
+  relay_off "$K2_GPIO"
+
+  logger -t "$LOG_TAG" "state=brake k1=off k2=off actuator_a=0v actuator_b=0v"
+  echo "state=brake actuator_a=0V actuator_b=0V"
+}
+
+state_raise() {
+  relay_on  "$K1_GPIO"
+  relay_off "$K2_GPIO"
+
+  logger -t "$LOG_TAG" "state=raise k1=on k2=off actuator_a=+v actuator_b=0v"
+  echo "state=raise actuator_a=+V actuator_b=0V"
+}
+
+state_lower() {
+  relay_off "$K1_GPIO"
+  relay_on  "$K2_GPIO"
+
+  logger -t "$LOG_TAG" "state=lower k1=off k2=on actuator_a=0v actuator_b=+v"
+  echo "state=lower actuator_a=0V actuator_b=+V"
+}
+
+k3_on() {
+  relay_on "$K3_GPIO"
+  logger -t "$LOG_TAG" "k3=on"
+  echo "k3=on"
+}
+
+k3_off() {
+  relay_off "$K3_GPIO"
+  logger -t "$LOG_TAG" "k3=off"
+  echo "k3=off"
+}
+
+cmd_raise() {
+  local seconds="$1"
+  local on_after_percent="${2:-$K3_RAISE_ON_AFTER_PERCENT_DEFAULT}"
+
+  valid_seconds "$seconds"
+  valid_percent "k3_on_after_percent" "$on_after_percent"
+
+  local k3_on_at
+  local before_k3_on
+  local after_k3_on
+
+  k3_on_at="$(calc "$seconds * $on_after_percent / 100")"
+  before_k3_on="$k3_on_at"
+  after_k3_on="$(calc "$seconds - $k3_on_at")"
+
+  logger -t "$LOG_TAG" "cmd=raise seconds=${seconds} k3_on_after_percent=${on_after_percent} k3_on_at=${k3_on_at}s"
+  echo "raise: total=${seconds}s k3_on_at=${k3_on_at}s"
+
+  state_brake
+  sleep "$SETTLE_TIME"
+
+  state_raise
+
+  sleep "$before_k3_on"
+  k3_on
+
+  sleep "$after_k3_on"
+
+  state_brake
+  k3_on
+}
+
+cmd_lower() {
+  local seconds="$1"
+  local off_after_percent="${2:-$K3_LOWER_OFF_AFTER_PERCENT_DEFAULT}"
+
+  valid_seconds "$seconds"
+  valid_percent "k3_off_after_percent" "$off_after_percent"
+
+  local k3_off_at
+  local before_k3_off
+  local after_k3_off
+
+  k3_off_at="$(calc "$seconds * $off_after_percent / 100")"
+  before_k3_off="$k3_off_at"
+  after_k3_off="$(calc "$seconds - $k3_off_at")"
+
+  logger -t "$LOG_TAG" "cmd=lower seconds=${seconds} k3_off_after_percent=${off_after_percent} k3_off_at=${k3_off_at}s"
+  echo "lower: total=${seconds}s k3_off_at=${k3_off_at}s"
+
+  # Normal lower behavior: leave K3 on initially, then turn it off after percentage.
+  k3_on
+
+  state_brake
+  sleep "$SETTLE_TIME"
+
+  state_lower
+
+  sleep "$before_k3_off"
+  k3_off
+
+  sleep "$after_k3_off"
+
+  state_brake
+  k3_off
+}
+
+cmd_initialize() {
+  local seconds="${1:-$INITIALIZE_SECONDS_DEFAULT}"
+  local off_after_percent="${2:-$INITIALIZE_K3_OFF_AFTER_PERCENT_DEFAULT}"
+
+  valid_seconds "$seconds"
+  valid_percent "initialize_k3_off_after_percent" "$off_after_percent"
+
+  local k3_off_at
+  local before_k3_off
+  local after_k3_off
+
+  k3_off_at="$(calc "$seconds * $off_after_percent / 100")"
+  before_k3_off="$k3_off_at"
+  after_k3_off="$(calc "$seconds - $k3_off_at")"
+
+  logger -t "$LOG_TAG" "cmd=initialize seconds=${seconds} k3_off_after_percent=${off_after_percent} k3_off_at=${k3_off_at}s"
+  echo "initialize: lower=${seconds}s k3_forced_off_at=${k3_off_at}s"
+
+  # Startup safety: lights/status relay off immediately.
+  k3_off
+
+  # Normalize before moving.
+  state_brake
+  sleep "$SETTLE_TIME"
+
+  # Run lower/retract.
+  state_lower
+
+  # This allows a nonzero percent if desired, but default is 0.
+  sleep "$before_k3_off"
+  k3_off
+
+  sleep "$after_k3_off"
+
+  # Final startup-safe state.
+  state_brake
+  k3_off
+
+  logger -t "$LOG_TAG" "cmd=initialize complete state=lowered k3=off"
+  echo "initialize=complete state=lowered k3=off"
+}
+
+cmd_raised() {
+  state_brake
+  k3_on
+  logger -t "$LOG_TAG" "position=raised"
+  echo "position=raised"
+}
+
+cmd_lowered() {
+  state_brake
+  k3_off
+  logger -t "$LOG_TAG" "position=lowered"
+  echo "position=lowered"
+}
+
+cmd_status() {
+  echo "K1 / Relay 1 / GPIO ${K1_GPIO}: $(gpio_get "$K1_GPIO")"
+  echo "K2 / Relay 2 / GPIO ${K2_GPIO}: $(gpio_get "$K2_GPIO")"
+  echo "K3 / Relay 3 / GPIO ${K3_GPIO}: $(gpio_get "$K3_GPIO")"
+  echo
+  echo "Logical states:"
+  echo "  Relay ON  = GPIO low"
+  echo "  Relay OFF = GPIO high"
+  echo
+  echo "  brake/default = K1 OFF, K2 OFF = A 0V, B 0V"
+  echo "  raise         = K1 ON,  K2 OFF = A +V, B 0V"
+  echo "  lower         = K1 OFF, K2 ON  = A 0V, B +V"
+  echo
+  echo "K3 timing defaults:"
+  echo "  raise:      K3 ON after ${K3_RAISE_ON_AFTER_PERCENT_DEFAULT}% of raise time"
+  echo "  lower:      K3 OFF after ${K3_LOWER_OFF_AFTER_PERCENT_DEFAULT}% of lower time"
+  echo "  initialize: K3 OFF immediately, lower for ${INITIALIZE_SECONDS_DEFAULT}s, final K3 OFF"
+}
+
+main_locked() {
+  local cmd="${1:-}"
+
+  case "$cmd" in
+    brake|stop|default)
+      state_brake
+      ;;
+
+    raise|up|extend)
+      if [ "$#" -lt 2 ]; then
+        echo "ERROR: ${cmd} requires seconds" >&2
+        usage >&2
+        exit 2
+      fi
+      cmd_raise "$2" "${3:-$K3_RAISE_ON_AFTER_PERCENT_DEFAULT}"
+      ;;
+
+    lower|down|retract)
+      if [ "$#" -lt 2 ]; then
+        echo "ERROR: ${cmd} requires seconds" >&2
+        usage >&2
+        exit 2
+      fi
+      cmd_lower "$2" "${3:-$K3_LOWER_OFF_AFTER_PERCENT_DEFAULT}"
+      ;;
+
+    initialize|init|home|startup)
+      cmd_initialize "${2:-$INITIALIZE_SECONDS_DEFAULT}" "${3:-$INITIALIZE_K3_OFF_AFTER_PERCENT_DEFAULT}"
+      ;;
+
+    raised|open|extended)
+      cmd_raised
+      ;;
+
+    lowered|closed|retracted)
+      cmd_lowered
+      ;;
+
+    status)
+      cmd_status
+      ;;
+
+    -h|--help|help|'')
+      usage
+      ;;
+
+    *)
+      echo "ERROR: unknown command '$cmd'" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+}
+
+main() {
+  mkdir -p "$(dirname "$LOCK_FILE")"
+
+  # Prevent overlapping actuator commands from simultaneous IVR calls or boot services.
+  exec 9>"$LOCK_FILE"
+  flock -x 9
+
+  main_locked "$@"
+}
+
+main "$@"
