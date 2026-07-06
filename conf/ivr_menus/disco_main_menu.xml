@@ -1,7 +1,7 @@
 <include>
-  <menu name="disco_main_menu"
-        greet-long="$${sound_prefix}/disco/main-menu.wav"
-        greet-short="$${sound_prefix}/disco/main-menu-short.wav"
+    <menu name="disco_main_menu"
+      greet-long="$${recordings_dir}/main-menu.wav"
+      greet-short="$${recordings_dir}/main-menu-short.wav"
         invalid-sound="ivr/ivr-that_was_an_invalid_entry.wav"
         exit-sound="voicemail/vm-goodbye.wav"
         timeout="7000"

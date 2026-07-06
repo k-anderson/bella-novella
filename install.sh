@@ -11,14 +11,19 @@ FS_GROUP="${FS_GROUP:-freeswitch}"
 
 DO_NETWORK=0
 DO_RESTART=1
+BUILD_SPANDSP=""
+BUILD_SOFIA=""
 
 usage() {
   cat <<USAGE
-Usage: sudo ./install.sh [--network] [--no-restart]
+Usage: sudo ./install.sh [--network] [--no-restart] [--build-spandsp[=BRANCH]] [--build-sofia[=BRANCH]]
 
 Options:
-  --network     Configure eth0 static IP and dnsmasq DHCP scope for ATA.
-  --no-restart  Install files but do not restart FreeSWITCH.
+  --network                 Configure eth0 static IP and dnsmasq DHCP scope for ATA.
+  --no-restart              Install files but do not restart FreeSWITCH.
+  --build-spandsp[=BRANCH]  Build and install SpanDSP from source (optional branch/tag).
+  --build-sofia[=BRANCH]    Build and install Sofia-SIP from source (optional branch/tag).
+  -h, --help                Show this help message.
 USAGE
 }
 
@@ -26,6 +31,10 @@ while [ "$#" -gt 0 ]; do
   case "$1" in
     --network) DO_NETWORK=1 ;;
     --no-restart) DO_RESTART=0 ;;
+    --build-spandsp) BUILD_SPANDSP="master" ;;
+    --build-spandsp=*) BUILD_SPANDSP="${1#*=}" ;;
+    --build-sofia) BUILD_SOFIA="master" ;;
+    --build-sofia=*) BUILD_SOFIA="${1#*=}" ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
   esac
@@ -43,6 +52,97 @@ if [ ! -d "${FS_DIR}" ]; then
 fi
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
+
+echo "==> Installing system files from ${PACKAGE_DIR}/system"
+
+backup_if_exists() {
+  local path="$1"
+  if [ -e "${path}" ]; then
+    cp -a "${path}" "${path}.backup.${STAMP}" || true
+    echo "BACKUP: ${path}.backup.${STAMP}"
+  fi
+}
+
+# profile.d
+backup_if_exists /etc/profile.d/freeswitch-path.sh
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/profile.d/freeswitch-path.sh" /etc/profile.d/freeswitch-path.sh || true
+backup_if_exists /etc/profile.d/freeswitch-pkgconfig.sh
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/profile.d/freeswitch-pkgconfig.sh" /etc/profile.d/freeswitch-pkgconfig.sh || true
+
+# NetworkManager ignore-carrier (file is provided in system/)
+backup_if_exists /etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf" /etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf || true
+
+# sysctl rules
+backup_if_exists /etc/sysctl.d/98-disco-no-routing.conf
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/sysctl.d/98-disco-no-routing.conf" /etc/sysctl.d/98-disco-no-routing.conf || true
+backup_if_exists /etc/sysctl.d/99-freeswitch.conf
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/sysctl.d/99-freeswitch.conf" /etc/sysctl.d/99-freeswitch.conf || true
+sysctl --system >/dev/null || true
+
+# bella-wait helper
+backup_if_exists /usr/local/bin/bella-wait-eth0
+install -D -m 0755 "${PACKAGE_DIR}/system/usr/local/bin/bella-wait-eth0" /usr/local/bin/bella-wait-eth0 || true
+
+# systemd unit and limits
+backup_if_exists /etc/systemd/system/freeswitch.service
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/systemd/system/freeswitch.service" /etc/systemd/system/freeswitch.service || true
+backup_if_exists /etc/security/limits.d/99-freeswitch.conf
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/security/limits.d/99-freeswitch.conf" /etc/security/limits.d/99-freeswitch.conf || true
+
+systemctl daemon-reload || true
+
+build_spandsp() {
+  BRANCH="$1"
+  echo "==> Building SpanDSP (branch: ${BRANCH:-master})"
+  mkdir -p /usr/local/src
+  cd /usr/local/src
+  if [ -d spandsp ]; then
+    cd spandsp
+    git fetch --all || true
+    git checkout "${BRANCH:-master}" || true
+    git pull --ff-only || true
+  else
+    git clone https://github.com/freeswitch/spandsp.git
+    cd spandsp
+    git checkout "${BRANCH:-master}" || true
+  fi
+  ./bootstrap.sh || true
+  ./configure --prefix=/usr/local
+  make -j"$(nproc)"
+  make install
+  ldconfig
+}
+
+build_sofia() {
+  BRANCH="$1"
+  echo "==> Building Sofia-SIP (branch: ${BRANCH:-master})"
+  mkdir -p /usr/local/src
+  cd /usr/local/src
+  if [ -d sofia-sip ]; then
+    cd sofia-sip
+    git fetch --all || true
+    git checkout "${BRANCH:-master}" || true
+    git pull --ff-only || true
+  else
+    git clone https://github.com/freeswitch/sofia-sip.git
+    cd sofia-sip
+    git checkout "${BRANCH:-master}" || true
+  fi
+  ./bootstrap.sh || true
+  ./configure --prefix=/usr/local
+  make -j"$(nproc)"
+  make install
+  ldconfig
+}
+
+if [ -n "${BUILD_SPANDSP}" ]; then
+  build_spandsp "${BUILD_SPANDSP}"
+fi
+
+if [ -n "${BUILD_SOFIA}" ]; then
+  build_sofia "${BUILD_SOFIA}"
+fi
 
 echo "==> Validating required FreeSWITCH modules"
 missing=0
@@ -78,7 +178,7 @@ if [ "${DO_NETWORK}" -eq 1 ]; then
 
   if command -v nmcli >/dev/null 2>&1; then
     mkdir -p /etc/NetworkManager/conf.d
-    cat >/etc/NetworkManager/conf.d/99-bella-eth0-ignore-carrier.conf <<'NMC'
+    cat >/etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf <<'NMC'
 [device]
 match-device=interface-name:eth0
 ignore-carrier=true
@@ -87,7 +187,7 @@ NMC
 
     nmcli con mod netplan-eth0 connection.autoconnect no 2>/dev/null || true
 
-    ATA_CON_NAME="${ATA_CON_NAME:-bella-ata-eth0}"
+    ATA_CON_NAME="${ATA_CON_NAME:-disco-ata-eth0}"
     ATA_IFACE="${ATA_IFACE:-eth0}"
     ATA_IP_CIDR="${ATA_IP_CIDR:-192.168.50.1/24}"
 
@@ -115,20 +215,23 @@ NMC
     echo "WARN: nmcli not found; skipping NetworkManager eth0 configuration"
   fi
 
-  cat >/etc/sysctl.d/98-bella-no-routing.conf <<'SYSCTL'
+  cat >/etc/sysctl.d/98-disco-no-routing.conf <<'SYSCTL'
 net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 SYSCTL
   sysctl --system >/dev/null || true
 
-  if command -v dnsmasq >/dev/null 2>&1; then
-    install -m 0644 "${PACKAGE_DIR}/network/bella-ata-dnsmasq.conf" /etc/dnsmasq.d/bella-ata.conf
-    systemctl enable dnsmasq >/dev/null 2>&1 || true
-    systemctl restart dnsmasq
-    echo "OK: dnsmasq DHCP scope installed"
-  else
-    echo "WARN: dnsmasq is not installed. Install it with: sudo apt install dnsmasq"
-  fi
+    if command -v dnsmasq >/dev/null 2>&1; then
+      if [ -f "${PACKAGE_DIR}/system/etc/dnsmasq.d/disco-ata.conf" ]; then
+        backup_if_exists /etc/dnsmasq.d/disco-ata.conf
+        install -m 0644 "${PACKAGE_DIR}/system/etc/dnsmasq.d/disco-ata.conf" /etc/dnsmasq.d/disco-ata.conf
+      fi
+      systemctl enable dnsmasq >/dev/null 2>&1 || true
+      systemctl restart dnsmasq
+      echo "OK: dnsmasq DHCP scope installed"
+    else
+      echo "WARN: dnsmasq is not installed. Install it with: sudo apt install dnsmasq"
+    fi
 fi
 
 SCRIPT="${FS_DIR}/scripts/disco-relay"
@@ -142,13 +245,15 @@ else
   echo "WARN: $SCRIPT not found in repo. Make sure scripts/disco-relay exists." >&2
 fi
 
-cat >/tmp/disco-relay-sudoers <<EOF
+tmp_sudoers_file=$(mktemp)
+cat >"${tmp_sudoers_file}" <<EOF
 bella ALL=(root) NOPASSWD: $SCRIPT
 freeswitch ALL=(root) NOPASSWD: $SCRIPT
 EOF
 
-install -m 0440 /tmp/disco-relay-sudoers "$SUDOERS"
-rm -f /tmp/disco-relay-sudoers
+backup_if_exists "$SUDOERS"
+install -m 0440 "${tmp_sudoers_file}" "$SUDOERS"
+rm -f "${tmp_sudoers_file}"
 
 if visudo -c >/dev/null 2>&1; then
   echo "sudoers file installed and valid: $SUDOERS"
@@ -168,7 +273,7 @@ else
 fi
 
 echo "==> Installing IVR fallback prompt symlinks if needed"
-DISCO_SOUND_DIR="${FS_DIR}/sounds/en/us/callie/disco"
+DISCO_SOUND_DIR="${FS_DIR}/recordings"
 mkdir -p "${DISCO_SOUND_DIR}"
 FALLBACK="${FS_DIR}/sounds/en/us/callie/ivr/ivr-welcome_to_freeswitch.wav"
 if [ -f "${FALLBACK}" ]; then

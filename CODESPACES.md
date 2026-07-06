@@ -53,7 +53,7 @@ fs_cli -x 'reloadxml'             # after editing conf/
 
 ## Simulating the actuator (no hardware)
 
-The IVR runs `sudo /usr/local/bin/disco-relay raise|lower ...` via `bgsystem`. You can also run it
+The IVR runs `sudo /usr/local/freeswitch/scripts/disco-relay raise|lower ...` via `bgsystem`. You can also run it
 directly:
 
 ```bash

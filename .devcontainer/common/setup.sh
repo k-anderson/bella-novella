@@ -68,12 +68,13 @@ install -m 0755 "${COMMON_DIR}/gpio-stubs/raspi-gpio" /usr/local/bin/raspi-gpio
 log "installed GPIO stubs (pinctrl, raspi-gpio); activity -> /var/log/disco-gpio.log"
 
 # ---------------------------------------------------------------------------
-# 5. disco-relay on PATH at the location conf/vars.xml expects
-#    (/usr/local/bin/disco-relay). Running as root, the dialplan's
-#    `/usr/bin/sudo /usr/local/bin/disco-relay ...` works with no sudoers rule.
+# 5. disco-relay location
+#    The repo contains `scripts/disco-relay` and FreeSWITCH is configured to
+#    call the script from /usr/local/freeswitch/scripts. No system-wide
+#    /usr/local/bin installation is required for Codespaces.
 # ---------------------------------------------------------------------------
-ln -sfn "${REPO_ROOT}/scripts/disco-relay" /usr/local/bin/disco-relay
-log "linked /usr/local/bin/disco-relay"
+ln -sfn "${REPO_ROOT}/scripts/disco-relay" /usr/local/freeswitch/scripts/disco-relay
+log "linked /usr/local/freeswitch/scripts/disco-relay"
 
 # ---------------------------------------------------------------------------
 # 6. Convenience launcher on PATH. fs_cli is used directly (the image puts
@@ -91,8 +92,8 @@ cat <<'DONE'
   fs_cli              # attach to the running FreeSWITCH (defaults: 127.0.0.1:8021 / ClueCon)
   fs_cli -x 'sofia status'
 
-  sudo disco-relay raise 5 15    # simulate the actuator (logged, no hardware)
-  disco-relay status
+  sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15    # simulate the actuator (logged, no hardware)
+  /usr/local/freeswitch/scripts/disco-relay status
 
   bash .devcontainer/common/softphone-test.sh    # full IVR/DTMF/intercom test
 

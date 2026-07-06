@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+IFACE="${1:-eth0}"
+IP="${2:-192.168.50.1}"
+TIMEOUT="${3:-30}"
+
+for i in $(seq 1 "$TIMEOUT"); do
+  if ip -4 addr show dev "$IFACE" | grep -q "${IP}/"; then
+    exit 0
+  fi
+  sleep 1
+done
+
+echo "ERROR: ${IFACE} did not get ${IP} within ${TIMEOUT}s" >&2
+ip -br addr >&2
+exit 1

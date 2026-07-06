@@ -8,11 +8,11 @@
       <action application="playback" data="tone_stream://%(250,100,800);%(250,100,1000);%(500,100,1200)"/>
 
       <!-- Record up to 30 seconds. Stops earlier after detected silence. -->
-      <action application="record" data="$${sound_prefix}/disco/main-menu.wav 30 200 5"/>
+      <action application="record" data="$${recordings_dir}/main-menu.wav 30 200 5"/>
 
       <!-- Playback the newly recorded greeting for review. -->
       <action application="sleep" data="500"/>
-      <action application="playback" data="$${sound_prefix}/disco/main-menu.wav"/>
+      <action application="playback" data="$${recordings_dir}/main-menu.wav"/>
       <action application="sleep" data="500"/>
 
       <!-- Return to the IVR so you can test it immediately. -->

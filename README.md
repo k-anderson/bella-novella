@@ -50,7 +50,7 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`lib/`](lib/) | `libfreeswitch.so`. | stock |
 | [`mod/`](mod/) | Loadable modules (`.so`), **aarch64**. Only a minimal set is used. | stock |
 | [`include/`](include/) | FreeSWITCH C headers. | stock |
-| [`sounds/`](sounds/) | Prompt audio and hold music. The recorded IVR greeting lives under `sounds/en/us/callie/disco/`. | stock + recording |
+| [`sounds/`](sounds/) | Prompt audio and hold music. The recorded IVR greeting lives under `recordings/`. | stock + recording |
 | [`fonts/`](fonts/), [`htdocs/`](htdocs/), [`images/`](images/) | Assets shipped with FreeSWITCH (unused by this appliance). | stock |
 | [`certs/`](certs/) | TLS/DTLS certificates. | stock |
 | `db/`, `log/`, `run/` | Runtime state (SQLite DBs, logs, PID). **Regenerated on boot; git-ignored.** | generated |
@@ -81,7 +81,7 @@ destination handled by the dialplan.
 
 ### 2. The menu
 [`disco_main_menu.xml`](conf/ivr_menus/disco_main_menu.xml) plays the greeting
-(`sounds/en/us/callie/disco/main-menu.wav`) and maps single digits:
+(`recordings/main-menu.wav`) and maps single digits:
 
 | Digit | Transfers to | Action |
 |---|---|---|
@@ -97,7 +97,7 @@ destination handled by the dialplan.
   **102**, from **102** it bridges to **101** (with an "invalid entry" fallback for anything
   else). `hangup_after_bridge` ends the call when the parties hang up.
 - **Raise (`DISCO_RAISE`)** — runs `bgsystem $${disco_raise}` (→
-  `sudo /usr/local/bin/disco-relay raise 5 15`) and plays a **rising** tone sweep, then hangs up.
+  `sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15`) and plays a **rising** tone sweep, then hangs up.
 - **Lower (`DISCO_LOWER`)** — runs `bgsystem $${disco_lower}` (→ `disco-relay lower 5 15`) and
   plays a **falling** tone sweep, then hangs up.
 
@@ -160,6 +160,6 @@ Codespaces doesn't forward). Physical testing stays on the Pi.
 
 Because the whole install tree is tracked (minus runtime-generated files), a fresh Pi can be
 brought up by placing this repo at `/usr/local/freeswitch`. The relay script is expected at
-`/usr/local/bin/disco-relay` with a passwordless sudo rule for the FreeSWITCH user (that sudoers
+`/usr/local/freeswitch/scripts/disco-relay` with a passwordless sudo rule for the FreeSWITCH user (that sudoers
 entry is host configuration and is intentionally **not** in this repo). Only `db/*.db`, `log/*`,
 `run/*.pid`, and `*.backup.*` are excluded — they regenerate on first boot.

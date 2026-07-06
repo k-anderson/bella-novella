@@ -1,0 +1,2 @@
+bella ALL=(root) NOPASSWD: /usr/local/freeswitch/scripts/disco-relay
+freeswitch ALL=(root) NOPASSWD: /usr/local/freeswitch/scripts/disco-relay
