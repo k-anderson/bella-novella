@@ -143,6 +143,42 @@ CPUPOWER
   systemctl enable cpupower.service 2>/dev/null || true
   systemctl restart cpupower.service 2>/dev/null || true
 
+  # --- Disable the ondemand governor service (it overrides 'performance') -----
+  # cpufrequtils/raspi-config ship an 'ondemand' unit that sets the governor at
+  # boot AFTER cpupower.service, silently undoing the performance setting above.
+  systemctl disable --now ondemand 2>/dev/null || true
+
+  # --- Disable swap: any swapping risks audio glitches on a media appliance ---
+  if command -v dphys-swapfile >/dev/null 2>&1; then
+    dphys-swapfile swapoff 2>/dev/null || true
+  fi
+  systemctl disable --now dphys-swapfile 2>/dev/null || true
+  swapoff -a 2>/dev/null || true
+
+  # --- Reduce SD-card writes: root noatime + keep the journal in RAM ----------
+  if [ -f /etc/fstab ] && ! awk '$2=="/"{print $4}' /etc/fstab | grep -q noatime; then
+    backup_if_exists /etc/fstab
+    sed -i -E '/[[:space:]]\/[[:space:]]/ s/(defaults)/\1,noatime/' /etc/fstab || true
+    echo "OK: added noatime to root mount in /etc/fstab"
+  fi
+  mkdir -p /etc/systemd/journald.conf.d
+  cat >/etc/systemd/journald.conf.d/99-freeswitch.conf <<'JOURNALD'
+[Journal]
+# Bella Novella: keep the journal in RAM to avoid SD-card wear on the appliance.
+Storage=volatile
+RuntimeMaxUse=64M
+JOURNALD
+  systemctl restart systemd-journald 2>/dev/null || true
+
+  # --- Hardware watchdog: auto-recover the appliance from a hard hang ---------
+  mkdir -p /etc/systemd/system.conf.d
+  cat >/etc/systemd/system.conf.d/99-freeswitch-watchdog.conf <<'WATCHDOG'
+[Manager]
+# Bella Novella: arm the Raspberry Pi hardware watchdog. Takes effect on reboot.
+RuntimeWatchdogSec=15s
+RebootWatchdogSec=2min
+WATCHDOG
+
   echo "OK: fresh-Pi bootstrap complete"
 }
 
@@ -433,11 +469,12 @@ IVR options:
   1 = call the other phone
   2 = raise actuator
   3 = lower actuator
+  4 = stop / brake
 
 Relay command:
   /usr/local/freeswitch/scripts/disco-relay status
-  /usr/local/freeswitch/scripts/disco-relay raise 10
-  /usr/local/freeswitch/scripts/disco-relay lower 10
+  /usr/local/freeswitch/scripts/disco-relay raise 10 40
+  /usr/local/freeswitch/scripts/disco-relay lower 10 60
   /usr/local/freeswitch/scripts/disco-relay brake
 
 Useful checks:

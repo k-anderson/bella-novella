@@ -35,20 +35,48 @@
     </condition>
   </extension>
 
-  <!-- IVR option 2: raise/extend actuator for configured time, then brake. -->
+  <!-- IVR option 2: raise the actuator. The relay script prints "busy" if a
+       movement is already running, otherwise "started"; branch on the result. -->
   <extension name="disco-raise">
     <condition field="destination_number" expression="^DISCO_RAISE$">
-      <action application="bgsystem" data="$${disco_raise}"/>
-      <action application="playback" data="tone_stream://%(300,100,700);%(300,100,900);%(300,100,1100)"/>
-      <action application="hangup" data="NORMAL_CLEARING"/>
+      <action application="set" data="disco_move=${system($${disco_raise})}"/>
+      <action application="transfer" data="DISCO_RAISE_RESULT XML default"/>
     </condition>
   </extension>
 
-  <!-- IVR option 3: lower/retract actuator for configured time, then brake. -->
+  <extension name="disco-raise-result">
+    <condition field="destination_number" expression="^DISCO_RAISE_RESULT$"/>
+    <condition field="${disco_move}" expression="busy">
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+      <anti-action application="playback" data="tone_stream://%(300,100,700);%(300,100,900);%(300,100,1100)"/>
+      <anti-action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 3: lower the actuator. Same busy/started handling as raise. -->
   <extension name="disco-lower">
     <condition field="destination_number" expression="^DISCO_LOWER$">
-      <action application="bgsystem" data="$${disco_lower}"/>
-      <action application="playback" data="tone_stream://%(300,100,1100);%(300,100,900);%(300,100,700)"/>
+      <action application="set" data="disco_move=${system($${disco_lower})}"/>
+      <action application="transfer" data="DISCO_LOWER_RESULT XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="disco-lower-result">
+    <condition field="destination_number" expression="^DISCO_LOWER_RESULT$"/>
+    <condition field="${disco_move}" expression="busy">
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="hangup" data="NORMAL_CLEARING"/>
+      <anti-action application="playback" data="tone_stream://%(300,100,1100);%(300,100,900);%(300,100,700)"/>
+      <anti-action application="hangup" data="NORMAL_CLEARING"/>
+    </condition>
+  </extension>
+
+  <!-- IVR option 4: stop/brake. Cancels any movement in progress. -->
+  <extension name="disco-stop">
+    <condition field="destination_number" expression="^DISCO_STOP$">
+      <action application="system" data="$${disco_stop}"/>
+      <action application="playback" data="tone_stream://%(500,0,480,620)"/>
       <action application="hangup" data="NORMAL_CLEARING"/>
     </condition>
   </extension>

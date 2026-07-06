@@ -13,25 +13,17 @@ set -euo pipefail
 #   K2 NO  -> +V
 #
 # Therefore:
-#   brake/default: K1 OFF, K2 OFF = A 0V, B 0V
-#   raise/extend:  K1 ON,  K2 OFF = A +V, B 0V
-#   lower/retract: K1 OFF, K2 ON  = A 0V, B +V
+#   motor stop/default: K1 OFF, K2 OFF = A 0V, B 0V
+#   motor up/extend:    K1 ON,  K2 OFF = A +V, B 0V
+#   motor down/retract: K1 OFF, K2 ON  = A 0V, B +V
 #
-# Relay 3 behavior:
+# Spot lights (Relay 3 / K3):
 #   raise <seconds> [percent]:
-#     K3 turns ON after <percent>% of the raise time.
-#     K3 stays ON after the raise finishes.
+#     Spot lights turn ON after <percent>% of the raise time and stay ON.
 #
 #   lower <seconds> [percent]:
-#     K3 remains ON at the start of lowering.
-#     K3 turns OFF after <percent>% of the lower time.
-#     K3 stays OFF after the lower finishes.
-#
-#   initialize <seconds> [percent]:
-#     K3 turns OFF immediately.
-#     actuator lowers for <seconds>.
-#     K1/K2 return to brake/default.
-#     K3 is forced OFF again.
+#     Spot lights start ON and turn OFF after <percent>% of the lower time,
+#     staying OFF when the movement finishes.
 #
 # Waveshare relay HAT mapping:
 #   K1 / Relay 1: P25 / BCM 26 / physical pin 37
@@ -47,49 +39,39 @@ K2_GPIO=20
 K3_GPIO=21
 
 LOCK_FILE="/run/disco-relay.lock"
+PID_FILE="/run/disco-relay.pid"
 LOG_TAG="disco-relay"
 SETTLE_TIME="0.15"
 
-K3_RAISE_ON_AFTER_PERCENT_DEFAULT=50
-K3_LOWER_OFF_AFTER_PERCENT_DEFAULT=50
-INITIALIZE_SECONDS_DEFAULT=10
-INITIALIZE_K3_OFF_AFTER_PERCENT_DEFAULT=0
+SPOT_LIGHTS_ON_AFTER_PERCENT_DEFAULT=50
+SPOT_LIGHTS_OFF_AFTER_PERCENT_DEFAULT=50
 
 usage() {
   cat <<USAGE
 Usage:
+  disco-relay raise <seconds> [spot_lights_on_after_percent]
+  disco-relay lower <seconds> [spot_lights_off_after_percent]
   disco-relay brake
-  disco-relay raise <seconds> [k3_on_after_percent]
-  disco-relay lower <seconds> [k3_off_after_percent]
-  disco-relay initialize [seconds] [k3_off_after_percent]
-  disco-relay raised
-  disco-relay lowered
   disco-relay status
 
-Aliases:
-  brake:      stop, default
-  raise:      up, extend
-  lower:      down, retract
-  initialize: init, home, startup
-  raised:     open, extended
-  lowered:    closed, retracted
+Behavior:
+  raise:  run the motor up for <seconds>; turn the spot lights ON after the
+          given percent of that time; leave the lights ON when finished.
+  lower:  run the motor down for <seconds>; turn the spot lights OFF after the
+          given percent of that time; leave the lights OFF when finished.
+  brake:  immediately stop the motor and cancel any movement in progress.
+  status: print the current relay states and whether a movement is running.
+
+Concurrency:
+  raise/lower take a non-blocking lock and run the movement in the background.
+  If a movement is already running the command prints "busy" and makes no
+  change; otherwise it prints "started". brake always preempts.
 
 Examples:
-  disco-relay brake
   disco-relay raise 10 40
   disco-relay lower 10 60
-  disco-relay initialize
-  disco-relay initialize 12 0
+  disco-relay brake
   disco-relay status
-
-Startup initialize:
-  disco-relay initialize 10 0
-
-  Meaning:
-    force K3 OFF immediately
-    lower for 10 seconds
-    keep/force K3 OFF
-    return K1/K2 to brake/default
 USAGE
 }
 
@@ -172,224 +154,211 @@ calc() {
   awk "BEGIN { printf \"%.3f\", $* }"
 }
 
-state_brake() {
+motor_stop() {
   relay_off "$K1_GPIO"
   relay_off "$K2_GPIO"
 
-  logger -t "$LOG_TAG" "state=brake k1=off k2=off actuator_a=0v actuator_b=0v"
-  echo "state=brake actuator_a=0V actuator_b=0V"
+  logger -t "$LOG_TAG" "motor=stop k1=off k2=off actuator_a=0v actuator_b=0v"
+  echo "motor=stop actuator_a=0V actuator_b=0V"
 }
 
-state_raise() {
+motor_up() {
   relay_on  "$K1_GPIO"
   relay_off "$K2_GPIO"
 
-  logger -t "$LOG_TAG" "state=raise k1=on k2=off actuator_a=+v actuator_b=0v"
-  echo "state=raise actuator_a=+V actuator_b=0V"
+  logger -t "$LOG_TAG" "motor=up k1=on k2=off actuator_a=+v actuator_b=0v"
+  echo "motor=up actuator_a=+V actuator_b=0V"
 }
 
-state_lower() {
+motor_down() {
   relay_off "$K1_GPIO"
   relay_on  "$K2_GPIO"
 
-  logger -t "$LOG_TAG" "state=lower k1=off k2=on actuator_a=0v actuator_b=+v"
-  echo "state=lower actuator_a=0V actuator_b=+V"
+  logger -t "$LOG_TAG" "motor=down k1=off k2=on actuator_a=0v actuator_b=+v"
+  echo "motor=down actuator_a=0V actuator_b=+V"
 }
 
-k3_on() {
+spot_lights_on() {
   relay_on "$K3_GPIO"
-  logger -t "$LOG_TAG" "k3=on"
-  echo "k3=on"
+  logger -t "$LOG_TAG" "spot_lights=on"
+  echo "spot_lights=on"
 }
 
-k3_off() {
+spot_lights_off() {
   relay_off "$K3_GPIO"
-  logger -t "$LOG_TAG" "k3=off"
-  echo "k3=off"
+  logger -t "$LOG_TAG" "spot_lights=off"
+  echo "spot_lights=off"
 }
 
-cmd_raise() {
+perform_raise() {
   local seconds="$1"
-  local on_after_percent="${2:-$K3_RAISE_ON_AFTER_PERCENT_DEFAULT}"
+  local on_after_percent="$2"
 
-  valid_seconds "$seconds"
-  valid_percent "k3_on_after_percent" "$on_after_percent"
+  # brake (or any TERM) preempts this movement cleanly.
+  trap 'motor_stop; rm -f "$PID_FILE"; exit 143' TERM INT
+  trap 'rm -f "$PID_FILE"' EXIT
 
-  local k3_on_at
-  local before_k3_on
-  local after_k3_on
+  local lights_on_at before_lights_on after_lights_on
+  lights_on_at="$(calc "$seconds * $on_after_percent / 100")"
+  before_lights_on="$lights_on_at"
+  after_lights_on="$(calc "$seconds - $lights_on_at")"
 
-  k3_on_at="$(calc "$seconds * $on_after_percent / 100")"
-  before_k3_on="$k3_on_at"
-  after_k3_on="$(calc "$seconds - $k3_on_at")"
+  logger -t "$LOG_TAG" "perform=raise seconds=${seconds} spot_lights_on_after_percent=${on_after_percent} spot_lights_on_at=${lights_on_at}s"
 
-  logger -t "$LOG_TAG" "cmd=raise seconds=${seconds} k3_on_after_percent=${on_after_percent} k3_on_at=${k3_on_at}s"
-  echo "raise: total=${seconds}s k3_on_at=${k3_on_at}s"
-
-  state_brake
+  motor_stop
   sleep "$SETTLE_TIME"
 
-  state_raise
+  motor_up
 
-  sleep "$before_k3_on"
-  k3_on
+  sleep "$before_lights_on"
+  spot_lights_on
 
-  sleep "$after_k3_on"
+  sleep "$after_lights_on"
 
-  state_brake
-  k3_on
+  motor_stop
+  spot_lights_on
 }
 
-cmd_lower() {
+perform_lower() {
   local seconds="$1"
-  local off_after_percent="${2:-$K3_LOWER_OFF_AFTER_PERCENT_DEFAULT}"
+  local off_after_percent="$2"
 
-  valid_seconds "$seconds"
-  valid_percent "k3_off_after_percent" "$off_after_percent"
+  # brake (or any TERM) preempts this movement cleanly.
+  trap 'motor_stop; rm -f "$PID_FILE"; exit 143' TERM INT
+  trap 'rm -f "$PID_FILE"' EXIT
 
-  local k3_off_at
-  local before_k3_off
-  local after_k3_off
+  local lights_off_at before_lights_off after_lights_off
+  lights_off_at="$(calc "$seconds * $off_after_percent / 100")"
+  before_lights_off="$lights_off_at"
+  after_lights_off="$(calc "$seconds - $lights_off_at")"
 
-  k3_off_at="$(calc "$seconds * $off_after_percent / 100")"
-  before_k3_off="$k3_off_at"
-  after_k3_off="$(calc "$seconds - $k3_off_at")"
+  logger -t "$LOG_TAG" "perform=lower seconds=${seconds} spot_lights_off_after_percent=${off_after_percent} spot_lights_off_at=${lights_off_at}s"
 
-  logger -t "$LOG_TAG" "cmd=lower seconds=${seconds} k3_off_after_percent=${off_after_percent} k3_off_at=${k3_off_at}s"
-  echo "lower: total=${seconds}s k3_off_at=${k3_off_at}s"
+  # Spot lights start ON, then turn OFF after the configured percentage.
+  spot_lights_on
 
-  # Normal lower behavior: leave K3 on initially, then turn it off after percentage.
-  k3_on
-
-  state_brake
+  motor_stop
   sleep "$SETTLE_TIME"
 
-  state_lower
+  motor_down
 
-  sleep "$before_k3_off"
-  k3_off
+  sleep "$before_lights_off"
+  spot_lights_off
 
-  sleep "$after_k3_off"
+  sleep "$after_lights_off"
 
-  state_brake
-  k3_off
+  motor_stop
+  spot_lights_off
 }
 
-cmd_initialize() {
-  local seconds="${1:-$INITIALIZE_SECONDS_DEFAULT}"
-  local off_after_percent="${2:-$INITIALIZE_K3_OFF_AFTER_PERCENT_DEFAULT}"
+start_move() {
+  local direction="$1"
+  local seconds="${2:-}"
+  local percent="${3:-}"
 
+  if [ -z "$seconds" ]; then
+    echo "ERROR: ${direction} requires seconds" >&2
+    usage >&2
+    exit 2
+  fi
   valid_seconds "$seconds"
-  valid_percent "initialize_k3_off_after_percent" "$off_after_percent"
 
-  local k3_off_at
-  local before_k3_off
-  local after_k3_off
+  if [ "$direction" = "up" ]; then
+    percent="${percent:-$SPOT_LIGHTS_ON_AFTER_PERCENT_DEFAULT}"
+    valid_percent "spot_lights_on_after_percent" "$percent"
+  else
+    percent="${percent:-$SPOT_LIGHTS_OFF_AFTER_PERCENT_DEFAULT}"
+    valid_percent "spot_lights_off_after_percent" "$percent"
+  fi
 
-  k3_off_at="$(calc "$seconds * $off_after_percent / 100")"
-  before_k3_off="$k3_off_at"
-  after_k3_off="$(calc "$seconds - $k3_off_at")"
+  mkdir -p "$(dirname "$LOCK_FILE")"
 
-  logger -t "$LOG_TAG" "cmd=initialize seconds=${seconds} k3_off_after_percent=${off_after_percent} k3_off_at=${k3_off_at}s"
-  echo "initialize: lower=${seconds}s k3_forced_off_at=${k3_off_at}s"
+  # Non-blocking lock: if a movement is already running, reject immediately so
+  # the dialplan can tell the caller instead of queueing another movement.
+  exec 9>"$LOCK_FILE"
+  if ! flock -n 9; then
+    logger -t "$LOG_TAG" "rejected reason=busy direction=${direction}"
+    printf 'busy'
+    return 0
+  fi
 
-  # Startup safety: lights/status relay off immediately.
-  k3_off
+  # Run the movement in the background so the caller (FreeSWITCH) returns at
+  # once. The child inherits fd 9 and therefore holds the lock for the whole
+  # movement; its output is detached so the caller sees EOF immediately.
+  if [ "$direction" = "up" ]; then
+    perform_raise "$seconds" "$percent" >/dev/null 2>&1 </dev/null &
+  else
+    perform_lower "$seconds" "$percent" >/dev/null 2>&1 </dev/null &
+  fi
+  echo "$!" >"$PID_FILE" 2>/dev/null || true
 
-  # Normalize before moving.
-  state_brake
-  sleep "$SETTLE_TIME"
-
-  # Run lower/retract.
-  state_lower
-
-  # This allows a nonzero percent if desired, but default is 0.
-  sleep "$before_k3_off"
-  k3_off
-
-  sleep "$after_k3_off"
-
-  # Final startup-safe state.
-  state_brake
-  k3_off
-
-  logger -t "$LOG_TAG" "cmd=initialize complete state=lowered k3=off"
-  echo "initialize=complete state=lowered k3=off"
+  logger -t "$LOG_TAG" "started direction=${direction} seconds=${seconds} percent=${percent} pid=$!"
+  printf 'started'
 }
 
-cmd_raised() {
-  state_brake
-  k3_on
-  logger -t "$LOG_TAG" "position=raised"
-  echo "position=raised"
+run_stop() {
+  # brake preempts any in-progress movement, then forces the motor off.
+  if [ -f "$PID_FILE" ]; then
+    local pid
+    pid="$(cat "$PID_FILE" 2>/dev/null || true)"
+    if [ -n "${pid}" ] && kill -0 "$pid" 2>/dev/null; then
+      kill -TERM "$pid" 2>/dev/null || true
+      for _ in 1 2 3 4 5; do
+        kill -0 "$pid" 2>/dev/null || break
+        sleep 0.1
+      done
+    fi
+    rm -f "$PID_FILE"
+  fi
+
+  motor_stop
+  logger -t "$LOG_TAG" "cmd=brake state=stopped"
 }
 
-cmd_lowered() {
-  state_brake
-  k3_off
-  logger -t "$LOG_TAG" "position=lowered"
-  echo "position=lowered"
-}
-
-cmd_status() {
-  echo "K1 / Relay 1 / GPIO ${K1_GPIO}: $(gpio_get "$K1_GPIO")"
-  echo "K2 / Relay 2 / GPIO ${K2_GPIO}: $(gpio_get "$K2_GPIO")"
-  echo "K3 / Relay 3 / GPIO ${K3_GPIO}: $(gpio_get "$K3_GPIO")"
+show_status() {
+  echo "K1 / Relay 1 / GPIO ${K1_GPIO} (motor A): $(gpio_get "$K1_GPIO")"
+  echo "K2 / Relay 2 / GPIO ${K2_GPIO} (motor B): $(gpio_get "$K2_GPIO")"
+  echo "K3 / Relay 3 / GPIO ${K3_GPIO} (spot lights): $(gpio_get "$K3_GPIO")"
   echo
   echo "Logical states:"
   echo "  Relay ON  = GPIO low"
   echo "  Relay OFF = GPIO high"
   echo
-  echo "  brake/default = K1 OFF, K2 OFF = A 0V, B 0V"
-  echo "  raise         = K1 ON,  K2 OFF = A +V, B 0V"
-  echo "  lower         = K1 OFF, K2 ON  = A 0V, B +V"
+  echo "  motor stop = K1 OFF, K2 OFF = A 0V, B 0V"
+  echo "  motor up   = K1 ON,  K2 OFF = A +V, B 0V"
+  echo "  motor down = K1 OFF, K2 ON  = A 0V, B +V"
   echo
-  echo "K3 timing defaults:"
-  echo "  raise:      K3 ON after ${K3_RAISE_ON_AFTER_PERCENT_DEFAULT}% of raise time"
-  echo "  lower:      K3 OFF after ${K3_LOWER_OFF_AFTER_PERCENT_DEFAULT}% of lower time"
-  echo "  initialize: K3 OFF immediately, lower for ${INITIALIZE_SECONDS_DEFAULT}s, final K3 OFF"
+  echo "Spot-light timing defaults:"
+  echo "  raise: lights ON after ${SPOT_LIGHTS_ON_AFTER_PERCENT_DEFAULT}% of raise time"
+  echo "  lower: lights OFF after ${SPOT_LIGHTS_OFF_AFTER_PERCENT_DEFAULT}% of lower time"
+  echo
+  if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null; then
+    echo "Movement: IN PROGRESS (pid $(cat "$PID_FILE"))"
+  else
+    echo "Movement: idle"
+  fi
 }
 
-main_locked() {
+main() {
   local cmd="${1:-}"
 
   case "$cmd" in
-    brake|stop|default)
-      state_brake
+    raise)
+      shift
+      start_move up "$@"
       ;;
 
-    raise|up|extend)
-      if [ "$#" -lt 2 ]; then
-        echo "ERROR: ${cmd} requires seconds" >&2
-        usage >&2
-        exit 2
-      fi
-      cmd_raise "$2" "${3:-$K3_RAISE_ON_AFTER_PERCENT_DEFAULT}"
+    lower)
+      shift
+      start_move down "$@"
       ;;
 
-    lower|down|retract)
-      if [ "$#" -lt 2 ]; then
-        echo "ERROR: ${cmd} requires seconds" >&2
-        usage >&2
-        exit 2
-      fi
-      cmd_lower "$2" "${3:-$K3_LOWER_OFF_AFTER_PERCENT_DEFAULT}"
-      ;;
-
-    initialize|init|home|startup)
-      cmd_initialize "${2:-$INITIALIZE_SECONDS_DEFAULT}" "${3:-$INITIALIZE_K3_OFF_AFTER_PERCENT_DEFAULT}"
-      ;;
-
-    raised|open|extended)
-      cmd_raised
-      ;;
-
-    lowered|closed|retracted)
-      cmd_lowered
+    brake)
+      run_stop
       ;;
 
     status)
-      cmd_status
+      show_status
       ;;
 
     -h|--help|help|'')
@@ -402,16 +371,6 @@ main_locked() {
       exit 2
       ;;
   esac
-}
-
-main() {
-  mkdir -p "$(dirname "$LOCK_FILE")"
-
-  # Prevent overlapping actuator commands from simultaneous IVR calls or boot services.
-  exec 9>"$LOCK_FILE"
-  flock -x 9
-
-  main_locked "$@"
 }
 
 main "$@"

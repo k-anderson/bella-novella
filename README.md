@@ -86,8 +86,9 @@ destination handled by the dialplan.
 | Digit | Transfers to | Action |
 |---|---|---|
 | **1** | `DISCO_CALL_OTHER` | Intercom the *other* line |
-| **2** | `DISCO_RAISE` | Raise / extend the actuator |
-| **3** | `DISCO_LOWER` | Lower / retract the actuator |
+| **2** | `DISCO_RAISE` | Raise the actuator (rejected if one is already moving) |
+| **3** | `DISCO_LOWER` | Lower the actuator (rejected if one is already moving) |
+| **4** | `DISCO_STOP` | Stop / brake — cancels any movement in progress |
 | **9** | `DISCO_RECORD_GREETING` | Re-record the menu greeting (hidden/admin) |
 
 ### 3.3 The actions
@@ -96,10 +97,15 @@ destination handled by the dialplan.
 - **Intercom (`DISCO_CALL_OTHER`)** — checks the caller's SIP user: from **101** it bridges to
   **102**, from **102** it bridges to **101** (with an "invalid entry" fallback for anything
   else). `hangup_after_bridge` ends the call when the parties hang up.
-- **Raise (`DISCO_RAISE`)** — runs `bgsystem $${disco_raise}` (→
-  `sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15`) and plays a **rising** tone sweep, then hangs up.
-- **Lower (`DISCO_LOWER`)** — runs `bgsystem $${disco_lower}` (→ `disco-relay lower 5 15`) and
-  plays a **falling** tone sweep, then hangs up.
+- **Raise (`DISCO_RAISE`)** — captures `${system($${disco_raise})}` (→
+  `sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15`). The relay script returns
+  immediately with `started` or `busy`; on `busy` (a movement is already running) the caller
+  hears the **invalid entry** prompt, otherwise a **rising** tone sweep. Either way the call then
+  hangs up.
+- **Lower (`DISCO_LOWER`)** — same busy/started handling as raise (→ `disco-relay lower 5 15`),
+  with a **falling** tone sweep on success.
+- **Stop (`DISCO_STOP`)** — runs `system $${disco_stop}` (→ `disco-relay brake`), which cancels
+  any in-progress movement and stops the motor, then plays a short confirmation tone and hangs up.
 
 [`10_disco_record_greeting.xml`](conf/dialplan/default/10_disco_record_greeting.xml):
 
@@ -108,15 +114,22 @@ destination handled by the dialplan.
   hear it live.
 
 ### 3.4 The relay controller
-[`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`initialize` into
+[`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status` into
 timed GPIO relay states on the Waveshare HAT:
 
-- **K1/K2** set actuator direction: `raise` = K1 on, `lower` = K2 on, `brake` = both off.
-- **K3** is an auxiliary relay toggled at a configurable percentage of the travel time.
-- A `flock` guard prevents overlapping actuator commands from simultaneous calls.
+- **K1/K2** drive the actuator motor: `raise` = `motor_up` (K1 on), `lower` = `motor_down`
+  (K2 on), `brake` = `motor_stop` (both off).
+- **K3** is the **spot lights**, switched (`spot_lights_on`/`spot_lights_off`) at a configurable
+  percentage of the travel time.
+- `raise`/`lower` take a **non-blocking** `flock` and run the movement in the **background**: if
+  the lock is already held they print `busy` and change nothing, otherwise they print `started`.
+  This is what lets the dialplan reject a second request instead of queueing it.
+- `brake` **preempts** — it signals the in-progress movement (tracked via
+  `/run/disco-relay.pid`) to stop, then forces the motor off. `status` reports the relay states
+  and whether a movement is running.
 
-`disco_raise=... raise 5 15` means: drive for **5 seconds**, switching K3 at **15%** of that
-time. Tune these in [`conf/vars.xml`](conf/vars.xml).
+`disco_raise=... raise 5 15` means: drive for **5 seconds**, switching the spot lights at **15%**
+of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).
 
 ---
 
@@ -353,8 +366,56 @@ EOF
 systemctl enable --now cpupower.service
 ```
 
-Reboot once after the fresh bootstrap so service pruning, `gpu_mem`, and the governor take full
-effect:
+**Stop the `ondemand` governor service.** Raspberry Pi OS ships an `ondemand` unit that sets the
+governor at boot *after* `cpupower.service`, silently undoing the `performance` setting above:
+
+```sh
+systemctl disable --now ondemand
+```
+
+**Disable swap** — on a media appliance any swapping can cause audio glitches, so turn it off
+entirely rather than relying on low `swappiness`:
+
+```sh
+command -v dphys-swapfile >/dev/null && dphys-swapfile swapoff || true
+systemctl disable --now dphys-swapfile
+swapoff -a
+```
+
+**Reduce SD-card writes** — mount root `noatime` and keep the systemd journal in RAM (the
+persistent journal is the single biggest source of avoidable SD writes and the latency spikes
+they cause):
+
+```sh
+# Add noatime to the root mount only if it isn't already set (backup first).
+if ! awk '$2=="/"{print $4}' /etc/fstab | grep -q noatime; then
+  cp -a /etc/fstab "/etc/fstab.backup.$(date +%Y%m%d-%H%M%S)"
+  sed -i -E '/[[:space:]]\/[[:space:]]/ s/(defaults)/\1,noatime/' /etc/fstab
+fi
+
+mkdir -p /etc/systemd/journald.conf.d
+cat >/etc/systemd/journald.conf.d/99-freeswitch.conf <<'EOF'
+[Journal]
+Storage=volatile
+RuntimeMaxUse=64M
+EOF
+systemctl restart systemd-journald
+```
+
+**Arm the hardware watchdog** so an unattended appliance auto-reboots if it ever hard-hangs
+(takes effect on the next reboot):
+
+```sh
+mkdir -p /etc/systemd/system.conf.d
+cat >/etc/systemd/system.conf.d/99-freeswitch-watchdog.conf <<'EOF'
+[Manager]
+RuntimeWatchdogSec=15s
+RebootWatchdogSec=2min
+EOF
+```
+
+Reboot once after the fresh bootstrap so service pruning, `gpu_mem`, the governor, and the
+watchdog take full effect:
 
 ```sh
 reboot
@@ -375,7 +436,7 @@ install -D -m 0644 system/etc/profile.d/freeswitch-pkgconfig.sh /etc/profile.d/f
 install -D -m 0644 system/etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf \
   /etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf
 
-# Disable IP forwarding + file-handle/socket/swappiness tuning.
+# Disable IP forwarding + file-handle/socket/RTP-buffer/swappiness tuning.
 install -D -m 0644 system/etc/sysctl.d/98-no-routing.conf /etc/sysctl.d/98-no-routing.conf
 install -D -m 0644 system/etc/sysctl.d/99-freeswitch.conf       /etc/sysctl.d/99-freeswitch.conf
 sysctl --system

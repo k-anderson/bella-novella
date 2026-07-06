@@ -30,8 +30,13 @@
 
   <!-- Recordings directory -->
   <X-PRE-PROCESS cmd="set" data="recordings_dir=$${base_dir}/recordings"/>
+  <X-PRE-PROCESS cmd="set" data="messages_dir=$${recordings_dir}/messages"/>
 
   <!-- Linear actuator relay commands -->
   <X-PRE-PROCESS cmd="set" data="disco_raise=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15"/>
   <X-PRE-PROCESS cmd="set" data="disco_lower=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay lower 5 15"/>
+  <X-PRE-PROCESS cmd="set" data="disco_stop=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay brake"/>
+
+  <!-- IVR message store helper (runs as the freeswitch user; no sudo needed) -->
+  <X-PRE-PROCESS cmd="set" data="disco_messages=/usr/local/freeswitch/scripts/disco-messages"/>
 </include>

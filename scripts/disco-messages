@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Message store for the Bella Novella IVR.
+#
+# Recordings live in MESSAGES_DIR as msg_<timestamp>_<uuid>.wav so a lexical
+# sort equals the order received. At most MAX_MESSAGES are kept; older ones are
+# pruned. Files smaller than MIN_BYTES are treated as "no speech" and removed.
+#
+# It runs as the freeswitch user (recordings/ is freeswitch-owned), so no sudo
+# is needed. All output is newline-free so it can be used directly in the
+# FreeSWITCH dialplan via ${system(...)}.
+#
+# Commands:
+#   rotate                  prune empty/no-speech files, keep newest MAX_MESSAGES
+#   count                   print the number of stored messages
+#   resolve <index>         print the absolute path of the 1-based Nth message
+#   step <index> next|prev  print the next/previous clamped index (0 = past end)
+#   invalid-prompt          print a random "invalid entry" prompt (relative path)
+
+MESSAGES_DIR="${DISCO_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
+MAX_MESSAGES="${DISCO_MAX_MESSAGES:-10}"
+MIN_BYTES="${DISCO_MIN_BYTES:-16000}"
+
+INVALID_PROMPTS=(
+  "ivr/ivr-that_was_an_invalid_entry.wav"
+  "ivr/ivr-youre_doing_it_wrong.wav"
+  "ivr/ivr-dude_you_suck.wav"
+  "ivr/ivr-aint_nobody_got_time_for_that.wav"
+  "ivr/ivr-no_no_no.wav"
+  "ivr/ivr-oh_whatever.wav"
+)
+
+# Sorted oldest-first (lexical == chronological because of the name prefix).
+list_messages() {
+  find "$MESSAGES_DIR" -maxdepth 1 -type f -name 'msg_*.wav' 2>/dev/null | sort
+}
+
+cmd_rotate() {
+  mkdir -p "$MESSAGES_DIR"
+
+  # Drop empty / no-speech recordings.
+  local f size
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    size="$(stat -c '%s' "$f" 2>/dev/null || echo 0)"
+    if [ "$size" -lt "$MIN_BYTES" ]; then
+      rm -f "$f"
+    fi
+  done < <(list_messages)
+
+  # Keep only the newest MAX_MESSAGES; delete the oldest beyond that.
+  local files count excess i
+  mapfile -t files < <(list_messages)
+  count="${#files[@]}"
+  if [ "$count" -gt "$MAX_MESSAGES" ]; then
+    excess=$(( count - MAX_MESSAGES ))
+    for (( i = 0; i < excess; i++ )); do
+      rm -f "${files[$i]}"
+    done
+  fi
+}
+
+cmd_count() {
+  local n
+  n="$(list_messages | grep -c . || true)"
+  printf '%s' "${n:-0}"
+}
+
+cmd_resolve() {
+  local idx="${1:-0}"
+  case "$idx" in
+    ''|*[!0-9]*) printf ''; return 0 ;;
+  esac
+  [ "$idx" -ge 1 ] || { printf ''; return 0; }
+
+  local files n
+  mapfile -t files < <(list_messages)
+  n="${#files[@]}"
+  if [ "$idx" -gt "$n" ]; then printf ''; return 0; fi
+  printf '%s' "${files[$(( idx - 1 ))]}"
+}
+
+cmd_step() {
+  local idx="${1:-0}" dir="${2:-next}" n
+  case "$idx" in
+    ''|*[!0-9]*) idx=0 ;;
+  esac
+  n="$(cmd_count)"
+  case "$dir" in
+    next) if [ "$idx" -lt "$n" ]; then printf '%s' "$(( idx + 1 ))"; else printf '0'; fi ;;
+    prev) if [ "$idx" -gt 1 ]; then printf '%s' "$(( idx - 1 ))"; else printf '1'; fi ;;
+    *)    printf '0' ;;
+  esac
+}
+
+cmd_invalid_prompt() {
+  printf '%s' "${INVALID_PROMPTS[$(( RANDOM % ${#INVALID_PROMPTS[@]} ))]}"
+}
+
+main() {
+  local cmd="${1:-}"
+  case "$cmd" in
+    rotate)         cmd_rotate ;;
+    count)          cmd_count ;;
+    resolve)        cmd_resolve "${2:-}" ;;
+    step)           cmd_step "${2:-}" "${3:-}" ;;
+    invalid-prompt) cmd_invalid_prompt ;;
+    *)
+      echo "usage: disco-messages {rotate|count|resolve <index>|step <index> next|prev|invalid-prompt}" >&2
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"
