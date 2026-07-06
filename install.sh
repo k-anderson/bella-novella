@@ -11,14 +11,17 @@ FS_GROUP="${FS_GROUP:-freeswitch}"
 
 DO_NETWORK=0
 DO_RESTART=1
+DO_FRESH=0
 BUILD_SPANDSP=""
 BUILD_SOFIA=""
 
 usage() {
   cat <<USAGE
-Usage: sudo ./install.sh [--network] [--no-restart] [--build-spandsp[=BRANCH]] [--build-sofia[=BRANCH]]
+Usage: sudo ./install.sh [--fresh] [--network] [--no-restart] [--build-spandsp[=BRANCH]] [--build-sofia[=BRANCH]]
 
 Options:
+  --fresh                   Run one-time fresh-Pi bootstrap: install packages, create the
+                            freeswitch user, prune desktop/bloat services, and apply OS tuning.
   --network                 Configure eth0 static IP and dnsmasq DHCP scope for ATA.
   --no-restart              Install files but do not restart FreeSWITCH.
   --build-spandsp[=BRANCH]  Build and install SpanDSP from source (optional branch/tag).
@@ -29,6 +32,7 @@ USAGE
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
+    --fresh) DO_FRESH=1 ;;
     --network) DO_NETWORK=1 ;;
     --no-restart) DO_RESTART=0 ;;
     --build-spandsp) BUILD_SPANDSP="master" ;;
@@ -53,6 +57,95 @@ fi
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
 
+bootstrap_fresh() {
+  echo "==> Fresh-Pi bootstrap (packages, user, service pruning, OS tuning)"
+
+  # --- Packages: build toolchain + FreeSWITCH runtime deps + admin tools -----
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -y || true
+  apt-get install -y \
+    git curl wget ca-certificates gnupg pkg-config \
+    build-essential autoconf automake libtool-bin cmake ninja-build \
+    libssl-dev zlib1g-dev libpcre2-dev libedit-dev libsqlite3-dev \
+    libcurl4-openssl-dev libldns-dev libspeex-dev libspeexdsp-dev \
+    libopus-dev libsndfile1-dev liblua5.4-dev lua5.4 \
+    libpq-dev libtiff-dev libjpeg-dev uuid-dev \
+    yasm nasm python3 python3-dev python3-pip \
+    dnsmasq tshark sngrep sox jq rsync \
+    vim htop iftop tcpdump net-tools unzip lsof tmux ncdu tree \
+    linux-cpupower || true
+
+  # --- FreeSWITCH runtime user/group -----------------------------------------
+  groupadd -r "${FS_GROUP}" 2>/dev/null || true
+  useradd -r -g "${FS_GROUP}" -d "${FS_DIR}" -s /usr/sbin/nologin "${FS_USER}" 2>/dev/null || true
+  chown -R "${FS_USER}:${FS_GROUP}" "${FS_DIR}" 2>/dev/null || true
+
+  # --- Source build directory ------------------------------------------------
+  mkdir -p /usr/local/src
+  chown -R root:root /usr/local/src 2>/dev/null || true
+
+  # --- Disable/stop bloat + desktop services (safe if already absent) --------
+  for svc in \
+    avahi-daemon triggerhappy ModemManager rpcbind nfs-blkmap \
+    udisks2 packagekit accounts-daemon lightdm cups
+  do
+    systemctl disable --now "${svc}" 2>/dev/null || true
+  done
+
+  # NetworkManager-wait-online blocks boot ~6s for no benefit on this appliance.
+  systemctl disable --now NetworkManager-wait-online 2>/dev/null || true
+  systemctl mask NetworkManager-wait-online 2>/dev/null || true
+
+  # --- Purge cloud-init only if present --------------------------------------
+  if dpkg -l cloud-init 2>/dev/null | grep -q '^ii'; then
+    apt-get purge -y cloud-init 2>/dev/null || true
+    rm -rf /etc/cloud /var/lib/cloud || true
+  fi
+
+  # --- Headless target -------------------------------------------------------
+  systemctl set-default multi-user.target 2>/dev/null || true
+
+  # --- Full GUI strip (idempotent: missing packages do not fail the run) -----
+  apt-get purge -y \
+    lightdm 'rpd-*' 'wf-panel-pi' 'wfplug-*' wayvnc rpi-connect \
+    pipewire pipewire-pulse wireplumber 'xdg-desktop-portal*' \
+    rpi-chromium-mods rpi-firefox-mods rpi-imager rp-bookshelf \
+    piclone rpicam-apps rpinters pi-printer-support cups \
+    2>/dev/null || true
+  apt-get autoremove --purge -y 2>/dev/null || true
+
+  # --- GPU memory: hand as little as possible to the (headless) GPU ----------
+  BOOT_CONFIG=""
+  for candidate in /boot/firmware/config.txt /boot/config.txt; do
+    if [ -f "${candidate}" ]; then BOOT_CONFIG="${candidate}"; break; fi
+  done
+  if [ -n "${BOOT_CONFIG}" ]; then
+    backup_if_exists "${BOOT_CONFIG}"
+    if grep -q '^[[:space:]]*gpu_mem=' "${BOOT_CONFIG}"; then
+      sed -i 's/^[[:space:]]*gpu_mem=.*/gpu_mem=16/' "${BOOT_CONFIG}"
+    else
+      printf '\ngpu_mem=16\n' >>"${BOOT_CONFIG}"
+    fi
+    echo "OK: gpu_mem=16 set in ${BOOT_CONFIG}"
+  else
+    echo "WARN: no boot config.txt found; skipping gpu_mem tuning"
+  fi
+
+  # --- CPU governor: performance, persisted across reboots -------------------
+  if command -v cpupower >/dev/null 2>&1; then
+    cpupower frequency-set -g performance >/dev/null 2>&1 || true
+  fi
+  cat >/etc/default/cpupower <<'CPUPOWER'
+# Set by Bella Novella install.sh --fresh: pin the CPU to the performance
+# governor so media timing is not affected by frequency scaling.
+GOVERNOR="performance"
+CPUPOWER
+  systemctl enable cpupower.service 2>/dev/null || true
+  systemctl restart cpupower.service 2>/dev/null || true
+
+  echo "OK: fresh-Pi bootstrap complete"
+}
+
 echo "==> Installing system files from ${PACKAGE_DIR}/system"
 
 backup_if_exists() {
@@ -62,6 +155,10 @@ backup_if_exists() {
     echo "BACKUP: ${path}.backup.${STAMP}"
   fi
 }
+
+if [ "${DO_FRESH}" -eq 1 ]; then
+  bootstrap_fresh
+fi
 
 # profile.d
 backup_if_exists /etc/profile.d/freeswitch-path.sh
@@ -149,6 +246,8 @@ missing=0
 for mod in \
   mod_console \
   mod_logfile \
+  mod_timerfd \
+  mod_posix_timer \
   mod_event_socket \
   mod_sofia \
   mod_commands \
@@ -300,7 +399,8 @@ test -f "${FS_DIR}/conf/sip_profiles/ata.xml"
 test -f "${FS_DIR}/conf/ivr_menus/disco_main_menu.xml"
 
 if [ "${DO_RESTART}" -eq 1 ]; then
-  echo "==> Restarting FreeSWITCH"
+  echo "==> Enabling and restarting FreeSWITCH"
+  systemctl enable freeswitch >/dev/null 2>&1 || true
   systemctl restart freeswitch
   sleep 2
   systemctl --no-pager --full status freeswitch || true
