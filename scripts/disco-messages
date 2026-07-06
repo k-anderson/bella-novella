@@ -4,17 +4,17 @@ set -euo pipefail
 # Message store for the Bella Novella IVR.
 #
 # Recordings live in MESSAGES_DIR as msg_<timestamp>_<uuid>.wav so a lexical
-# sort equals the order received. Files smaller than MIN_BYTES are treated as
-# "no speech" and removed. The IVR only plays the newest PLAYBACK_LIMIT
-# messages; older ones are KEPT on disk and are pruned (oldest-first) only when
-# free space drops below MIN_FREE_MB.
+# sort equals the order received. Recordings are NEVER deleted during normal
+# operation. The IVR only plays the newest PLAYBACK_LIMIT messages; older ones
+# are KEPT on disk and are pruned (the minimum number of oldest, and never the
+# newest PLAYBACK_LIMIT) only when free space drops below MIN_FREE_MB.
 #
 # It runs as the freeswitch user (recordings/ is freeswitch-owned), so no sudo
 # is needed. All output is newline-free so it can be used directly in the
 # FreeSWITCH dialplan via ${system(...)}.
 #
 # Commands:
-#   rotate                  drop no-speech files; prune oldest only if disk is low
+#   rotate                  prune the oldest messages ONLY when disk space is low
 #   count                   print how many messages are playable (<= PLAYBACK_LIMIT)
 #   resolve <index>         print the absolute path of the 1-based Nth playable message
 #   step <index> next|prev  print the next/previous clamped index (0 = past end)
@@ -22,7 +22,6 @@ set -euo pipefail
 
 MESSAGES_DIR="${DISCO_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
 PLAYBACK_LIMIT="${DISCO_PLAYBACK_LIMIT:-10}"
-MIN_BYTES="${DISCO_MIN_BYTES:-16000}"
 # Old messages are pruned only when free space on the messages filesystem drops
 # below this many megabytes.
 MIN_FREE_MB="${DISCO_MIN_FREE_MB:-200}"
@@ -57,19 +56,11 @@ disk_low() {
 cmd_rotate() {
   mkdir -p "$MESSAGES_DIR"
 
-  # Drop empty / no-speech recordings.
-  local f size
-  while IFS= read -r f; do
-    [ -n "$f" ] || continue
-    size="$(stat -c '%s' "$f" 2>/dev/null || echo 0)"
-    if [ "$size" -lt "$MIN_BYTES" ]; then
-      rm -f "$f"
-    fi
-  done < <(list_messages)
-
-  # Retention: keep everything by default. Only when free space is low, delete
-  # the oldest messages (never touching the newest PLAYBACK_LIMIT) until there
-  # is enough space again or nothing older is left to prune.
+  # Recordings are NEVER deleted during normal operation. Only when free space
+  # is low do we delete the minimum number of OLDEST messages needed to bring
+  # free space back above MIN_FREE_MB, and we never delete the newest
+  # PLAYBACK_LIMIT (the messages the IVR can still play back). No-speech / empty
+  # recordings are discarded at record time by the dialplan (record_min_sec).
   local oldest count
   while disk_low; do
     count="$(list_messages | grep -c . || true)"
