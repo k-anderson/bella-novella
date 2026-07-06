@@ -40,6 +40,10 @@ K3_GPIO=21
 
 LOCK_FILE="/run/disco-relay.lock"
 PID_FILE="/run/disco-relay.pid"
+# Tracks whether the ball is up or down. It lives on /run (tmpfs), so it resets
+# each boot. When there is no state (fresh boot, or after brake) the position
+# reads "unknown" so that EITHER raise (911) or lower (411) will run next.
+STATE_FILE="/run/disco-relay.state"
 LOG_TAG="disco-relay"
 SETTLE_TIME="0.15"
 
@@ -53,14 +57,18 @@ Usage:
   disco-relay lower <seconds> [spot_lights_off_after_percent]
   disco-relay brake
   disco-relay status
+  disco-relay position
 
 Behavior:
   raise:  run the motor up for <seconds>; turn the spot lights ON after the
           given percent of that time; leave the lights ON when finished.
   lower:  run the motor down for <seconds>; turn the spot lights OFF after the
           given percent of that time; leave the lights OFF when finished.
-  brake:  immediately stop the motor and cancel any movement in progress.
-  status: print the current relay states and whether a movement is running.
+  brake:  immediately stop the motor and cancel any movement in progress. The
+          tracked position is reset to "unknown".
+  status: print the current relay states, position, and whether a movement is
+          running.
+  position: print "up", "down", or "unknown" (unknown at boot or after brake).
 
 Concurrency:
   raise/lower take a non-blocking lock and run the movement in the background.
@@ -190,6 +198,21 @@ spot_lights_off() {
   echo "spot_lights=off"
 }
 
+# Position tracking. No state file (fresh boot or after brake) reads "unknown",
+# so either raise or lower will run. A completed raise/lower records up/down.
+read_position() {
+  if [ -r "$STATE_FILE" ]; then
+    cat "$STATE_FILE" 2>/dev/null || printf 'unknown'
+  else
+    printf 'unknown'
+  fi
+}
+
+write_position() {
+  printf '%s' "$1" >"$STATE_FILE" 2>/dev/null || true
+  logger -t "$LOG_TAG" "position=$1"
+}
+
 perform_raise() {
   local seconds="$1"
   local on_after_percent="$2"
@@ -217,6 +240,8 @@ perform_raise() {
 
   motor_stop
   spot_lights_on
+
+  write_position up
 }
 
 perform_lower() {
@@ -249,6 +274,8 @@ perform_lower() {
 
   motor_stop
   spot_lights_off
+
+  write_position down
 }
 
 start_move() {
@@ -312,7 +339,9 @@ run_stop() {
   fi
 
   motor_stop
-  logger -t "$LOG_TAG" "cmd=brake state=stopped"
+  # Position is now indeterminate; reset to "unknown" so raise or lower will run.
+  rm -f "$STATE_FILE"
+  logger -t "$LOG_TAG" "cmd=brake state=stopped position=unknown"
 }
 
 show_status() {
@@ -331,6 +360,8 @@ show_status() {
   echo "Spot-light timing defaults:"
   echo "  raise: lights ON after ${SPOT_LIGHTS_ON_AFTER_PERCENT_DEFAULT}% of raise time"
   echo "  lower: lights OFF after ${SPOT_LIGHTS_OFF_AFTER_PERCENT_DEFAULT}% of lower time"
+  echo
+  echo "Position: $(read_position) (unknown at boot or after brake)"
   echo
   if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null; then
     echo "Movement: IN PROGRESS (pid $(cat "$PID_FILE"))"
@@ -355,6 +386,10 @@ main() {
 
     brake)
       run_stop
+      ;;
+
+    position)
+      read_position
       ;;
 
     status)

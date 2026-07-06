@@ -104,10 +104,16 @@ invalid — returns to the main menu.
 - **Intercom (`DISCO_CALL_OTHER`)** — checks the caller's SIP user: from **101** it bridges to
   **102**, from **102** it bridges to **101** (with an "invalid entry" fallback). When the bridge
   ends it returns to the menu.
-- **Raise / Lower / Stop (`DISCO_RAISE` / `DISCO_LOWER` / `DISCO_STOP`)** — each plays a prompt,
-  runs the relay via `${system(...)}` (`disco-relay raise|lower|brake`), then returns to the menu.
-  Concurrency is handled inside `disco-relay` (a movement already running is a no-op), so no
-  busy prompt is needed here.
+- **Raise / Lower (`DISCO_RAISE` / `DISCO_LOWER`)** — first read the ball's tracked position via
+  `${system($${disco_position})}` (`up` / `down` / `unknown`). **911** raises unless the ball is
+  already `up` (then it plays `disco-already-up.wav`); **411** lowers unless it is already `down`
+  (then `disco-already-down.wav`). Otherwise it plays the raise/lower prompt, runs the relay, and
+  returns to the menu.
+- **Stop (`DISCO_STOP`)** — runs `disco-relay brake`, which cancels any movement **and resets the
+  position to `unknown`** so either 911 or 411 will run next, then returns to the menu.
+- **Position** is `unknown` at boot (and after `#`), so both 911 and 411 work; a completed raise
+  sets `up` and a completed lower sets `down`. The state lives on `/run` (tmpfs), so it resets on
+  reboot.
 
 [`20_disco_messages.xml`](conf/dialplan/default/20_disco_messages.xml):
 
@@ -122,8 +128,8 @@ invalid — returns to the main menu.
   `resolve`/`step` to map the index to a file.
 
 ### 3.4 The relay controller
-[`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status` into
-timed GPIO relay states on the Waveshare HAT:
+[`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status`/`position`
+into timed GPIO relay states on the Waveshare HAT:
 
 - **K1/K2** drive the actuator motor: `raise` = `motor_up` (K1 on), `lower` = `motor_down`
   (K2 on), `brake` = `motor_stop` (both off).
@@ -131,9 +137,12 @@ timed GPIO relay states on the Waveshare HAT:
   percentage of the travel time.
 - `raise`/`lower` take a **non-blocking** `flock` and run the movement in the **background**: if
   the lock is already held they print `busy` and change nothing, otherwise they print `started`.
+  A completed raise records `up`, a completed lower records `down`.
 - `brake` **preempts** — it signals the in-progress movement (tracked via
-  `/run/disco-relay.pid`) to stop, then forces the motor off. `status` reports the relay states
-  and whether a movement is running.
+  `/run/disco-relay.pid`) to stop, forces the motor off, and resets the position to `unknown`.
+- `status` reports the relay states, tracked position, and whether a movement is running;
+  `position` prints `up`/`down`/`unknown` (stored in `/run/disco-relay.state`, so `unknown` at
+  boot).
 
 `disco_raise=... raise 5 15` means: drive for **5 seconds**, switching the spot lights at **15%**
 of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).

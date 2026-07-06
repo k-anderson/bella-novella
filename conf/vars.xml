@@ -36,6 +36,7 @@
   <X-PRE-PROCESS cmd="set" data="disco_raise=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15"/>
   <X-PRE-PROCESS cmd="set" data="disco_lower=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay lower 5 15"/>
   <X-PRE-PROCESS cmd="set" data="disco_stop=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay brake"/>
+  <X-PRE-PROCESS cmd="set" data="disco_position=/usr/bin/sudo /usr/local/freeswitch/scripts/disco-relay position"/>
 
   <!-- IVR message store helper (runs as the freeswitch user; no sudo needed) -->
   <X-PRE-PROCESS cmd="set" data="disco_messages=/usr/local/freeswitch/scripts/disco-messages"/>
