@@ -372,16 +372,16 @@ install -D -m 0644 system/etc/profile.d/freeswitch-path.sh      /etc/profile.d/f
 install -D -m 0644 system/etc/profile.d/freeswitch-pkgconfig.sh /etc/profile.d/freeswitch-pkgconfig.sh
 
 # Keep eth0's static IP up even with no cable plugged in.
-install -D -m 0644 system/etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf \
-  /etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf
+install -D -m 0644 system/etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf \
+  /etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf
 
 # Disable IP forwarding + file-handle/socket/swappiness tuning.
-install -D -m 0644 system/etc/sysctl.d/98-disco-no-routing.conf /etc/sysctl.d/98-disco-no-routing.conf
+install -D -m 0644 system/etc/sysctl.d/98-no-routing.conf /etc/sysctl.d/98-no-routing.conf
 install -D -m 0644 system/etc/sysctl.d/99-freeswitch.conf       /etc/sysctl.d/99-freeswitch.conf
 sysctl --system
 
 # Helper that blocks FreeSWITCH startup until eth0 has 192.168.50.1.
-install -D -m 0755 system/usr/local/bin/bella-wait-eth0 /usr/local/bin/bella-wait-eth0
+install -D -m 0755 system/usr/local/bin/freeswitch-wait-eth0 /usr/local/bin/freeswitch-wait-eth0
 
 # systemd unit (NoNewPrivileges=no so the IVR can 'sudo disco-relay') + resource limits.
 install -D -m 0644 system/etc/systemd/system/freeswitch.service /etc/systemd/system/freeswitch.service
@@ -458,7 +458,7 @@ network), disable routing, and hand out DHCP to the ATA only.
 
 ```sh
 mkdir -p /etc/NetworkManager/conf.d
-cat >/etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf <<'EOF'
+cat >/etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf <<'EOF'
 [device]
 match-device=interface-name:eth0
 ignore-carrier=true
@@ -483,7 +483,7 @@ nmcli con up disco-ata-eth0
 **Disable IP forwarding** so the ATA segment can't route out over Wi-Fi:
 
 ```sh
-cat >/etc/sysctl.d/98-disco-no-routing.conf <<'EOF'
+cat >/etc/sysctl.d/98-no-routing.conf <<'EOF'
 net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 EOF
@@ -494,7 +494,7 @@ sysctl --system
 gateway or DNS) and restart it:
 
 ```sh
-install -m 0644 system/etc/dnsmasq.d/disco-ata.conf /etc/dnsmasq.d/disco-ata.conf
+install -m 0644 system/etc/dnsmasq.d/eth0.conf /etc/dnsmasq.d/eth0.conf
 systemctl enable dnsmasq
 systemctl restart dnsmasq
 ```

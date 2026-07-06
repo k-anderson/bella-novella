@@ -167,19 +167,19 @@ backup_if_exists /etc/profile.d/freeswitch-pkgconfig.sh
 install -D -m 0644 "${PACKAGE_DIR}/system/etc/profile.d/freeswitch-pkgconfig.sh" /etc/profile.d/freeswitch-pkgconfig.sh || true
 
 # NetworkManager ignore-carrier (file is provided in system/)
-backup_if_exists /etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf
-install -D -m 0644 "${PACKAGE_DIR}/system/etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf" /etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf || true
+backup_if_exists /etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf" /etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf || true
 
 # sysctl rules
-backup_if_exists /etc/sysctl.d/98-disco-no-routing.conf
-install -D -m 0644 "${PACKAGE_DIR}/system/etc/sysctl.d/98-disco-no-routing.conf" /etc/sysctl.d/98-disco-no-routing.conf || true
+backup_if_exists /etc/sysctl.d/98-no-routing.conf
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/sysctl.d/98-no-routing.conf" /etc/sysctl.d/98-no-routing.conf || true
 backup_if_exists /etc/sysctl.d/99-freeswitch.conf
 install -D -m 0644 "${PACKAGE_DIR}/system/etc/sysctl.d/99-freeswitch.conf" /etc/sysctl.d/99-freeswitch.conf || true
 sysctl --system >/dev/null || true
 
 # bella-wait helper
-backup_if_exists /usr/local/bin/bella-wait-eth0
-install -D -m 0755 "${PACKAGE_DIR}/system/usr/local/bin/bella-wait-eth0" /usr/local/bin/bella-wait-eth0 || true
+backup_if_exists /usr/local/bin/freeswitch-wait-eth0
+install -D -m 0755 "${PACKAGE_DIR}/system/usr/local/bin/freeswitch-wait-eth0" /usr/local/bin/freeswitch-wait-eth0 || true
 
 # systemd unit and limits
 backup_if_exists /etc/systemd/system/freeswitch.service
@@ -277,7 +277,7 @@ if [ "${DO_NETWORK}" -eq 1 ]; then
 
   if command -v nmcli >/dev/null 2>&1; then
     mkdir -p /etc/NetworkManager/conf.d
-    cat >/etc/NetworkManager/conf.d/99-disco-eth0-ignore-carrier.conf <<'NMC'
+    cat >/etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf <<'NMC'
 [device]
 match-device=interface-name:eth0
 ignore-carrier=true
@@ -314,16 +314,16 @@ NMC
     echo "WARN: nmcli not found; skipping NetworkManager eth0 configuration"
   fi
 
-  cat >/etc/sysctl.d/98-disco-no-routing.conf <<'SYSCTL'
+  cat >/etc/sysctl.d/98-no-routing.conf <<'SYSCTL'
 net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 SYSCTL
   sysctl --system >/dev/null || true
 
     if command -v dnsmasq >/dev/null 2>&1; then
-      if [ -f "${PACKAGE_DIR}/system/etc/dnsmasq.d/disco-ata.conf" ]; then
-        backup_if_exists /etc/dnsmasq.d/disco-ata.conf
-        install -m 0644 "${PACKAGE_DIR}/system/etc/dnsmasq.d/disco-ata.conf" /etc/dnsmasq.d/disco-ata.conf
+      if [ -f "${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" ]; then
+        backup_if_exists /etc/dnsmasq.d/eth0.conf
+        install -m 0644 "${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" /etc/dnsmasq.d/eth0.conf
       fi
       systemctl enable dnsmasq >/dev/null 2>&1 || true
       systemctl restart dnsmasq

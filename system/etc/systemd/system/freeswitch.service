@@ -9,7 +9,7 @@ User=freeswitch
 Group=freeswitch
 WorkingDirectory=/usr/local/freeswitch
 
-ExecStartPre=/usr/local/bin/bella-wait-eth0 eth0 192.168.50.1 30
+ExecStartPre=/usr/local/bin/freeswitch-wait-eth0 eth0 192.168.50.1 30
 ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat
 ExecReload=/usr/local/freeswitch/bin/fs_cli -x "reloadxml"
 ExecStop=/usr/local/freeswitch/bin/fs_cli -x "shutdown elegant"
