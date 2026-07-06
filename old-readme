@@ -1,0 +1,1241 @@
+## Deploying to the Raspberry Pi
+
+This project was built and tested on:
+
+```text
+Raspberry Pi 4 Model B
+Raspberry Pi OS 64-bit / Debian GNU/Linux 13 "trixie"
+Architecture: aarch64 / arm64
+Hostname used during setup: bella-novella
+Control user used during setup: bella
+
+Wi-Fi management network: wlan0
+Isolated ATA network: eth0
+Pi ATA-side IP: 192.168.50.1/24
+Grandstream HT812 ATA DHCP range: 192.168.50.100-192.168.50.150
+
+FreeSWITCH install prefix: /usr/local/freeswitch
+Source/build directory: /usr/local/src
+FreeSWITCH runtime user/group: freeswitch:freeswitch
+```
+
+The intended topology is:
+
+```text
+Laptop / home network
+        |
+      Wi-Fi
+        |
+Raspberry Pi wlan0  = normal management network
+Raspberry Pi eth0   = isolated private ATA network, 192.168.50.1/24
+        |
+Grandstream HT812 ATA
+        |
+Two analog phones:
+  Line 1 = extension 101
+  Line 2 = extension 102
+```
+
+FreeSWITCH should only bind SIP/RTP to the isolated Ethernet address, `192.168.50.1`. It should not expose SIP on Wi-Fi or the internet.
+
+---
+
+### 1. Install the OS
+
+Use Raspberry Pi Imager and install the latest 64-bit Raspberry Pi OS.
+
+Recommended imager settings:
+
+```text
+Hostname: bella-novella
+User: bella
+Enable SSH: yes
+Configure Wi-Fi: yes
+Wi-Fi country: US
+```
+
+After first boot, SSH into the Pi over Wi-Fi:
+
+```sh
+ssh bella@<pi-wifi-ip>
+```
+
+Confirm the OS:
+
+```sh
+uname -a
+cat /etc/os-release
+ip -br addr
+```
+
+Expected shape:
+
+```text
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+Architecture: aarch64 / arm64
+wlan0 UP 192.168.1.x/24
+```
+
+Update the base system:
+
+```sh
+sudo apt update
+sudo apt full-upgrade -y
+sudo reboot
+```
+
+---
+
+### 2. Install base build tools and utilities
+
+```sh
+sudo apt install -y \
+  git curl wget ca-certificates gnupg pkg-config \
+  build-essential autoconf automake libtool-bin cmake ninja-build \
+  libssl-dev zlib1g-dev libpcre2-dev libedit-dev libsqlite3-dev \
+  libcurl4-openssl-dev libldns-dev libspeex-dev libspeexdsp-dev \
+  libopus-dev libsndfile1-dev liblua5.4-dev lua5.4 \
+  libpq-dev libtiff-dev libjpeg-dev uuid-dev \
+  yasm nasm python3 python3-dev python3-pip \
+  dnsmasq tshark sngrep sox jq rsync
+```
+
+The Debian package version of SpanDSP may be too old for this FreeSWITCH build. On this setup, Debian provided SpanDSP `0.0.6`, while FreeSWITCH required SpanDSP `>= 3.0`, so Sofia-SIP and SpanDSP are built from source.
+
+---
+
+### 3. Prepare `/usr/local/src`
+
+```sh
+sudo mkdir -p /usr/local/src
+sudo chown -R "$USER":"$USER" /usr/local/src
+cd /usr/local/src
+```
+
+---
+
+### 4. Build and install SpanDSP from source
+
+```sh
+cd /usr/local/src
+
+git clone https://github.com/freeswitch/spandsp.git
+cd spandsp
+
+./bootstrap.sh
+./configure --prefix=/usr/local
+make -j"$(nproc)"
+sudo make install
+sudo ldconfig
+```
+
+Verify:
+
+```sh
+pkg-config --modversion spandsp
+pkg-config --cflags spandsp
+pkg-config --libs spandsp
+```
+
+Expected: a modern `spandsp` version usable by FreeSWITCH, not Debian’s old `0.0.6`.
+
+If `pkg-config` cannot find it, check:
+
+```sh
+ls /usr/local/lib/pkgconfig/spandsp.pc
+echo "$PKG_CONFIG_PATH"
+```
+
+If needed:
+
+```sh
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
+```
+
+---
+
+### 5. Build and install Sofia-SIP from source
+
+```sh
+cd /usr/local/src
+
+git clone https://github.com/freeswitch/sofia-sip.git
+cd sofia-sip
+
+./bootstrap.sh
+./configure --prefix=/usr/local
+make -j"$(nproc)"
+sudo make install
+sudo ldconfig
+```
+
+Verify:
+
+```sh
+pkg-config --modversion sofia-sip-ua
+pkg-config --cflags sofia-sip-ua
+pkg-config --libs sofia-sip-ua
+```
+
+If FreeSWITCH later says it cannot find `sofia-sip-ua`, re-check `PKG_CONFIG_PATH` and run:
+
+```sh
+sudo ldconfig
+```
+
+---
+
+### 7. Add the FreeSWITCH user and group
+
+```sh
+sudo groupadd -r freeswitch 2>/dev/null || true
+
+sudo useradd -r \
+  -g freeswitch \
+  -d /usr/local/freeswitch \
+  -s /usr/sbin/nologin \
+  freeswitch 2>/dev/null || true
+
+sudo chown -R freeswitch:freeswitch /usr/local/freeswitch
+```
+
+Allow FreeSWITCH to use larger file descriptor and scheduling limits:
+
+```sh
+sudo tee /etc/security/limits.d/99-freeswitch.conf >/dev/null <<'EOF'
+freeswitch soft nofile 500000
+freeswitch hard nofile 500000
+freeswitch soft nproc 20000
+freeswitch hard nproc 20000
+freeswitch soft rtprio 89
+freeswitch hard rtprio 89
+freeswitch soft nice -10
+freeswitch hard nice -10
+EOF
+```
+
+Recommended sysctl tuning:
+
+```sh
+sudo tee /etc/sysctl.d/99-freeswitch.conf >/dev/null <<'EOF'
+fs.file-max = 1048576
+net.core.somaxconn = 4096
+net.ipv4.ip_local_port_range = 10000 65000
+vm.swappiness = 10
+vm.vfs_cache_pressure = 50
+EOF
+
+sudo sysctl --system
+```
+
+---
+
+### 8. Put FreeSWITCH tools in the path
+
+```sh
+sudo tee /etc/profile.d/freeswitch-path.sh >/dev/null <<'EOF'
+export PATH="/usr/local/freeswitch/bin:$PATH"
+EOF
+```
+
+Log out/in or run:
+
+```sh
+source /etc/profile.d/freeswitch-path.sh
+```
+
+Verify:
+
+```sh
+which fs_cli
+which freeswitch
+```
+
+---
+
+### 9. Configure the isolated ATA Ethernet network
+
+The Pi’s Wi-Fi remains the management network. The Ethernet port is a private network used only for the Grandstream ATA.
+
+Create a NetworkManager connection for `eth0`:
+
+```sh
+sudo nmcli con add type ethernet ifname eth0 con-name bella-ata-eth0 \
+  connection.autoconnect yes \
+  ipv4.method manual \
+  ipv4.addresses 192.168.50.1/24 \
+  ipv4.never-default yes \
+  ipv4.ignore-auto-dns yes \
+  ipv6.method disabled 2>/dev/null || true
+
+sudo nmcli con mod bella-ata-eth0 \
+  connection.interface-name eth0 \
+  connection.autoconnect yes \
+  ipv4.method manual \
+  ipv4.addresses 192.168.50.1/24 \
+  ipv4.never-default yes \
+  ipv4.ignore-auto-dns yes \
+  ipv6.method disabled
+```
+
+Tell NetworkManager to keep the static Ethernet IP active even if no cable is connected:
+
+```sh
+sudo mkdir -p /etc/NetworkManager/conf.d
+
+sudo tee /etc/NetworkManager/conf.d/99-bella-eth0-ignore-carrier.conf >/dev/null <<'EOF'
+[device]
+match-device=interface-name:eth0
+ignore-carrier=true
+EOF
+
+sudo nmcli general reload
+sudo nmcli con up bella-ata-eth0 || true
+```
+
+Make sure Wi-Fi remains the default route.
+
+List connections:
+
+```sh
+nmcli con show
+```
+
+For your Wi-Fi connection, set autoconnect and default route preference:
+
+```sh
+sudo nmcli con mod "<YOUR_WIFI_CONNECTION_NAME>" \
+  connection.autoconnect yes \
+  connection.autoconnect-priority 100 \
+  ipv4.never-default no \
+  ipv6.method auto
+```
+
+Confirm Ethernet never becomes the default route:
+
+```sh
+sudo nmcli con mod bella-ata-eth0 \
+  ipv4.never-default yes \
+  ipv4.ignore-auto-dns yes \
+  ipv6.method disabled
+```
+
+Expected route shape:
+
+```text
+default via 192.168.1.1 dev wlan0
+192.168.50.0/24 dev eth0
+```
+
+---
+
+### 10. Disable IP forwarding
+
+This keeps the ATA-side network isolated. The Pi should not route ATA traffic out over Wi-Fi.
+
+```sh
+sudo tee /etc/sysctl.d/98-bella-no-routing.conf >/dev/null <<'EOF'
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+EOF
+
+sudo sysctl --system
+```
+
+Verify:
+
+```sh
+sysctl net.ipv4.ip_forward
+sysctl net.ipv6.conf.all.forwarding
+```
+
+Expected:
+
+```text
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+```
+
+---
+
+### 11. Configure DHCP for the ATA
+
+Install and configure `dnsmasq`:
+
+```sh
+sudo apt install -y dnsmasq
+
+sudo tee /etc/dnsmasq.d/bella-ata.conf >/dev/null <<'EOF'
+# Bella ATA-only DHCP scope.
+# DHCP only, bound to eth0. No DNS service, no default gateway advertisement.
+
+interface=eth0
+bind-dynamic
+except-interface=wlan0
+
+port=0
+
+dhcp-authoritative
+dhcp-range=192.168.50.100,192.168.50.150,255.255.255.0,12h
+
+# Do not advertise default gateway or DNS.
+dhcp-option=3
+dhcp-option=6
+
+dhcp-option=option:domain-name,bella.local
+EOF
+
+sudo systemctl enable dnsmasq
+sudo systemctl restart dnsmasq
+```
+
+Find the ATA IP after plugging it in:
+
+```sh
+cat /var/lib/misc/dnsmasq.leases
+journalctl -u dnsmasq -n 100 --no-pager
+ip neigh show dev eth0
+```
+
+Expected lease example:
+
+```text
+c0:74:ad:e8:ae:95 192.168.50.119
+```
+
+If the ATA web UI is only reachable from the Pi, use an SSH tunnel from your laptop:
+
+```sh
+ssh -N -L 8080:192.168.50.119:80 bella@<pi-wifi-ip>
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
+---
+
+### 12. Configure the Grandstream HT812
+
+In the HT812 web UI:
+
+Basic/network:
+
+```text
+Mode: Bridge
+IP: DHCP
+```
+
+SIP profile:
+
+```text
+Primary SIP Server: 192.168.50.1
+Outbound Proxy: blank
+SIP Transport: UDP
+NAT Traversal: No
+SIP Registration: Yes
+Unregister on Reboot: Yes
+Use Random SIP Port: No
+Use Random RTP Port: No
+STUN Server: blank
+```
+
+Audio:
+
+```text
+Preferred Vocoder 1: PCMU
+Preferred Vocoder 2: PCMU
+Preferred Vocoder 3: PCMU
+Preferred Vocoder 4: PCMU
+Silence Suppression: No
+Voice Frames per TX: 2
+Jitter Buffer Type: Adaptive
+Jitter Buffer Length: Low or Medium
+DTMF: RFC2833
+```
+
+FXS ports:
+
+```text
+FXS Port 1:
+  Profile ID: Profile 1
+  SIP User ID: 101
+  Authenticate ID: 101
+  Authenticate Password: any value
+  Name: 101
+  Off-hook Auto-Dial: 700
+
+FXS Port 2:
+  Profile ID: Profile 1
+  SIP User ID: 102
+  Authenticate ID: 102
+  Authenticate Password: any value
+  Name: 102
+  Off-hook Auto-Dial: 700
+```
+
+Apply and reboot the ATA.
+
+### 14. Install `disco-relay`
+
+The relay control script should be installed as:
+
+```text
+/usr/local/bin/disco-relay
+```
+
+Install it:
+
+```sh
+sudo install -m 0755 scripts/disco-relay /usr/local/bin/disco-relay
+sudo chown root:root /usr/local/bin/disco-relay
+```
+
+The script controls a Waveshare 3-relay HAT using Raspberry Pi GPIOs:
+
+```text
+Relay 1 / K1: GPIO 26 / P25
+Relay 2 / K2: GPIO 20 / P28
+Relay 3 / K3: GPIO 21 / P29
+```
+
+Expected actuator wiring:
+
+```text
+K1 COM -> actuator terminal A
+K1 NC  -> 0V
+K1 NO  -> +V
+
+K2 COM -> actuator terminal B
+K2 NC  -> 0V
+K2 NO  -> +V
+```
+
+Logical states:
+
+```text
+brake/default: K1 OFF, K2 OFF = A 0V, B 0V
+raise/extend:  K1 ON,  K2 OFF = A +V, B 0V
+lower/retract: K1 OFF, K2 ON  = A 0V, B +V
+```
+
+Test:
+
+```sh
+sudo disco-relay status
+sudo disco-relay brake
+sudo disco-relay raise 2 40
+sudo disco-relay lower 2 60
+sudo disco-relay initialize 10 0
+```
+
+Allow the `bella` user and the `freeswitch` service user to run the relay script as root without a password:
+
+```sh
+sudo tee /etc/sudoers.d/disco-relay >/dev/null <<'EOF'
+bella ALL=(root) NOPASSWD: /usr/local/bin/disco-relay
+freeswitch ALL=(root) NOPASSWD: /usr/local/bin/disco-relay
+EOF
+
+sudo chmod 440 /etc/sudoers.d/disco-relay
+sudo visudo -c
+```
+
+In FreeSWITCH `vars.xml`, relay commands should include `/usr/bin/sudo`:
+
+```xml
+<X-PRE-PROCESS cmd="set" data="relay_brake_command=/usr/bin/sudo /usr/local/bin/disco-relay brake"/>
+<X-PRE-PROCESS cmd="set" data="relay_raise_command=/usr/bin/sudo /usr/local/bin/disco-relay raise 10 40"/>
+<X-PRE-PROCESS cmd="set" data="relay_lower_command=/usr/bin/sudo /usr/local/bin/disco-relay lower 10 60"/>
+<X-PRE-PROCESS cmd="set" data="relay_raised_command=/usr/bin/sudo /usr/local/bin/disco-relay raised"/>
+<X-PRE-PROCESS cmd="set" data="relay_lowered_command=/usr/bin/sudo /usr/local/bin/disco-relay lowered"/>
+<X-PRE-PROCESS cmd="set" data="relay_status_command=/usr/bin/sudo /usr/local/bin/disco-relay status"/>
+```
+
+---
+
+### 15. Add boot-time actuator initialization
+
+The system should start in a known safe state: fully lowered/retracted and lights/status relay off.
+
+Create defaults:
+
+```sh
+sudo tee /etc/default/disco-relay-boot >/dev/null <<'EOF'
+# Boot-time actuator initialization.
+#
+# Format:
+#   initialize <seconds> <k3_off_after_percent>
+#
+# Meaning:
+#   K3 OFF immediately.
+#   Lower/retract for the configured time.
+#   End with K1 OFF, K2 OFF, K3 OFF.
+
+DISCO_RELAY_BOOT_COMMAND="initialize 10 0"
+EOF
+```
+
+Create the service:
+
+```sh
+sudo tee /etc/systemd/system/disco-relay-boot.service >/dev/null <<'EOF'
+[Unit]
+Description=Initialize Disco Actuator on Boot
+Documentation=file:/usr/local/bin/disco-relay
+After=local-fs.target
+Before=freeswitch.service
+Wants=freeswitch.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/default/disco-relay-boot
+ExecStart=/bin/bash -c '/usr/local/bin/disco-relay ${DISCO_RELAY_BOOT_COMMAND}'
+TimeoutStartSec=90
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+Enable it:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable disco-relay-boot.service
+sudo systemctl start disco-relay-boot.service
+```
+
+---
+
+### 16. Install the FreeSWITCH systemd service
+
+Create `/etc/systemd/system/freeswitch.service`:
+
+```sh
+sudo tee /etc/systemd/system/freeswitch.service >/dev/null <<'EOF'
+[Unit]
+Description=FreeSWITCH
+After=NetworkManager.service dnsmasq.service disco-relay-boot.service
+Wants=dnsmasq.service disco-relay-boot.service
+
+[Service]
+Type=forking
+User=freeswitch
+Group=freeswitch
+WorkingDirectory=/usr/local/freeswitch
+
+ExecStartPre=/usr/local/bin/bella-wait-eth0 eth0 192.168.50.1 30
+ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat
+ExecReload=/usr/local/freeswitch/bin/fs_cli -x "reloadxml"
+ExecStop=/usr/local/freeswitch/bin/fs_cli -x "shutdown elegant"
+
+PIDFile=/usr/local/freeswitch/run/freeswitch.pid
+Restart=on-failure
+RestartSec=5
+
+LimitNOFILE=500000
+LimitNPROC=20000
+LimitRTPRIO=89
+LimitRTTIME=infinity
+Nice=-10
+
+# Must be "no" because FreeSWITCH calls sudo disco-relay from bgsystem.
+NoNewPrivileges=no
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+Create the Ethernet wait helper:
+
+```sh
+sudo tee /usr/local/bin/bella-wait-eth0 >/dev/null <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+IFACE="${1:-eth0}"
+IP="${2:-192.168.50.1}"
+TIMEOUT="${3:-30}"
+
+for i in $(seq 1 "$TIMEOUT"); do
+  if ip -4 addr show dev "$IFACE" | grep -q "${IP}/"; then
+    exit 0
+  fi
+  sleep 1
+done
+
+echo "ERROR: ${IFACE} did not get ${IP} within ${TIMEOUT}s" >&2
+ip -br addr >&2
+exit 1
+EOF
+
+sudo chmod 755 /usr/local/bin/bella-wait-eth0
+```
+
+Enable and start:
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable freeswitch
+sudo systemctl restart freeswitch
+```
+
+Check:
+
+```sh
+systemctl status freeswitch --no-pager
+fs_cli -x "status"
+fs_cli -x "sofia status profile ata"
+fs_cli -x "show registrations"
+```
+
+---
+
+### 17. Verify SIP and ATA registration
+
+After the ATA is connected and configured:
+
+```sh
+cat /var/lib/misc/dnsmasq.leases
+fs_cli -x "show registrations"
+fs_cli -x "sofia status profile ata"
+sudo sngrep -d eth0 port 5060
+```
+
+Expected:
+
+```text
+101 registered
+102 registered
+Sofia profile ata bound to 192.168.50.1:5060
+```
+
+---
+
+### 18. IVR behavior
+
+Default IVR behavior:
+
+```text
+Pick up either phone:
+  ATA off-hook auto-dials 700
+  FreeSWITCH answers with the IVR
+
+Press 1:
+  Calls the other phone
+
+Press 2:
+  Runs relay_raise_command
+  Expected command: sudo disco-relay raise 10 40
+
+Press 3:
+  Runs relay_lower_command
+  Expected command: sudo disco-relay lower 10 60
+
+Press 9:
+  Hidden/admin option to record a new greeting
+```
+
+FreeSWITCH should use `bgsystem`, not `bg_system`, for relay commands:
+
+```xml
+<action application="bgsystem" data="$${relay_raise_command}"/>
+<action application="bgsystem" data="$${relay_lower_command}"/>
+```
+
+---
+
+### 19. Record the IVR greeting from a phone
+
+The IVR can include hidden option `9` to record the main menu greeting.
+
+Suggested greeting:
+
+```text
+Press 1 to call the other phone.
+Press 2 to raise.
+Press 3 to lower.
+```
+
+The recording should save to:
+
+```text
+/usr/local/freeswitch/sounds/en/us/callie/disco/main-menu.wav
+```
+
+---
+
+### 20. Debugging audio playback
+
+Useful audio tests:
+
+```sh
+CONTACT="$(fs_cli -x 'sofia_contact 101@192.168.50.1')"
+
+fs_cli -x "originate {origination_caller_id_name=Debug,origination_caller_id_number=700}${CONTACT} '&playback(tone_stream://%(10000,0,1000))'"
+
+fs_cli -x "originate {origination_caller_id_name=Debug,origination_caller_id_number=700}${CONTACT} '&playback(/usr/local/freeswitch/sounds/en/us/callie/ivr/8000/ivr-that_was_an_invalid_entry.wav)'"
+```
+
+If tone playback is clean but WAV playback is choppy, capture RTP timing:
+
+```sh
+sudo tshark -i eth0 -f "udp and host 192.168.50.119" \
+  -a duration:12 \
+  -w /tmp/wav-test.pcap
+
+tshark -r /tmp/wav-test.pcap -q -z rtp,streams
+```
+
+---
+
+### 21. Final reboot test
+
+Reboot cleanly:
+
+```sh
+sudo reboot
+```
+
+After reconnecting:
+
+```sh
+ip -br addr
+ip route
+systemctl status dnsmasq --no-pager
+systemctl status disco-relay-boot --no-pager
+systemctl status freeswitch --no-pager
+fs_cli -x "status"
+fs_cli -x "sofia status profile ata"
+fs_cli -x "show registrations"
+sudo disco-relay status
+```
+
+Expected network shape:
+
+```text
+wlan0  UP  192.168.1.x/24
+eth0   UP  192.168.50.1/24
+
+default via 192.168.1.1 dev wlan0
+192.168.50.0/24 dev eth0
+```
+
+Expected service state:
+
+```text
+dnsmasq active
+disco-relay-boot completed
+freeswitch active
+101 and 102 registered after ATA boot
+```
+
+Expected actuator state after boot:
+
+```text
+K1 OFF
+K2 OFF
+K3 OFF
+actuator lowered/retracted
+lights/status relay off
+```
+
+---
+
+### 22. Useful maintenance commands
+
+```sh
+# FreeSWITCH status
+fs_cli -x "status"
+fs_cli -x "show channels"
+fs_cli -x "show registrations"
+fs_cli -x "sofia status profile ata"
+
+# Restart FreeSWITCH
+sudo systemctl restart freeswitch
+
+# Restart only the Sofia ATA profile
+fs_cli -x "sofia profile ata restart"
+
+# Watch SIP
+sudo sngrep -d eth0 port 5060
+
+# Watch relay logs
+journalctl -t disco-relay -f
+
+# Relay manual controls
+sudo disco-relay status
+sudo disco-relay brake
+sudo disco-relay raise 10 40
+sudo disco-relay lower 10 60
+sudo disco-relay initialize 10 0
+
+# DHCP leases
+cat /var/lib/misc/dnsmasq.leases
+
+# Network sanity
+ip -br addr
+ip route
+nmcli connection show --active
+```
+
+
+
+
+
+---
+
+We used /usr/local/src as the source-build location for Sofia-SIP, SpanDSP, and FreeSWITCH.
+
+sudo mkdir -p /usr/local/src
+sudo chown -R "$USER":"$USER" /usr/local/src
+FreeSWITCH runtime user/group
+
+FreeSWITCH runs as its own system user, not as root.
+
+sudo groupadd -r freeswitch 2>/dev/null || true
+
+sudo useradd -r \
+  -g freeswitch \
+  -d /usr/local/freeswitch \
+  -s /usr/sbin/nologin \
+  freeswitch 2>/dev/null || true
+
+sudo chown -R freeswitch:freeswitch /usr/local/freeswitch
+FreeSWITCH limits
+
+We added high file descriptor/process/scheduler limits for the freeswitch user.
+
+sudo tee /etc/security/limits.d/99-freeswitch.conf >/dev/null <<'EOF'
+freeswitch soft nofile 500000
+freeswitch hard nofile 500000
+freeswitch soft nproc 20000
+freeswitch hard nproc 20000
+freeswitch soft rtprio 89
+freeswitch hard rtprio 89
+freeswitch soft nice -10
+freeswitch hard nice -10
+EOF
+FreeSWITCH sysctl tuning
+
+We added general kernel tuning for file handles, socket backlog, ephemeral port range, and VM behavior.
+
+sudo tee /etc/sysctl.d/99-freeswitch.conf >/dev/null <<'EOF'
+fs.file-max = 1048576
+net.core.somaxconn = 4096
+net.ipv4.ip_local_port_range = 10000 65000
+vm.swappiness = 10
+vm.vfs_cache_pressure = 50
+EOF
+
+sudo sysctl --system
+FreeSWITCH binary path convenience
+
+We added FreeSWITCH tools to the shell path and symlinked fs_cli / freeswitch.
+
+sudo tee /etc/profile.d/freeswitch-path.sh >/dev/null <<'EOF'
+export PATH="/usr/local/freeswitch/bin:$PATH"
+EOF
+
+sudo ln -sf /usr/local/freeswitch/bin/fs_cli /usr/local/bin/fs_cli
+sudo ln -sf /usr/local/freeswitch/bin/freeswitch /usr/local/bin/freeswitch
+Static isolated Ethernet for the ATA
+
+The Pi Ethernet port is not part of the normal LAN. It is a private ATA-only network.
+
+sudo nmcli con add type ethernet ifname eth0 con-name bella-ata-eth0 \
+  connection.autoconnect yes \
+  ipv4.method manual \
+  ipv4.addresses 192.168.50.1/24 \
+  ipv4.never-default yes \
+  ipv4.ignore-auto-dns yes \
+  ipv6.method disabled 2>/dev/null || true
+
+sudo nmcli con mod bella-ata-eth0 \
+  connection.interface-name eth0 \
+  connection.autoconnect yes \
+  ipv4.method manual \
+  ipv4.addresses 192.168.50.1/24 \
+  ipv4.never-default yes \
+  ipv4.ignore-auto-dns yes \
+  ipv6.method disabled
+NetworkManager ignore-carrier for eth0
+
+This was important because we wanted eth0 to keep 192.168.50.1 even when the ATA was not connected yet.
+
+sudo mkdir -p /etc/NetworkManager/conf.d
+
+sudo tee /etc/NetworkManager/conf.d/99-bella-eth0-ignore-carrier.conf >/dev/null <<'EOF'
+[device]
+match-device=interface-name:eth0
+ignore-carrier=true
+EOF
+
+sudo nmcli general reload
+sudo nmcli con up bella-ata-eth0 || true
+Keep Wi-Fi as the management/default route
+
+The ATA Ethernet connection should never become the default route.
+
+sudo nmcli con mod bella-ata-eth0 \
+  ipv4.never-default yes \
+  ipv4.ignore-auto-dns yes \
+  ipv6.method disabled
+
+For the Wi-Fi profile, we explicitly recreated/set the profile after a power pull caused Wi-Fi not to reconnect:
+
+sudo nmcli con add type wifi ifname wlan0 con-name geezerville ssid geezerville
+
+sudo nmcli con mod geezerville \
+  wifi-sec.key-mgmt wpa-psk \
+  wifi-sec.psk "$WIFI_PASS" \
+  connection.autoconnect yes \
+  connection.autoconnect-priority 100 \
+  ipv4.method auto \
+  ipv4.never-default no \
+  ipv6.method auto
+
+sudo nmcli con up geezerville
+
+In the README this should probably be generalized as:
+
+sudo nmcli con mod "<YOUR_WIFI_CONNECTION_NAME>" \
+  connection.autoconnect yes \
+  connection.autoconnect-priority 100 \
+  ipv4.never-default no
+Disable IP forwarding
+
+The Pi should not route the ATA network out through Wi-Fi.
+
+sudo tee /etc/sysctl.d/98-bella-no-routing.conf >/dev/null <<'EOF'
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+EOF
+
+sudo sysctl --system
+
+Expected:
+
+sysctl net.ipv4.ip_forward
+sysctl net.ipv6.conf.all.forwarding
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+dnsmasq DHCP server on eth0 only
+
+The Pi provides DHCP only to the Grandstream ATA network.
+
+sudo tee /etc/dnsmasq.d/bella-ata.conf >/dev/null <<'EOF'
+interface=eth0
+bind-dynamic
+except-interface=wlan0
+
+port=0
+
+dhcp-authoritative
+dhcp-range=192.168.50.100,192.168.50.150,255.255.255.0,12h
+
+# Do not advertise default gateway or DNS.
+dhcp-option=3
+dhcp-option=6
+
+dhcp-option=option:domain-name,bella.local
+EOF
+
+sudo systemctl enable dnsmasq
+sudo systemctl restart dnsmasq
+
+Key details:
+
+DHCP only on eth0
+DNS disabled with port=0
+No default gateway advertised
+No DNS server advertised
+FreeSWITCH service dependency on Ethernet/DHCP/relay init
+
+FreeSWITCH waits for the isolated Ethernet address before starting.
+
+Helper:
+
+sudo tee /usr/local/bin/bella-wait-eth0 >/dev/null <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+IFACE="${1:-eth0}"
+IP="${2:-192.168.50.1}"
+TIMEOUT="${3:-30}"
+
+for i in $(seq 1 "$TIMEOUT"); do
+  if ip -4 addr show dev "$IFACE" | grep -q "${IP}/"; then
+    exit 0
+  fi
+  sleep 1
+done
+
+echo "ERROR: ${IFACE} did not get ${IP} within ${TIMEOUT}s" >&2
+ip -br addr >&2
+exit 1
+EOF
+
+sudo chmod 755 /usr/local/bin/bella-wait-eth0
+
+Service uses:
+
+ExecStartPre=/usr/local/bin/bella-wait-eth0 eth0 192.168.50.1 30
+FreeSWITCH systemd service settings
+
+Important service settings we used:
+
+User=freeswitch
+Group=freeswitch
+WorkingDirectory=/usr/local/freeswitch
+
+ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat
+ExecReload=/usr/local/freeswitch/bin/fs_cli -x "reloadxml"
+ExecStop=/usr/local/freeswitch/bin/fs_cli -x "shutdown elegant"
+
+LimitNOFILE=500000
+LimitNPROC=20000
+LimitRTPRIO=89
+LimitRTTIME=infinity
+Nice=-10
+
+NoNewPrivileges=no
+PrivateTmp=yes
+
+Critical note: NoNewPrivileges=no was required because FreeSWITCH runs sudo /usr/local/bin/disco-relay from bgsystem. With NoNewPrivileges=yes, the relay command did not work.
+
+sudoers rule for relay control
+
+FreeSWITCH and the setup user need passwordless access only to the relay script.
+
+sudo tee /etc/sudoers.d/disco-relay >/dev/null <<'EOF'
+bella ALL=(root) NOPASSWD: /usr/local/bin/disco-relay
+freeswitch ALL=(root) NOPASSWD: /usr/local/bin/disco-relay
+EOF
+
+sudo chmod 440 /etc/sudoers.d/disco-relay
+sudo visudo -c
+Boot-time relay/actuator initialization
+
+We added a oneshot service to force the actuator into a known lowered/off state before FreeSWITCH starts.
+
+Defaults file:
+
+sudo tee /etc/default/disco-relay-boot >/dev/null <<'EOF'
+DISCO_RELAY_BOOT_COMMAND="initialize 10 0"
+EOF
+
+Service:
+
+[Unit]
+Description=Initialize Disco Actuator on Boot
+After=local-fs.target
+Before=freeswitch.service
+Wants=freeswitch.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/default/disco-relay-boot
+ExecStart=/bin/bash -c '/usr/local/bin/disco-relay ${DISCO_RELAY_BOOT_COMMAND}'
+TimeoutStartSec=90
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
+Enable:
+
+sudo systemctl daemon-reload
+sudo systemctl enable disco-relay-boot.service
+File ownership fixes
+
+We repeatedly made sure FreeSWITCH owned its config and sounds:
+
+sudo chown -R freeswitch:freeswitch /usr/local/freeswitch/conf
+sudo chown -R freeswitch:freeswitch /usr/local/freeswitch/sounds
+
+For the custom recorded greeting directory:
+
+sudo mkdir -p /usr/local/freeswitch/sounds/en/us/callie/disco
+sudo chown -R freeswitch:freeswitch /usr/local/freeswitch/sounds/en/us/callie/disco
+Raspberry Pi GPIO access model
+
+The relay script runs as root through sudo, rather than trying to grant FreeSWITCH direct GPIO access. This avoided permission issues around GPIO/pinctrl and /run/disco-relay.lock.
+
+Manual use:
+
+sudo /usr/local/bin/disco-relay status
+sudo /usr/local/bin/disco-relay brake
+sudo /usr/local/bin/disco-relay raise 10 40
+sudo /usr/local/bin/disco-relay lower 10 60
+
+Optional convenience alias for the bella user:
+
+echo "alias disco-relay='sudo /usr/local/bin/disco-relay'" >> ~/.bashrc
+source ~/.bashrc
+Power-management tweaks
+
+I do not see the specific power-management commands preserved in the current conversation context. The retained context includes that we checked Pi throttling:
+
+vcgencmd get_throttled
+
+and saw:
+
+throttled=0x0
+
+That confirms there was no active under-voltage or throttling at that moment, but I do not have a reliable record here of exact power-management changes like:
+
+Wi-Fi power save off
+CPU governor set to performance
+HDMI blanking disabled
+Bluetooth disabled
+USB autosuspend disabled
+screen blanking disabled
+
+So I would not put those in the README as “what we did” unless you have the commands in your shell history or repo. A safe README subsection could say:
+
+### Optional power stability checks
+
+Check for undervoltage or throttling:
+
+```sh
+vcgencmd get_throttled
+
+Expected healthy output:
+
+throttled=0x0
+
+Use a quality USB-C power supply. If this value is nonzero, fix power before debugging audio, relay, or network issues.
+
+
+## README-worthy short checklist
+
+For a concise checklist, I would list these as the actual OS tweaks:
+
+```text
+- Raspberry Pi OS 64-bit / Debian 13 arm64
+- `/usr/local/src` used for source builds
+- `freeswitch` system user/group created
+- `/usr/local/freeswitch` owned by `freeswitch:freeswitch`
+- FreeSWITCH limits added in `/etc/security/limits.d/99-freeswitch.conf`
+- FreeSWITCH sysctl tuning added in `/etc/sysctl.d/99-freeswitch.conf`
+- FreeSWITCH binaries added to PATH and symlinked into `/usr/local/bin`
+- `eth0` configured as static `192.168.50.1/24`
+- `eth0` marked `never-default`
+- `eth0` configured with NetworkManager `ignore-carrier=true`
+- Wi-Fi set as the management/default route
+- IP forwarding explicitly disabled
+- `dnsmasq` configured as DHCP-only server on `eth0`
+- `dnsmasq` configured to advertise no gateway and no DNS
+- `bella-wait-eth0` helper added before FreeSWITCH startup
+- `disco-relay-boot.service` added before FreeSWITCH startup
+- `freeswitch.service` installed with high limits and `NoNewPrivileges=no`
+- `/etc/sudoers.d/disco-relay` added for `bella` and `freeswitch`
+- custom FreeSWITCH sounds/config directories chowned to `freeswitch:freeswitch`
+- `vcgencmd get_throttled` used to verify no Pi undervoltage/throttling
