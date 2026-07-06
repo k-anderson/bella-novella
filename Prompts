@@ -1,0 +1,87 @@
+main-menu:
+[low, sultry, smoke-curling] Mmm. Well hello there, stranger. [half-smile, knowing] You picked up my phone. That means you're either lost... [long beat, unhurried] ...or exactly where you're supposed to be. [husky, low chuckle] Out here, it's usually both.
+[hushed, almost a whisper] Now, if you already know my other numbers... [sly, lips-curled] ...well. You know what to do.
+[velvet, commanding but unhurried] But if this is the only line you've found, [slow, sultry] these are your options.
+[low, deliberate] Press 1, and I'll ring you through to whoever's picking up on the other end. [wry, half-laughing] Could be anyone, darling. That's the fun of it.
+[intimate, leaning in, almost touching the mic] Press 2 if you want to hear what the night's been saying — messages left by the ones who came before you.
+[cool, knowing] And press 3 if you've got something to say yourself. Go on, say what you need to say. [low, private, trailing off] I keep everyone's secrets after an hour.
+[soft, smoky, drawn-out] Whatever brought you to this phone... [long pause] ...the desert sent you here for a reason.
+[warm, low, half-dismissive] Go on now. Make your selection.
+
+main-menu-short:
+[dry, arch] Well. Seems you need a little help finding your way. [low, a little amused] Press 1 to ring the other line. [wry] Could be anyone, darling. Could be fun. [flat, clipped, impatient] Press 2 for messages left by the ones who came before you. [dry, pointed] Although not you, apparently. [cool, half-smiling] Press 3 to leave one of your own. [low, private, trailing off] Remember, I keep everyone's secrets after an hour. [warm, dry] Tick tock, sugar... [beat] time to choose.
+
+Invalid:
+1. [dry, flat] Darling, that's not one of the numbers I mentioned. [low, sultry] Or one of the ones I don't say out loud. [beat] Try again.
+2. [low, amused] Mmm, no. [wry] One, two, or three — [beat, low, teasing] there could be more. [playful] I'll never tell. [low] But that wasn't any of them.
+3. cool, arch] Careful now — a girl could take that personally. [beat, dry] One, two, three. [low, sly] Some things I keep to myself. [beat, playful] That wasn't one of them, though.
+4. [low, tired-but-warm] Not it, darling. [beat] One, two, three — that's what I hand out. [low, teasing] The rest is just for me to know. [beat] But that wasn't one of those, was it.
+5. [low, playful, slow] Wrong number, stranger. [beat, low, teasing] There's more than three, if you're clever enough to find them. [low] That wasn't it, though. [beat] Try again.
+6. [flat, clipped] That's not a choice. [dry, pointed] One, two, three. [beat, low, sly] There might be a few I've never mentioned. [flat, playful] but that wasn't one of them. [beat] Try again darling.
+
+vm-record_message:
+[warm, low, private] I'm listening, and so is the desert.
+[matter-of-fact, gentle] Speak after the tone, you've got 60 seconds. [low] When you're done, just stop talking, or press any key, and I'll tuck it away safe.
+
+vm-saved:
+[warm, low] Got it, stranger. [beat, soft] Safe with me now.
+
+vm-no_more_messages:
+[low, a little wistful] That's all of them, darling [beat] for now.
+[warm, dry] Come back later. Someone's always got something to say eventually. [beat, playful] Or... you could leave one now. [low, warm] Just a thought sugar.
+
+disco-raise:
+[low, sly, building energy] Oh-ho. Now that's a number I didn't expect tonight.
+[playful, a little breathless] Go on... [beat] look up, darling.
+[warm, building excitement] The desert's about to get a little brighter. [beat, delighted] Don't say I never gave you anything.
+
+disco-already-up:
+[beat, sultry] The ball's up, darling — it's been spinning this whole time, waiting on you to notice.
+[sly, low] What more do you want from me, hm? [beat, jokingly] Fireworks? [playful] I don't do fireworks.
+[warm, low, building] But this— [beat] this is mine. All that light, just for you. [sultry, slow] So what's it going to be, darling?
+[low, warm, inviting] Shall we dance?
+
+========================================================================
+PROMPT FILES — what to record and what plays each
+========================================================================
+
+Custom recordings — your voice — saved under recordings/ :
+  main-menu.wav
+      The "Main Menu" script above. Played when a caller enters the menu at
+      700; digits are collected over it, so callers can barge in.
+  main-menu-short.wav
+      The "Short Menu" script above. NOTE: not used by the current dialplan
+      (the menu now plays only main-menu.wav). Kept for future use.
+
+Caller messages — auto-generated, do NOT record:
+  messages/msg_<timestamp>_<uuid>.wav
+      A message left by a caller (option 2). The newest 10 are played back
+      (option 3), oldest-first; older messages are kept on disk and only pruned
+      when free space runs low. Managed by scripts/disco-messages.
+
+Invalid prompts — one is played at random on a wrong entry. These are your six
+"Invalid" scripts above, but the IVR currently points at STOCK placeholder
+files (in sounds/en/us/callie/ivr/). Re-record these filenames, or tell me to
+switch the helper (scripts/disco-messages) to custom files:
+  ivr/ivr-that_was_an_invalid_entry.wav      Invalid #1  (also the intercom fallback)
+  ivr/ivr-youre_doing_it_wrong.wav           Invalid #2
+  ivr/ivr-dude_you_suck.wav                  Invalid #3
+  ivr/ivr-aint_nobody_got_time_for_that.wav  Invalid #4
+  ivr/ivr-no_no_no.wav                       Invalid #5
+  ivr/ivr-oh_whatever.wav                    Invalid #6
+
+Other prompts — currently STOCK placeholders (in sounds/en/us/callie/);
+re-record as desired:
+  voicemail/vm-record_message.wav    Option 2 "leave a message" — spoken before the beep.
+  (beep tone)                        Generated by tone_stream (not a file) — the record-start beep.
+  voicemail/vm-saved.wav             Played after a message is recorded.
+  voicemail/vm-no_more_messages.wav  Option 3 — "no messages" and end-of-messages.
+  ivr/ivr-one_moment_please.wav      911 raise AND 411 lower — spoken before moving the ball
+                                     (both currently share this one placeholder).
+  ivr/ivr-recording_stopped.wav      #  stop — spoken when stopping the ball.
+
+Notes:
+  - path/file.wav names (ivr/..., voicemail/...) are stock FreeSWITCH prompts
+    under sounds/en/us/callie/; bare *.wav names are your custom files in
+    recordings/.
+  - For the narrowband ATA path, record prompts as 8 kHz mono WAV.
