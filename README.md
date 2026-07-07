@@ -65,8 +65,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
-| [`scripts/disco-messages`](scripts/disco-messages) | Message-store helper for the IVR (record rotation, playback navigation). |
-| [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`disco_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
+| [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
+| [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`bella_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
 
 ---
 
@@ -76,56 +76,52 @@ Every call from the ATA lands in the IVR, and each menu digit `transfer`s to a v
 destination handled by the dialplan.
 
 ### 3.1 Entry — any call → the menu
-[`99_all_calls_to_ivr.xml`](conf/dialplan/default/99_all_calls_to_ivr.xml): dialing `700` (the
-ATA off-hook auto-dial), or **any** number from the ATA, is routed to the main menu at `700`.
+[`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) (`all-calls-to-menu`):
+dialing `700` (the ATA off-hook auto-dial), or **any** number from the ATA, is routed to the main
+menu at `700`.
 
 ### 3.2 The menu
-[`00_disco_control.xml`](conf/dialplan/default/00_disco_control.xml) plays the greeting
+[`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) plays the greeting
 (`recordings/main-menu.wav`) and collects the option with `play_and_get_digits` (1–3 digits, `*`
-terminator, validated to the set below). The collected option is dispatched on a second routing
-pass:
+terminator, validated to the set below). The collected option (`bella_opt`) is dispatched on a
+second routing pass:
 
 | Dial | Transfers to | Action |
 |---|---|---|
-| **1** | `DISCO_CALL_OTHER` | Intercom the *other* line |
-| **2** | `DISCO_LEAVE` | Leave a message (max 60s) |
-| **3** | `DISCO_LISTEN` | Listen to stored messages |
+| **1** | `CALL_OTHER` | Intercom the *other* line |
+| **2** | `LISTEN_MESSAGES` | Listen to stored messages |
+| **3** | `LEAVE_MESSAGE` | Leave a message (max 60s) |
 | **911** | `DISCO_RAISE` | Raise the disco ball |
 | **411** | `DISCO_LOWER` | Lower the disco ball |
 | **#** | `DISCO_STOP` | Stop the disco ball |
 
 Anything else plays **one of six random "invalid" prompts** (from
-[`scripts/disco-messages`](scripts/disco-messages) `invalid-prompt`). **Every** action — valid or
+[`scripts/bella-messages`](scripts/bella-messages) `invalid-prompt`). **Every** action — valid or
 invalid — returns to the main menu.
 
 ### 3.3 The actions
-[`00_disco_control.xml`](conf/dialplan/default/00_disco_control.xml):
 
-- **Intercom (`DISCO_CALL_OTHER`)** — checks the caller's SIP user: from **101** it bridges to
-  **102**, from **102** it bridges to **101** (with an "invalid entry" fallback). When the bridge
-  ends it returns to the menu.
-- **Raise / Lower (`DISCO_RAISE` / `DISCO_LOWER`)** — first read the ball's tracked position via
-  `${system($${disco_position})}` (`up` / `down` / `unknown`). **911** raises unless the ball is
-  already `up` (then it plays `disco-already-up.wav`); **411** lowers unless it is already `down`
-  (then `disco-already-down.wav`). Otherwise it plays the raise/lower prompt, runs the relay, and
-  returns to the menu.
-- **Stop (`DISCO_STOP`)** — runs `disco-relay brake`, which cancels any movement **and resets the
-  position to `unknown`** so either 911 or 411 will run next, then returns to the menu.
-- **Position** is `unknown` at boot (and after `#`), so both 911 and 411 work; a completed raise
-  sets `up` and a completed lower sets `down`. The state lives on `/run` (tmpfs), so it resets on
-  reboot.
-
-[`20_disco_messages.xml`](conf/dialplan/default/20_disco_messages.xml):
-
-- **Leave (`DISCO_LEAVE`)** — plays a prompt and a beep, then records up to **60 s** to
+- **Intercom (`CALL_OTHER`)** — [`10_option1_intercom.xml`](conf/dialplan/default/10_option1_intercom.xml):
+  checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
+  **101** (with an "invalid entry" fallback). When the bridge ends it returns to the menu.
+- **Listen (`LISTEN_MESSAGES`)** — [`20_option2_listen.xml`](conf/dialplan/default/20_option2_listen.xml):
+  plays the **newest 10** messages **oldest-first**. During a message, **1 = previous** and
+  **2 = next**; when a message finishes with no key it **auto-advances**, and after the last one
+  it returns to the menu. No other actions on messages are possible. The browse loop
+  (`MESSAGE_PLAY` → `MESSAGE_NAV`) uses `bella-messages` `resolve`/`step` to map the index to a
+  file.
+- **Leave (`LEAVE_MESSAGE`)** — [`30_option3_leave.xml`](conf/dialplan/default/30_option3_leave.xml):
+  plays a prompt and a beep, then records up to **60 s** to
   `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech
-  recordings. Messages are **kept on disk**; `disco-messages rotate` only prunes the oldest when
+  recordings. Messages are **kept on disk**; `bella-messages rotate` only prunes the oldest when
   free space runs low.
-- **Listen (`DISCO_LISTEN`)** — plays the **newest 10** messages **oldest-first**. During a
-  message, **1 = previous** and **2 = next**; when a message finishes with no key it
-  **auto-advances**, and after the last one it returns to the menu. No other actions on messages
-  are possible. The browse loop (`DISCO_MSG_PLAY` → `DISCO_MSG_NAV`) uses `disco-messages`
-  `resolve`/`step` to map the index to a file.
+- **Disco ball (`DISCO_RAISE` / `DISCO_LOWER` / `DISCO_STOP`)** —
+  [`40_disco_controls.xml`](conf/dialplan/default/40_disco_controls.xml): each reads the ball's
+  tracked position via `${system($${disco_position})}` (`up` / `down` / `unknown`). **911** raises
+  unless already `up` (plays `disco-already-up.wav`); **411** lowers unless already `down` (plays
+  `disco-already-down.wav`); **#** runs `disco-relay brake`, which cancels any movement **and
+  resets the position to `unknown`** so either 911 or 411 will run next. Every path returns to the
+  menu. Position is `unknown` at boot and after `#` (state lives on `/run`, tmpfs).
 
 ### 3.4 The relay controller
 [`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status`/`position`
@@ -148,12 +144,11 @@ into timed GPIO relay states on the Waveshare HAT:
 of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).
 
 ### 3.5 The message store
-[`scripts/disco-messages`](scripts/disco-messages) manages `recordings/messages/` for the IVR
+[`scripts/bella-messages`](scripts/bella-messages) manages `recordings/messages/` for the IVR
 (runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback in
-the order received, discards no-speech files, resolves an index to a file for playback, steps the
-next/previous index, and returns a random invalid prompt. Older messages are **kept on disk** and
-pruned oldest-first only when free space is low. All output is newline-free for use in
-`${system(...)}`.
+the order received, resolves an index to a file for playback, steps the next/previous index, and
+returns a random invalid prompt. Older messages are **kept on disk** and pruned oldest-first only
+when free space is low. All output is newline-free for use in `${system(...)}`.
 
 ---
 
@@ -553,16 +548,16 @@ nmcli general reload
 # If a stock 'netplan-eth0'/DHCP profile exists, stop it auto-connecting.
 nmcli con mod netplan-eth0 connection.autoconnect no 2>/dev/null || true
 
-nmcli con add type ethernet ifname eth0 con-name disco-ata-eth0 \
+nmcli con add type ethernet ifname eth0 con-name bella-ata-eth0 \
   connection.autoconnect yes \
   ipv4.method manual ipv4.addresses 192.168.50.1/24 \
   ipv4.never-default yes ipv4.ignore-auto-dns yes ipv6.method disabled \
   2>/dev/null \
-|| nmcli con mod disco-ata-eth0 \
+|| nmcli con mod bella-ata-eth0 \
   connection.interface-name eth0 connection.autoconnect yes \
   ipv4.method manual ipv4.addresses 192.168.50.1/24 \
   ipv4.never-default yes ipv4.ignore-auto-dns yes ipv6.method disabled
-nmcli con up disco-ata-eth0
+nmcli con up bella-ata-eth0
 ```
 
 **Disable IP forwarding** so the ATA segment can't route out over Wi-Fi:
@@ -636,7 +631,7 @@ chown -R freeswitch:freeswitch /usr/local/freeswitch/conf /usr/local/freeswitch/
 test -f /usr/local/freeswitch/conf/freeswitch.xml
 test -f /usr/local/freeswitch/conf/autoload_configs/modules.conf.xml
 test -f /usr/local/freeswitch/conf/sip_profiles/ata.xml
-test -f /usr/local/freeswitch/conf/dialplan/default/00_disco_control.xml
+test -f /usr/local/freeswitch/conf/dialplan/default/00_inbound_and_menu.xml
 
 systemctl enable freeswitch
 systemctl restart freeswitch

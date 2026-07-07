@@ -1,0 +1,34 @@
+<include>
+  <!-- Option 1: intercom the other line, then return to the menu. -->
+  <extension name="call-other-from-101">
+    <condition field="destination_number" expression="^CALL_OTHER$"/>
+    <condition field="${sip_from_user}" expression="^101$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="effective_caller_id_number=101"/>
+      <action application="set" data="effective_caller_id_name=Line 101"/>
+      <action application="bridge" data="${sofia_contact(102@$${domain})}"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="call-other-from-102">
+    <condition field="destination_number" expression="^CALL_OTHER$"/>
+    <condition field="${sip_from_user}" expression="^102$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="effective_caller_id_number=102"/>
+      <action application="set" data="effective_caller_id_name=Line 102"/>
+      <action application="bridge" data="${sofia_contact(101@$${domain})}"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Fallback if option 1 is selected from an unexpected SIP user. -->
+  <extension name="call-other-unknown-line">
+    <condition field="destination_number" expression="^CALL_OTHER$">
+      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+</include>

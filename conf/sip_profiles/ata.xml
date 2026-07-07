@@ -29,9 +29,9 @@
       <param name="log-auth-failures" value="true"/>
 
       <!-- Defense in depth -->
-      <param name="apply-inbound-acl" value="disco_ata_only"/>
-      <param name="apply-register-acl" value="disco_ata_only"/>
-      <param name="local-network-acl" value="disco_ata_only"/>
+      <param name="apply-inbound-acl" value="bella_ata_only"/>
+      <param name="apply-register-acl" value="bella_ata_only"/>
+      <param name="local-network-acl" value="bella_ata_only"/>
 
       <!-- Registration model -->
       <param name="force-register-domain" value="$${domain}"/>
@@ -126,7 +126,7 @@
       <param name="parse-all-invite-headers" value="false"/>
       <param name="extended-info-parsing" value="false"/>
       <param name="track-calls" value="false"/>
-      <param name="user-agent-string" value="Disco-FreeSWITCH"/>
+      <param name="user-agent-string" value="Bella-FreeSWITCH"/>
       <param name="dbname" value="sofia_reg_ata"/>
       <param name="shutdown-on-fail" value="true"/>
       <param name="profile-standby" value="false"/>

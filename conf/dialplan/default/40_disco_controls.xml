@@ -1,0 +1,64 @@
+<include>
+  <!-- ===================================================================
+       Disco-ball controls — the ONLY "disco" component. These drive
+       scripts/disco-relay: 911 = raise, 411 = lower, # = stop. The tracked
+       position (up / down / unknown) comes from disco-relay; it is "unknown" at
+       boot or after #, so either 911 or 411 will run. Every path returns to the
+       menu.
+       =================================================================== -->
+
+  <!-- 911: raise the disco ball, unless it is already up. -->
+  <extension name="disco-raise">
+    <condition field="destination_number" expression="^DISCO_RAISE$">
+      <action application="answer"/>
+      <action application="set" data="disco_pos=${system($${disco_position})}"/>
+      <action application="transfer" data="DISCO_RAISE_GO XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="disco-raise-go">
+    <condition field="destination_number" expression="^DISCO_RAISE_GO$"/>
+    <condition field="${disco_pos}" expression="^up$">
+      <!-- already up: play the "already up" prompt, do not move -->
+      <action application="playback" data="$${recordings_dir}/disco-already-up.wav"/>
+      <action application="transfer" data="700 XML default"/>
+      <!-- not up (down or unknown): announce and raise -->
+      <anti-action application="playback" data="$${recordings_dir}/disco-raise.wav"/>
+      <anti-action application="set" data="disco_move=${system($${disco_raise})}"/>
+      <anti-action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- 411: lower the disco ball, unless it is already down. -->
+  <extension name="disco-lower">
+    <condition field="destination_number" expression="^DISCO_LOWER$">
+      <action application="answer"/>
+      <action application="set" data="disco_pos=${system($${disco_position})}"/>
+      <action application="transfer" data="DISCO_LOWER_GO XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="disco-lower-go">
+    <condition field="destination_number" expression="^DISCO_LOWER_GO$"/>
+    <condition field="${disco_pos}" expression="^down$">
+      <!-- already down: play the "already down" prompt, do not move -->
+      <action application="playback" data="$${recordings_dir}/disco-already-down.wav"/>
+      <action application="transfer" data="700 XML default"/>
+      <!-- not down (up or unknown): announce and lower -->
+      <anti-action application="playback" data="$${recordings_dir}/disco-lower.wav"/>
+      <anti-action application="set" data="disco_move=${system($${disco_lower})}"/>
+      <anti-action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- #: stop the disco ball, cancelling any movement in progress. This also
+       resets the tracked position to "unknown" so 911 or 411 work next. -->
+  <extension name="disco-stop">
+    <condition field="destination_number" expression="^DISCO_STOP$">
+      <action application="answer"/>
+      <action application="playback" data="$${recordings_dir}/disco-stop.wav"/>
+      <action application="set" data="disco_move=${system($${disco_stop})}"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+</include>

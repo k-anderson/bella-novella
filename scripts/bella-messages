@@ -20,11 +20,11 @@ set -euo pipefail
 #   step <index> next|prev  print the next/previous clamped index (0 = past end)
 #   invalid-prompt          print a random "invalid entry" prompt (relative path)
 
-MESSAGES_DIR="${DISCO_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
-PLAYBACK_LIMIT="${DISCO_PLAYBACK_LIMIT:-10}"
+MESSAGES_DIR="${BELLA_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
+PLAYBACK_LIMIT="${BELLA_PLAYBACK_LIMIT:-10}"
 # Old messages are pruned only when free space on the messages filesystem drops
 # below this many megabytes.
-MIN_FREE_MB="${DISCO_MIN_FREE_MB:-200}"
+MIN_FREE_MB="${BELLA_MIN_FREE_MB:-200}"
 
 INVALID_PROMPTS=(
   "ivr/ivr-that_was_an_invalid_entry.wav"
@@ -117,7 +117,7 @@ main() {
     step)           cmd_step "${2:-}" "${3:-}" ;;
     invalid-prompt) cmd_invalid_prompt ;;
     *)
-      echo "usage: disco-messages {rotate|count|resolve <index>|step <index> next|prev|invalid-prompt}" >&2
+      echo "usage: bella-messages {rotate|count|resolve <index>|step <index> next|prev|invalid-prompt}" >&2
       exit 2
       ;;
   esac

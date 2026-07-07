@@ -47,7 +47,7 @@ mkdir -p "${REPO_ROOT}/db" "${REPO_ROOT}/log" "${REPO_ROOT}/run"
 # ---------------------------------------------------------------------------
 # 3. Loopback alias for the isolated ATA IP.
 #    ata.xml binds sip-ip/rtp-ip to $${bind_server_ip} = 192.168.50.1, and the
-#    disco_ata_only ACL only trusts 192.168.50.0/24. Aliasing it onto lo lets
+#    bella_ata_only ACL only trusts 192.168.50.0/24. Aliasing it onto lo lets
 #    mod_sofia bind and lets a local softphone register from within the ACL.
 # ---------------------------------------------------------------------------
 if ! ip addr show dev lo | grep -q "192.168.50.1/24"; then

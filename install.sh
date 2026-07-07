@@ -322,7 +322,7 @@ NMC
 
     nmcli con mod netplan-eth0 connection.autoconnect no 2>/dev/null || true
 
-    ATA_CON_NAME="${ATA_CON_NAME:-disco-ata-eth0}"
+    ATA_CON_NAME="${ATA_CON_NAME:-bella-ata-eth0}"
     ATA_IFACE="${ATA_IFACE:-eth0}"
     ATA_IP_CIDR="${ATA_IP_CIDR:-192.168.50.1/24}"
 
@@ -380,13 +380,13 @@ else
   echo "WARN: $SCRIPT not found in repo. Make sure scripts/disco-relay exists." >&2
 fi
 
-# disco-messages runs as the freeswitch user (no sudo); just needs to be runnable.
-MSG_SCRIPT="${FS_DIR}/scripts/disco-messages"
+# bella-messages runs as the freeswitch user (no sudo); just needs to be runnable.
+MSG_SCRIPT="${FS_DIR}/scripts/bella-messages"
 if [ -f "$MSG_SCRIPT" ]; then
   chown "${FS_USER}:${FS_GROUP}" "$MSG_SCRIPT" 2>/dev/null || true
   chmod 0755 "$MSG_SCRIPT" || true
 else
-  echo "WARN: $MSG_SCRIPT not found in repo. Make sure scripts/disco-messages exists." >&2
+  echo "WARN: $MSG_SCRIPT not found in repo. Make sure scripts/bella-messages exists." >&2
 fi
 
 tmp_sudoers_file=$(mktemp)
@@ -417,13 +417,13 @@ else
 fi
 
 echo "==> Installing IVR fallback prompt symlinks if needed"
-DISCO_SOUND_DIR="${FS_DIR}/recordings"
-MESSAGES_DIR="${DISCO_SOUND_DIR}/messages"
-mkdir -p "${DISCO_SOUND_DIR}" "${MESSAGES_DIR}"
+RECORDINGS_DIR="${FS_DIR}/recordings"
+MESSAGES_DIR="${RECORDINGS_DIR}/messages"
+mkdir -p "${RECORDINGS_DIR}" "${MESSAGES_DIR}"
 FALLBACK="${FS_DIR}/sounds/en/us/callie/ivr/ivr-welcome_to_freeswitch.wav"
 if [ -f "${FALLBACK}" ]; then
-  [ -e "${DISCO_SOUND_DIR}/main-menu.wav" ] || ln -s "${FALLBACK}" "${DISCO_SOUND_DIR}/main-menu.wav"
-  [ -e "${DISCO_SOUND_DIR}/main-menu-short.wav" ] || ln -s "${FALLBACK}" "${DISCO_SOUND_DIR}/main-menu-short.wav"
+  [ -e "${RECORDINGS_DIR}/main-menu.wav" ] || ln -s "${FALLBACK}" "${RECORDINGS_DIR}/main-menu.wav"
+  [ -e "${RECORDINGS_DIR}/main-menu-short.wav" ] || ln -s "${FALLBACK}" "${RECORDINGS_DIR}/main-menu-short.wav"
 else
   echo "WARN: fallback IVR prompt not found: ${FALLBACK}"
 fi
@@ -436,13 +436,13 @@ fi
 
 rm -rf "${FS_DIR}/conf"
 cp -a "${PACKAGE_DIR}/conf" "${FS_DIR}/conf"
-chown -R "${FS_USER}:${FS_GROUP}" "${FS_DIR}/conf" "${DISCO_SOUND_DIR}" 2>/dev/null || true
+chown -R "${FS_USER}:${FS_GROUP}" "${FS_DIR}/conf" "${RECORDINGS_DIR}" 2>/dev/null || true
 
 echo "==> Validating installed config file presence"
 test -f "${FS_DIR}/conf/freeswitch.xml"
 test -f "${FS_DIR}/conf/autoload_configs/modules.conf.xml"
 test -f "${FS_DIR}/conf/sip_profiles/ata.xml"
-test -f "${FS_DIR}/conf/dialplan/default/00_disco_control.xml"
+test -f "${FS_DIR}/conf/dialplan/default/00_inbound_and_menu.xml"
 
 if [ "${DO_RESTART}" -eq 1 ]; then
   echo "==> Enabling and restarting FreeSWITCH"
@@ -477,8 +477,8 @@ ATA settings:
 
 IVR options:
   1   = call the other phone
-  2   = leave a message (max 60s)
-  3   = listen to messages (newest 10; 1 = previous, 2 = next)
+  2   = listen to messages (newest 10; 1 = previous, 2 = next)
+  3   = leave a message (max 60s)
   911 = raise the disco ball
   411 = lower the disco ball
   #   = stop the disco ball

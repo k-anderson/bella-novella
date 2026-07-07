@@ -30,7 +30,7 @@ When you create a Codespace, GitHub asks which dev container to use:
   - symlinks the repo to `/usr/local/freeswitch` (so `base_dir` in `conf/vars.xml` matches and
     the committed binaries/config/sounds are what run);
   - adds `192.168.50.1/24` to `lo` so `mod_sofia` can bind the isolated ATA address and a local
-    softphone can register (within the `disco_ata_only` ACL);
+    softphone can register (within the `bella_ata_only` ACL);
   - installs **GPIO command stubs** (`pinctrl`, `raspi-gpio`) so the real `scripts/disco-relay`
     runs unchanged — every relay action is logged to `/var/log/disco-gpio.log` instead of moving
     hardware;
