@@ -65,7 +65,7 @@
            leaves msg_nav empty and auto-advances (with the next announcement). -->
       <anti-action application="flush_dtmf"/>
       <anti-action application="play_and_get_digits"
-                   data="0 1 1 3000 * ${msg_file} silence_stream://100 msg_nav '^[0-9*#]$' 3000"/>
+                   data="0 1 1 500 * ${msg_file} silence_stream://100 msg_nav '^[0-9*#]$' 3000"/>
       <anti-action application="transfer" data="MESSAGE_NAV XML default"/>
     </condition>
   </extension>
