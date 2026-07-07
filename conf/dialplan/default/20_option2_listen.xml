@@ -1,8 +1,8 @@
 <include>
-  <!-- Option 2: listen to messages, oldest first (newest 10 only). 1 = previous,
-       2 = next; when a message finishes with no key it auto-advances, and after
-       the last one it returns to the menu. No other actions are possible. Uses
-       scripts/bella-messages resolve/step to map the index to a file. -->
+  <!-- Option 2: listen to messages, oldest first (newest 10 only). 1 = next,
+       2 = previous; when a message finishes with no key it auto-advances, and
+       after the last one it returns to the menu. No other actions are possible.
+       Uses scripts/bella-messages resolve/step to map the index to a file. -->
   <extension name="listen-messages">
     <condition field="destination_number" expression="^LISTEN_MESSAGES$">
       <action application="answer"/>
@@ -38,11 +38,11 @@
 
   <extension name="message-nav">
     <condition field="destination_number" expression="^MESSAGE_NAV$"/>
-    <condition field="${msg_nav}" expression="^1$">
-      <!-- 1 = previous -->
+    <condition field="${msg_nav}" expression="^2$">
+      <!-- 2 = previous -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} prev)}"/>
       <action application="transfer" data="MESSAGE_PLAY XML default"/>
-      <!-- 2 = next, or empty = auto-advance after the message finished -->
+      <!-- 1 = next, or empty = auto-advance after the message finished -->
       <anti-action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} next)}"/>
       <anti-action application="transfer" data="MESSAGE_PLAY XML default"/>
     </condition>

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Convert the custom prompt MP3s to the format FreeSWITCH plays on the ATA:
+# 8 kHz mono 16-bit PCM WAV. The MP3s in prompts/ are the source of truth; the
+# WAVs are generated from them.
+#
+# By default only (re)generates a WAV when its MP3 is newer, or the WAV is
+# missing. Pass --force to regenerate every WAV.
+#
+# Requires sox with MP3 support (sox + libsox-fmt-all / libsox-fmt-mp3), which
+# `install.sh --fresh` installs.
+#
+# Usage: bella-convert-prompts [--force]
+
+FORCE=0
+[ "${1:-}" = "--force" ] && FORCE=1
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROMPTS_DIR="${BELLA_PROMPTS_DIR:-${SCRIPT_DIR%/scripts}/prompts}"
+
+if ! command -v sox >/dev/null 2>&1; then
+  echo "ERROR: sox not found. Install it: sudo apt install -y sox libsox-fmt-all" >&2
+  exit 1
+fi
+
+if [ ! -d "$PROMPTS_DIR" ]; then
+  echo "ERROR: prompts directory not found: $PROMPTS_DIR" >&2
+  exit 1
+fi
+
+shopt -s nullglob
+count=0
+for mp3 in "$PROMPTS_DIR"/*.mp3; do
+  wav="${mp3%.mp3}.wav"
+  if [ "$FORCE" -eq 1 ] || [ ! -f "$wav" ] || [ "$mp3" -nt "$wav" ]; then
+    sox "$mp3" -r 8000 -c 1 -b 16 "$wav"
+    echo "converted: $(basename "$mp3") -> $(basename "$wav")"
+    count=$((count + 1))
+  fi
+done
+
+echo "done: ${count} file(s) (re)generated in ${PROMPTS_DIR}"

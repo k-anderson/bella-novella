@@ -18,7 +18,6 @@
     <load module="mod_dptools"/>
 
     <!-- Media playback -->
-    <load module="mod_local_stream"/>
     <load module="mod_native_file"/>
     <load module="mod_sndfile"/>
     <load module="mod_tone_stream"/>

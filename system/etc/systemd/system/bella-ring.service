@@ -1,0 +1,10 @@
+[Unit]
+Description=Bella periodic ring -> main menu
+After=freeswitch.service
+Wants=freeswitch.service
+
+[Service]
+Type=oneshot
+User=freeswitch
+Group=freeswitch
+ExecStart=/usr/local/freeswitch/scripts/bella-ring

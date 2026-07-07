@@ -16,6 +16,6 @@
 /recordings/*
 !/recordings/.gitkeep
 
-# NOTE: bin/ lib/ mod/ include/ (aarch64 binaries), sounds/ (incl. recorded
-# greetings), fonts/, htdocs/, certs/, conf/, scripts/ are intentionally
+# NOTE: bin/ lib/ mod/ include/ (aarch64 binaries), prompts/ (custom voice
+# prompts), fonts/, htdocs/, certs/, conf/, scripts/ are intentionally
 # tracked so this repo can fully redeploy the Raspberry Pi.

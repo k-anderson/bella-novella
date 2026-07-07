@@ -12,6 +12,7 @@ FS_GROUP="${FS_GROUP:-freeswitch}"
 DO_NETWORK=0
 DO_RESTART=1
 DO_FRESH=0
+DO_BACKUP=0
 BUILD_SPANDSP=""
 BUILD_SOFIA=""
 
@@ -24,6 +25,7 @@ Options:
                             freeswitch user, prune desktop/bloat services, and apply OS tuning.
   --network                 Configure eth0 static IP and dnsmasq DHCP scope for ATA.
   --no-restart              Install files but do not restart FreeSWITCH.
+  --backup                  Back up any file before overwriting it (default: overwrite).
   --build-spandsp[=BRANCH]  Build and install SpanDSP from source (optional branch/tag).
   --build-sofia[=BRANCH]    Build and install Sofia-SIP from source (optional branch/tag).
   -h, --help                Show this help message.
@@ -35,6 +37,7 @@ while [ "$#" -gt 0 ]; do
     --fresh) DO_FRESH=1 ;;
     --network) DO_NETWORK=1 ;;
     --no-restart) DO_RESTART=0 ;;
+    --backup) DO_BACKUP=1 ;;
     --build-spandsp) BUILD_SPANDSP="master" ;;
     --build-spandsp=*) BUILD_SPANDSP="${1#*=}" ;;
     --build-sofia) BUILD_SOFIA="master" ;;
@@ -71,7 +74,7 @@ bootstrap_fresh() {
     libopus-dev libsndfile1-dev liblua5.4-dev lua5.4 \
     libpq-dev libtiff-dev libjpeg-dev uuid-dev \
     yasm nasm python3 python3-dev python3-pip \
-    dnsmasq tshark sngrep sox jq rsync \
+    dnsmasq tshark sngrep sox libsox-fmt-all jq rsync \
     vim htop iftop tcpdump net-tools unzip lsof tmux ncdu tree \
     linux-cpupower || true
 
@@ -185,6 +188,7 @@ WATCHDOG
 echo "==> Installing system files from ${PACKAGE_DIR}/system"
 
 backup_if_exists() {
+  [ "${DO_BACKUP}" -eq 1 ] || return 0
   local path="$1"
   if [ -e "${path}" ]; then
     cp -a "${path}" "${path}.backup.${STAMP}" || true
@@ -206,6 +210,16 @@ install -D -m 0644 "${PACKAGE_DIR}/system/etc/profile.d/freeswitch-pkgconfig.sh"
 backup_if_exists /etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf
 install -D -m 0644 "${PACKAGE_DIR}/system/etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf" /etc/NetworkManager/conf.d/99-eth0-ignore-carrier.conf || true
 
+# dnsmasq DHCP scope for the ATA. The config file is placed on every run so it is
+# always in sync; --network is what actually enables/restarts dnsmasq.
+if [ -f "${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" ]; then
+  backup_if_exists /etc/dnsmasq.d/eth0.conf
+  install -D -m 0644 "${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" /etc/dnsmasq.d/eth0.conf || true
+  echo "OK: dnsmasq scope installed at /etc/dnsmasq.d/eth0.conf"
+else
+  echo "WARN: missing ${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" >&2
+fi
+
 # sysctl rules
 backup_if_exists /etc/sysctl.d/98-no-routing.conf
 install -D -m 0644 "${PACKAGE_DIR}/system/etc/sysctl.d/98-no-routing.conf" /etc/sysctl.d/98-no-routing.conf || true
@@ -223,7 +237,14 @@ install -D -m 0644 "${PACKAGE_DIR}/system/etc/systemd/system/freeswitch.service"
 backup_if_exists /etc/security/limits.d/99-freeswitch.conf
 install -D -m 0644 "${PACKAGE_DIR}/system/etc/security/limits.d/99-freeswitch.conf" /etc/security/limits.d/99-freeswitch.conf || true
 
+# Periodic-ring timer: ring a phone every 15 minutes -> main menu.
+backup_if_exists /etc/systemd/system/bella-ring.service
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/systemd/system/bella-ring.service" /etc/systemd/system/bella-ring.service || true
+backup_if_exists /etc/systemd/system/bella-ring.timer
+install -D -m 0644 "${PACKAGE_DIR}/system/etc/systemd/system/bella-ring.timer" /etc/systemd/system/bella-ring.timer || true
+
 systemctl daemon-reload || true
+systemctl enable --now bella-ring.timer >/dev/null 2>&1 || true
 
 build_spandsp() {
   BRANCH="$1"
@@ -289,7 +310,6 @@ for mod in \
   mod_commands \
   mod_dptools \
   mod_dialplan_xml \
-  mod_local_stream \
   mod_native_file \
   mod_sndfile \
   mod_tone_stream \
@@ -357,15 +377,11 @@ SYSCTL
   sysctl --system >/dev/null || true
 
     if command -v dnsmasq >/dev/null 2>&1; then
-      if [ -f "${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" ]; then
-        backup_if_exists /etc/dnsmasq.d/eth0.conf
-        install -m 0644 "${PACKAGE_DIR}/system/etc/dnsmasq.d/eth0.conf" /etc/dnsmasq.d/eth0.conf
-      fi
       systemctl enable dnsmasq >/dev/null 2>&1 || true
       systemctl restart dnsmasq
-      echo "OK: dnsmasq DHCP scope installed"
+      echo "OK: dnsmasq enabled (config at /etc/dnsmasq.d/eth0.conf)"
     else
-      echo "WARN: dnsmasq is not installed. Install it with: sudo apt install dnsmasq"
+      echo "WARN: dnsmasq is not installed; config is in place at /etc/dnsmasq.d/eth0.conf. Install it with: sudo apt install dnsmasq"
     fi
 fi
 
@@ -387,6 +403,20 @@ if [ -f "$MSG_SCRIPT" ]; then
   chmod 0755 "$MSG_SCRIPT" || true
 else
   echo "WARN: $MSG_SCRIPT not found in repo. Make sure scripts/bella-messages exists." >&2
+fi
+
+# bella-ring runs as the freeswitch user (talks to the local event socket).
+RING_SCRIPT="${FS_DIR}/scripts/bella-ring"
+if [ -f "$RING_SCRIPT" ]; then
+  chown "${FS_USER}:${FS_GROUP}" "$RING_SCRIPT" 2>/dev/null || true
+  chmod 0755 "$RING_SCRIPT" || true
+else
+  echo "WARN: $RING_SCRIPT not found in repo. Make sure scripts/bella-ring exists." >&2
+fi
+
+# bella-convert-prompts is run by this installer to build prompt WAVs from MP3s.
+if [ -f "${FS_DIR}/scripts/bella-convert-prompts" ]; then
+  chmod 0755 "${FS_DIR}/scripts/bella-convert-prompts" || true
 fi
 
 tmp_sudoers_file=$(mktemp)
@@ -421,22 +451,33 @@ RECORDINGS_DIR="${FS_DIR}/recordings"
 MESSAGES_DIR="${RECORDINGS_DIR}/messages"
 PROMPTS_DIR="${FS_DIR}/prompts"
 mkdir -p "${RECORDINGS_DIR}" "${MESSAGES_DIR}" "${PROMPTS_DIR}"
-# If the custom menu greeting is missing, fall back to a stock prompt so the
-# IVR is not silent.
-FALLBACK="${FS_DIR}/sounds/en/us/callie/ivr/ivr-welcome_to_freeswitch.wav"
-if [ ! -e "${PROMPTS_DIR}/main-menu.wav" ] && [ -f "${FALLBACK}" ]; then
-  ln -s "${FALLBACK}" "${PROMPTS_DIR}/main-menu.wav"
-  echo "WARN: prompts/main-menu.wav missing; linked stock fallback"
+if [ ! -e "${PROMPTS_DIR}/main-menu.wav" ]; then
+  echo "WARN: ${PROMPTS_DIR}/main-menu.wav is missing; the IVR greeting will be silent." >&2
 fi
 
-echo "==> Backing up and installing FreeSWITCH config"
-if [ -d "${FS_DIR}/conf" ]; then
-  cp -a "${FS_DIR}/conf" "${FS_DIR}/conf.backup.${STAMP}"
-  echo "BACKUP: ${FS_DIR}/conf.backup.${STAMP}"
+# Regenerate prompt WAVs from their MP3 sources (needs sox with MP3 support,
+# installed by --fresh). Only files whose MP3 changed are rebuilt.
+CONVERT_SCRIPT="${FS_DIR}/scripts/bella-convert-prompts"
+if [ -x "${CONVERT_SCRIPT}" ]; then
+  if command -v sox >/dev/null 2>&1; then
+    echo "==> Converting prompts (mp3 -> 8kHz mono wav)"
+    "${CONVERT_SCRIPT}" || echo "WARN: prompt conversion failed"
+  else
+    echo "SKIP: sox not installed; run 'sudo ./install.sh --fresh' then re-run to (re)build prompt WAVs"
+  fi
 fi
 
-rm -rf "${FS_DIR}/conf"
-cp -a "${PACKAGE_DIR}/conf" "${FS_DIR}/conf"
+echo "==> Installing FreeSWITCH config"
+if [ "${PACKAGE_DIR}" = "${FS_DIR}" ]; then
+  echo "OK: config is already in place (repo is ${FS_DIR})"
+else
+  if [ "${DO_BACKUP}" -eq 1 ] && [ -d "${FS_DIR}/conf" ]; then
+    cp -a "${FS_DIR}/conf" "${FS_DIR}/conf.backup.${STAMP}"
+    echo "BACKUP: ${FS_DIR}/conf.backup.${STAMP}"
+  fi
+  rm -rf "${FS_DIR}/conf"
+  cp -a "${PACKAGE_DIR}/conf" "${FS_DIR}/conf"
+fi
 chown -R "${FS_USER}:${FS_GROUP}" "${FS_DIR}/conf" "${RECORDINGS_DIR}" "${PROMPTS_DIR}" 2>/dev/null || true
 
 echo "==> Validating installed config file presence"
@@ -478,7 +519,7 @@ ATA settings:
 
 IVR options:
   1   = call the other phone
-  2   = listen to messages (newest 10; 1 = previous, 2 = next)
+  2   = listen to messages (newest 10; 1 = next, 2 = previous)
   3   = leave a message (max 60s)
   911 = raise the disco ball
   411 = lower the disco ball

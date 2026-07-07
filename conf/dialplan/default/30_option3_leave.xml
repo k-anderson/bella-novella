@@ -12,7 +12,8 @@
       <action application="playback" data="tone_stream://%(500,0,800)"/>
       <!-- Discard recordings shorter than 2s (treated as no speech). -->
       <action application="set" data="record_min_sec=2"/>
-      <action application="set" data="playback_terminators=none"/>
+      <!-- Any DTMF digit stops the recording. -->
+      <action application="set" data="playback_terminators=any"/>
       <!-- 60s cap; lenient silence detection (threshold 300, 5 silence hits). -->
       <action application="record" data="$${messages_dir}/msg_${strftime(%Y%m%d%H%M%S)}_${uuid}.wav 60 300 5"/>
       <!-- Prune only if disk is low; keep everything otherwise. -->

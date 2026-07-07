@@ -67,6 +67,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
 | [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, and invalid prompts. |
 | [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
+| [`scripts/bella-ring`](scripts/bella-ring) | Rings a phone every 15-45 min (systemd timer) and routes it to the menu on answer. |
+| [`scripts/bella-convert-prompts`](scripts/bella-convert-prompts) | Rebuilds the prompt WAVs from their MP3 sources (8 kHz mono); run by `install.sh`. |
 | [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`bella_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
 
 ---
@@ -82,9 +84,11 @@ dialing `700` (the ATA off-hook auto-dial), or **any** number from the ATA, is r
 menu at `700`.
 
 ### 3.2 The menu
-[`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) plays the greeting
-(`prompts/main-menu.wav`) and collects the option with `play_and_get_digits` (1–3 digits, `*`
-terminator, validated to the set below). The collected option (`bella_opt`) is dispatched on a
+[`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) plays the greeting and
+collects the option with `play_and_get_digits` (1–3 digits, `*` terminator, validated to the set
+below). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the call; every
+return to the menu thereafter plays the **short** greeting (`prompts/main-menu-short.wav`) — tracked
+by the `menu_greeted` channel variable. The collected option (`bella_opt`) is dispatched on a
 second routing pass:
 
 | Dial | Transfers to | Action |
@@ -106,8 +110,8 @@ invalid — returns to the main menu.
   checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
   **101** (with an "invalid entry" fallback). When the bridge ends it returns to the menu.
 - **Listen (`LISTEN_MESSAGES`)** — [`20_option2_listen.xml`](conf/dialplan/default/20_option2_listen.xml):
-  plays the **newest 10** messages **oldest-first**. During a message, **1 = previous** and
-  **2 = next**; when a message finishes with no key it **auto-advances**, and after the last one
+  plays the **newest 10** messages **oldest-first**. During a message, **1 = next** and
+  **2 = previous**; when a message finishes with no key it **auto-advances**, and after the last one
   it returns to the menu. No other actions on messages are possible. The browse loop
   (`MESSAGE_PLAY` → `MESSAGE_NAV`) uses `bella-messages` `resolve`/`step` to map the index to a
   file.
@@ -150,6 +154,17 @@ of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).
 the order received, resolves an index to a file for playback, steps the next/previous index, and
 returns a random invalid prompt. Older messages are **kept on disk** and pruned oldest-first only
 when free space is low. All output is newline-free for use in `${system(...)}`.
+
+### 3.6 The periodic ring
+At a random interval between **15 and 45 minutes** a systemd timer runs
+[`scripts/bella-ring`](scripts/bella-ring), which picks
+one of the two lines (101/102) at random and, if it is registered, `originate`s a call to it via
+the local event socket. When the handset is answered it is routed to extension `700` — the main
+menu. If the line isn't registered (ATA unplugged, off-hook, FreeSWITCH down) it logs and exits
+quietly. The schedule lives in
+[`system/etc/systemd/system/bella-ring.timer`](system/etc/systemd/system/bella-ring.timer) /
+[`bella-ring.service`](system/etc/systemd/system/bella-ring.service); `install.sh` enables the
+timer.
 
 ---
 
@@ -524,7 +539,7 @@ missing `.so` means FreeSWITCH won't start with this config:
 ```sh
 cd /usr/local/freeswitch
 for mod in mod_console mod_logfile mod_timerfd mod_posix_timer mod_event_socket \
-           mod_sofia mod_commands mod_dptools mod_dialplan_xml mod_local_stream \
+           mod_sofia mod_commands mod_dptools mod_dialplan_xml \
            mod_native_file mod_sndfile mod_tone_stream mod_say_en; do
   if [ -f "mod/${mod}.so" ]; then echo "OK: ${mod}"; else echo "MISSING: ${mod}" >&2; fi
 done
@@ -602,17 +617,14 @@ scripts/disco-relay brake
 scripts/disco-relay status
 ```
 
-### 6.9 Recordings directory and fallback prompt
+### 6.9 Prompts and message directories
 
-Create the recordings directory and, if no greeting has been recorded yet, symlink a stock
-prompt in as a placeholder so the IVR has audio on first boot (option `9` overwrites
-`recordings/main-menu.wav` from the handset):
+The custom voice prompts (menu greeting, disco-ball, message, and invalid prompts) ship in
+`prompts/` as 8 kHz mono WAV and are tracked in the repo. Just create the runtime directory the
+IVR records caller messages into:
 
 ```sh
-mkdir -p /usr/local/freeswitch/recordings
-FALLBACK=/usr/local/freeswitch/sounds/en/us/callie/ivr/ivr-welcome_to_freeswitch.wav
-[ -e /usr/local/freeswitch/recordings/main-menu.wav ]       || ln -s "$FALLBACK" /usr/local/freeswitch/recordings/main-menu.wav
-[ -e /usr/local/freeswitch/recordings/main-menu-short.wav ] || ln -s "$FALLBACK" /usr/local/freeswitch/recordings/main-menu-short.wav
+mkdir -p /usr/local/freeswitch/prompts /usr/local/freeswitch/recordings/messages
 ```
 
 ### 6.10 Install FreeSWITCH configuration and start
@@ -704,17 +716,10 @@ make -j"$(nproc)"
 sudo make install
 ```
 
-Install sounds and hold music:
-
-```sh
-cd /usr/local/src/freeswitch
-sudo make sounds-install
-sudo make moh-install
-```
-
-> **Audio note:** optional HD sounds are fine, but the ATA path is narrowband G.711/PCMU. For
-> best compatibility, prompts used by the IVR should be 8 kHz mono WAV, or at least tested
-> through the ATA.
+> **Audio note:** this appliance ships **no stock sound set** — every prompt is a custom 8 kHz
+> mono WAV under `prompts/`, and hold music is silence. `make sounds-install`/`make moh-install`
+> are therefore not needed. The ATA path is narrowband G.711/PCMU, so any prompt you add should be
+> 8 kHz mono WAV (or at least tested through the ATA).
 
 SpanDSP and Sofia-SIP are dependencies of this build — install them first with
 `sudo ./install.sh --build-spandsp --build-sofia` (see [6.3](#63-build-spandsp---build-spandsp)

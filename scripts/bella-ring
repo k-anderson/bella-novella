@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ring one of the ATA phones and, on answer, drop it into the main menu (700).
+# Invoked every 15 minutes by bella-ring.timer. Runs as the freeswitch user and
+# talks to FreeSWITCH over the local event socket (127.0.0.1:8021).
+#
+# If the chosen line is not registered (ATA unplugged, phone off-hook, etc.) it
+# logs and exits quietly.
+
+FS_CLI="${FS_CLI:-/usr/local/freeswitch/bin/fs_cli}"
+DOMAIN="${BELLA_DOMAIN:-192.168.50.1}"
+RING_TIMEOUT="${BELLA_RING_TIMEOUT:-10}"
+LOG_TAG="bella-ring"
+
+fs() { "$FS_CLI" -x "$1" 2>/dev/null; }
+
+# Pick one of the two lines at random.
+lines=(101 102)
+ext="${lines[$((RANDOM % ${#lines[@]}))]}"
+
+# Resolve the registered contact; skip if the phone is not registered.
+contact="$(fs "sofia_contact ${ext}@${DOMAIN}" || true)"
+case "$contact" in
+  ""|error/*|*user_not_registered*|*invalid*)
+    logger -t "$LOG_TAG" "skip: ${ext} not registered"
+    exit 0
+    ;;
+esac
+
+logger -t "$LOG_TAG" "ringing ${ext} -> menu"
+
+# Originate to the phone; on answer, run extension 700 (the main menu).
+fs "originate {origination_caller_id_name=Bella,origination_caller_id_number=700,ignore_early_media=true,originate_timeout=${RING_TIMEOUT}}${contact} 700 XML default" || true

@@ -1,0 +1,14 @@
+[Unit]
+Description=Ring one of the phones every 15-45 minutes
+
+[Timer]
+# Base 15 min since the last run, plus a random 0-30 min, so each interval
+# lands uniformly between 15 and 45 minutes. AccuracySec keeps the random
+# delay from being rounded to the minute.
+OnBootSec=15min
+OnUnitActiveSec=15min
+RandomizedDelaySec=30min
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

@@ -6,7 +6,6 @@
   <X-PRE-PROCESS cmd="set" data="run_dir=$${base_dir}/run"/>
   <X-PRE-PROCESS cmd="set" data="db_dir=$${base_dir}/db"/>
   <X-PRE-PROCESS cmd="set" data="mod_dir=$${base_dir}/mod"/>
-  <X-PRE-PROCESS cmd="set" data="sounds_dir=$${base_dir}/sounds"/>
 
   <!-- Isolated ATA Ethernet network -->
   <X-PRE-PROCESS cmd="set" data="domain=192.168.50.1"/>
@@ -21,12 +20,12 @@
   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=PCMU@20i"/>
   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMU@20i"/>
 
-  <!-- Sounds -->
+  <!-- Language + hold music. No stock sound files are shipped; every prompt is
+       an absolute path under prompts_dir, so hold music is silence. -->
   <X-PRE-PROCESS cmd="set" data="default_language=en"/>
   <X-PRE-PROCESS cmd="set" data="default_dialect=us"/>
   <X-PRE-PROCESS cmd="set" data="default_voice=callie"/>
-  <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
-  <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://moh"/>
+  <X-PRE-PROCESS cmd="set" data="hold_music=silence_stream://-1"/>
 
   <!-- Recordings directory -->
   <X-PRE-PROCESS cmd="set" data="recordings_dir=$${base_dir}/recordings"/>

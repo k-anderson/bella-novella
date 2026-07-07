@@ -101,5 +101,5 @@ b             # hang up
 
 Nothing here changes the deployable tree. On the Pi, `git pull` into `/usr/local/freeswitch` (or
 re-clone) still yields a complete, runnable install: the aarch64 `bin/ lib/ mod/`, `conf/`,
-`sounds/` (including recorded greetings), and `scripts/` are all tracked. Only runtime-generated
+`prompts/` (custom voice prompts), and `scripts/` are all tracked. Only runtime-generated
 files (`db/*.db`, `log/*.log`, `run/*.pid`) and `*.backup.*` are ignored.
