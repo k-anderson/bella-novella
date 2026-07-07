@@ -60,41 +60,32 @@ no-answer:
 [warm, low] Either way — [beat] that line's gone quiet on me tonight.
 [warm, dry, affectionate] Try again later, sugar. [beat, teasing] Or leave a little something behind for whoever it is. [low, private] They'll come back to it. They always do.
 
-========================================================================
-PROMPT FILES — what to record and what plays each
-========================================================================
+playback-announcement-1:
+[low, amused, private] [low, private] These are the traces they left in the wire. [wry] Press 1 anytime you'd like to move on to the next one — [low, trailing off] no need to sit with a stranger's secret longer than you want to.
 
-Custom prompts — your voice — live in prompts/ as 8 kHz mono WAV (converted from
-the uploaded MP3s). All of these are now wired into the config:
-  main-menu.wav            The "Main Menu" script. Played once at the start of
-                           the call (barge-in enabled).
-  main-menu-short.wav      The "Short Menu" script. Played on every return to the
-                           menu after the first greeting.
-  invalid-entry-1..6.wav   Your six "Invalid" scripts. One is played at random on
-                           a wrong entry (scripts/bella-messages invalid-prompt).
-  vm-record_message.wav    Option 3 "leave a message" — spoken before the beep.
-  vm-saved.wav             Played after a message is recorded.
-  vm-no_more_messages.wav  Option 2 — "no messages" and end-of-messages.
-  no-answer.wav            Option 1 — played when the other line does not answer.
-  disco-raise.wav          911 when the ball is down/unknown — spoken as it raises.
-  disco-already-up.wav     911 when the ball is already up (does not move).
-  disco-lower.wav          411 when the ball is up/unknown — spoken as it lowers.
-  disco-already-down.wav   411 when the ball is already down (does not move).
-  disco-stop.wav           #  stop — spoken when stopping the ball.
+playback-announcement-2:
+[low, amused] Amusing, wasn't it? [wry] And if you'd like to hear it again, press 2. [low, private, trailing off] I don't mind saying it twice.
 
-Caller messages — auto-generated, do NOT record:
-  recordings/messages/msg_<timestamp>_<uuid>.wav
-      A message left by a caller (option 3). The newest 10 are played back
-      (option 2), oldest-first; older messages are kept on disk and only pruned
-      when free space runs low. Managed by scripts/bella-messages.
+playback-announcement-3:
+[dry, arch, warm] That one'll stay with you. [wry, light] 1 or 2, as you listen — onward, or back. [low, amused] Some secrets deserve a second listen. Others... not so much. [playful, low] There was a caller once who left the same message four times, each one a little more honest than the last. [amused, husky] I only kept the fourth. Cheeky thing.
 
-Still using generated / stock audio:
-  (beep tone)                            tone_stream (not a file) — the record-start beep.
-  ivr/ivr-that_was_an_invalid_entry.wav  stock — intercom fallback for an unexpected SIP user.
+playback-announcement-4:
+[low, amused] Careless, that one — said more than they meant to. [low, private, trailing off] I don't forget the careless ones.
 
-Notes:
-  - Custom prompts live in prompts/ (tracked in git). The .mp3 files are the
-    source; scripts/bella-convert-prompts generates the .wav FreeSWITCH plays
-    (mod_sndfile has no MP3 support), and install.sh runs it automatically.
-    Requires sox with MP3 support, installed by `install.sh --fresh`.
-  - For the narrowband ATA path, prompts are 8 kHz mono WAV.
+playback-announcement-5:
+[low, intimate, playful] That's not the kind of thing you're meant to overhear. [low, husky] Left at 3am, thinking no one was listening. [wry, light] Someone always is. [low, teasing] While I repeat these [break, playful ]remember [sly] you can press 1 to move along, or 2, if you'd like to hear it again.
+
+playback-announcement-6:
+[low, wry, fond] Now that one's a classic. [low, private] I've had it memorized longer than I'd like to admit.
+
+playback-announcement-7:
+[low, amused] Funny, the things people tell a dial tone. [low, private, trailing off] I've never forgotten a single one.
+
+playback-announcement-8:
+[low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead.
+
+playback-announcement-9:
+[low, amused] Careful with that one, darling. [low, private, trailing off] Some of these I keep closer than others.
+
+playback-announcement-10:
+[low, warm, private] This is the last of them. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, almost tender] every voice that ever trusted this line with something. [low, private] And now you know too.
