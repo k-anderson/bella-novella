@@ -8,8 +8,14 @@ main-menu:
 [soft, smoky, drawn-out] Whatever brought you to this phone... [long pause] ...the desert sent you here for a reason.
 [warm, low, half-dismissive] Go on now. Make your selection.
 
-main-menu-short:
+main-menu-short-varient-1:
 [dry, arch] Let me give you a little help finding your way. [low, a little amused] Press 1 to ring the other line. [wry] Could be anyone, darling. Could be fun. [flat, sultry] Press 2 for messages left by the ones who came before you. [low, almost a whisper] Their secrets linger in my mind. [cool, half-smiling] Press 3 to leave a message of your own. [low, private, trailing off] Say something worth remembering. [warm, dry] Tick tock, sugar... [beat] time to choose.
+
+main-menu-short-varient-2:
+[low, smoke-curled] Still here, are you? [dry, amused] The desert's patient. So am I. [velvet, unhurried] Press 1, and I'll set you loose on the line — [wry, half-laughing] a voice out there in the dark, darling, take your chances. [smoky, slower] Press 2, and I'll pour you the whispers left behind — [hushed] secrets that settled into me like dust settles on everything out here. [cool, deliberate] Press 3, if you've one of your own to give me. [low, private] I've got room for it. [warm, dry] Don't keep the night waiting, sugar.
+
+main-menu-short-varient-3:
+[amused, low] You're still on my line. [sly] Careful — that means something. [velvet, unhurried] Press 1, and I'll send you out across the wires — [wry] could be anyone waiting on the other end, darling, that's the gamble. [hushed, smoky] Press 2, for what the ones before you left curled in my ear — [low, reverent] I keep their secrets warm, like a cigarette between two fingers. [cool, inviting] Press 3, and leave me something of your own. [low, trailing off] Everybody's carrying one. [dry, warm] Go on, now. This is the time.
 
 Invalid:
 1. [dry, flat] Darling, that's not one of the numbers I mentioned. [low, sultry] Or one of the ones I don't say out loud. [beat] Try again.
