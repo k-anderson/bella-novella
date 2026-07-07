@@ -17,10 +17,9 @@ set -euo pipefail
 #   rotate                  prune the oldest messages ONLY when disk space is low
 #   count                   print how many messages are playable (<= PLAYBACK_LIMIT)
 #   resolve <index>         print the absolute path of the 1-based Nth playable message
-#   playspec <index>        print the FreeSWITCH playback spec for the Nth message:
-#                           empty when there is no such message; otherwise the message
-#                           path, prefixed with its announcement via file_string:// when
-#                           prompts/playback-announcement-<index>.wav exists
+#   announcement <index>    print the lead-in announcement wav for the Nth message,
+#                           or empty when prompts/playback-announcement-<index>.wav
+#                           does not exist
 #   step <index> next|prev  print the next/previous clamped index (0 = past end)
 #   invalid-prompt          print a random "invalid entry" prompt (relative path)
 #   short-menu-prompt       print a random short main-menu greeting (absolute path)
@@ -109,19 +108,16 @@ cmd_resolve() {
   printf '%s' "${files[$(( idx - 1 ))]}"
 }
 
-# Print the FreeSWITCH playback spec for the 1-based Nth playable message.
-# Empty when there is no such message (so an announcement never plays on its own).
-# When prompts/playback-announcement-<idx>.wav exists, the message is prefixed with
-# that announcement using file_string:// so both play as one interruptible stream.
-cmd_playspec() {
-  local idx="${1:-0}" msg ann
-  msg="$(cmd_resolve "$idx")"
-  [ -n "$msg" ] || { printf ''; return 0; }
+# Print the lead-in announcement wav for the 1-based Nth message, played as a
+# separate prompt before the message. Empty when that announcement file does not
+# exist (so the message plays with no announcement).
+cmd_announcement() {
+  local idx="${1:-0}" ann
   ann="$PROMPTS_DIR/playback-announcement-${idx}.wav"
   if [ -f "$ann" ]; then
-    printf 'file_string://%s!%s' "$ann" "$msg"
+    printf '%s' "$ann"
   else
-    printf '%s' "$msg"
+    printf ''
   fi
 }
 
@@ -152,12 +148,12 @@ main() {
     rotate)         cmd_rotate ;;
     count)          cmd_count ;;
     resolve)        cmd_resolve "${2:-}" ;;
-    playspec)       cmd_playspec "${2:-}" ;;
+    announcement)   cmd_announcement "${2:-}" ;;
     step)           cmd_step "${2:-}" "${3:-}" ;;
     invalid-prompt) cmd_invalid_prompt ;;
     short-menu-prompt) cmd_short_menu_prompt ;;
     *)
-      echo "usage: bella-messages {rotate|count|resolve <index>|playspec <index>|step <index> next|prev|invalid-prompt|short-menu-prompt}" >&2
+      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|invalid-prompt|short-menu-prompt}" >&2
       exit 2
       ;;
   esac

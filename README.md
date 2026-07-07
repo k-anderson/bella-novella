@@ -112,11 +112,13 @@ invalid — returns to the main menu.
   checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
   **101** (with an "invalid entry" fallback). When the bridge ends it returns to the menu.
 - **Listen (`LISTEN_MESSAGES`)** — [`20_option2_listen.xml`](conf/dialplan/default/20_option2_listen.xml):
-  plays the **newest 10** messages **oldest-first**. During a message, **1 = next** and
-  **2 = previous**; when a message finishes with no key it **auto-advances**, and after the last one
-  it returns to the menu. No other actions on messages are possible. The browse loop
-  (`MESSAGE_PLAY` → `MESSAGE_NAV`) uses `bella-messages` `resolve`/`step` to map the index to a
-  file.
+  plays the **newest 10** messages **oldest-first**, each preceded by its numbered announcement
+  (`prompts/playback-announcement-<idx>.wav`) as a lead-in prompt. During a message, **1 = next**
+  and **2 = previous**; navigating by key (or pressing a key during an announcement) **skips the
+  announcement** and plays the message directly. When a message finishes with no key it
+  **auto-advances** to the next message *with* its announcement, and after the last one it returns
+  to the menu. The browse loop (`MESSAGE_ANN` → `MESSAGE_PLAY` → `MESSAGE_NAV`) uses `bella-messages`
+  `announcement`/`resolve`/`step` to map the index to files.
 - **Leave (`LEAVE_MESSAGE`)** — [`30_option3_leave.xml`](conf/dialplan/default/30_option3_leave.xml):
   plays a prompt and a beep, then records up to **60 s** to
   `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech
