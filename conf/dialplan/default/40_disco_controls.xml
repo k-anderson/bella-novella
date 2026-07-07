@@ -20,10 +20,10 @@
     <condition field="destination_number" expression="^DISCO_RAISE_GO$"/>
     <condition field="${disco_pos}" expression="^up$">
       <!-- already up: play the "already up" prompt, do not move -->
-      <action application="playback" data="$${recordings_dir}/disco-already-up.wav"/>
+      <action application="playback" data="$${prompts_dir}/disco-already-up.wav"/>
       <action application="transfer" data="700 XML default"/>
       <!-- not up (down or unknown): announce and raise -->
-      <anti-action application="playback" data="$${recordings_dir}/disco-raise.wav"/>
+      <anti-action application="playback" data="$${prompts_dir}/disco-raise.wav"/>
       <anti-action application="set" data="disco_move=${system($${disco_raise})}"/>
       <anti-action application="transfer" data="700 XML default"/>
     </condition>
@@ -42,10 +42,10 @@
     <condition field="destination_number" expression="^DISCO_LOWER_GO$"/>
     <condition field="${disco_pos}" expression="^down$">
       <!-- already down: play the "already down" prompt, do not move -->
-      <action application="playback" data="$${recordings_dir}/disco-already-down.wav"/>
+      <action application="playback" data="$${prompts_dir}/disco-already-down.wav"/>
       <action application="transfer" data="700 XML default"/>
       <!-- not down (up or unknown): announce and lower -->
-      <anti-action application="playback" data="$${recordings_dir}/disco-lower.wav"/>
+      <anti-action application="playback" data="$${prompts_dir}/disco-lower.wav"/>
       <anti-action application="set" data="disco_move=${system($${disco_lower})}"/>
       <anti-action application="transfer" data="700 XML default"/>
     </condition>
@@ -56,7 +56,7 @@
   <extension name="disco-stop">
     <condition field="destination_number" expression="^DISCO_STOP$">
       <action application="answer"/>
-      <action application="playback" data="$${recordings_dir}/disco-stop.wav"/>
+      <action application="playback" data="$${prompts_dir}/disco-stop.wav"/>
       <action application="set" data="disco_move=${system($${disco_stop})}"/>
       <action application="transfer" data="700 XML default"/>
     </condition>

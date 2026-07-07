@@ -6,8 +6,8 @@
   <extension name="leave-message">
     <condition field="destination_number" expression="^LEAVE_MESSAGE$">
       <action application="answer"/>
-      <!-- Placeholder prompt: "record your message". -->
-      <action application="playback" data="voicemail/vm-record_message.wav"/>
+      <!-- "record your message" prompt. -->
+      <action application="playback" data="$${prompts_dir}/vm-record_message.wav"/>
       <!-- Beep, then begin recording. -->
       <action application="playback" data="tone_stream://%(500,0,800)"/>
       <!-- Discard recordings shorter than 2s (treated as no speech). -->
@@ -17,8 +17,8 @@
       <action application="record" data="$${messages_dir}/msg_${strftime(%Y%m%d%H%M%S)}_${uuid}.wav 60 300 5"/>
       <!-- Prune only if disk is low; keep everything otherwise. -->
       <action application="set" data="bella_rotate=${system($${bella_messages} rotate)}"/>
-      <!-- Placeholder prompt: "saved". -->
-      <action application="playback" data="voicemail/vm-saved.wav"/>
+      <!-- "saved" prompt. -->
+      <action application="playback" data="$${prompts_dir}/vm-saved.wav"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>

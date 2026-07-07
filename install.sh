@@ -416,16 +416,17 @@ else
   echo "SKIP: $SCRIPT not executable; skipping relay initialization"
 fi
 
-echo "==> Installing IVR fallback prompt symlinks if needed"
+echo "==> Ensuring prompts, recordings, and messages directories"
 RECORDINGS_DIR="${FS_DIR}/recordings"
 MESSAGES_DIR="${RECORDINGS_DIR}/messages"
-mkdir -p "${RECORDINGS_DIR}" "${MESSAGES_DIR}"
+PROMPTS_DIR="${FS_DIR}/prompts"
+mkdir -p "${RECORDINGS_DIR}" "${MESSAGES_DIR}" "${PROMPTS_DIR}"
+# If the custom menu greeting is missing, fall back to a stock prompt so the
+# IVR is not silent.
 FALLBACK="${FS_DIR}/sounds/en/us/callie/ivr/ivr-welcome_to_freeswitch.wav"
-if [ -f "${FALLBACK}" ]; then
-  [ -e "${RECORDINGS_DIR}/main-menu.wav" ] || ln -s "${FALLBACK}" "${RECORDINGS_DIR}/main-menu.wav"
-  [ -e "${RECORDINGS_DIR}/main-menu-short.wav" ] || ln -s "${FALLBACK}" "${RECORDINGS_DIR}/main-menu-short.wav"
-else
-  echo "WARN: fallback IVR prompt not found: ${FALLBACK}"
+if [ ! -e "${PROMPTS_DIR}/main-menu.wav" ] && [ -f "${FALLBACK}" ]; then
+  ln -s "${FALLBACK}" "${PROMPTS_DIR}/main-menu.wav"
+  echo "WARN: prompts/main-menu.wav missing; linked stock fallback"
 fi
 
 echo "==> Backing up and installing FreeSWITCH config"
@@ -436,7 +437,7 @@ fi
 
 rm -rf "${FS_DIR}/conf"
 cp -a "${PACKAGE_DIR}/conf" "${FS_DIR}/conf"
-chown -R "${FS_USER}:${FS_GROUP}" "${FS_DIR}/conf" "${RECORDINGS_DIR}" 2>/dev/null || true
+chown -R "${FS_USER}:${FS_GROUP}" "${FS_DIR}/conf" "${RECORDINGS_DIR}" "${PROMPTS_DIR}" 2>/dev/null || true
 
 echo "==> Validating installed config file presence"
 test -f "${FS_DIR}/conf/freeswitch.xml"

@@ -25,7 +25,7 @@
     <condition field="destination_number" expression="^MESSAGE_PLAY2$"/>
     <condition field="${msg_file}" expression="^$">
       <!-- Empty path => no messages, or advanced past the last one. -->
-      <action application="playback" data="voicemail/vm-no_more_messages.wav"/>
+      <action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
       <action application="transfer" data="700 XML default"/>
       <!-- Non-empty: play the message and collect a nav digit (1 or 2). The
            '*' terminator keeps input to the two nav keys; anything else or no

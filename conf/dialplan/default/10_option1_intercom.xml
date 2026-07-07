@@ -8,6 +8,8 @@
       <action application="set" data="effective_caller_id_number=101"/>
       <action application="set" data="effective_caller_id_name=Line 101"/>
       <action application="bridge" data="${sofia_contact(102@$${domain})}"/>
+      <!-- Only reached if the bridge failed (no answer / busy). -->
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -20,6 +22,8 @@
       <action application="set" data="effective_caller_id_number=102"/>
       <action application="set" data="effective_caller_id_name=Line 102"/>
       <action application="bridge" data="${sofia_contact(101@$${domain})}"/>
+      <!-- Only reached if the bridge failed (no answer / busy). -->
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -27,7 +31,7 @@
   <!-- Fallback if option 1 is selected from an unexpected SIP user. -->
   <extension name="call-other-unknown-line">
     <condition field="destination_number" expression="^CALL_OTHER$">
-      <action application="playback" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>

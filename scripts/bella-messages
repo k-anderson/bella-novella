@@ -26,13 +26,16 @@ PLAYBACK_LIMIT="${BELLA_PLAYBACK_LIMIT:-10}"
 # below this many megabytes.
 MIN_FREE_MB="${BELLA_MIN_FREE_MB:-200}"
 
+# Custom prompts directory (absolute path, played directly by FreeSWITCH).
+PROMPTS_DIR="${BELLA_PROMPTS_DIR:-/usr/local/freeswitch/prompts}"
+
 INVALID_PROMPTS=(
-  "ivr/ivr-that_was_an_invalid_entry.wav"
-  "ivr/ivr-youre_doing_it_wrong.wav"
-  "ivr/ivr-dude_you_suck.wav"
-  "ivr/ivr-aint_nobody_got_time_for_that.wav"
-  "ivr/ivr-no_no_no.wav"
-  "ivr/ivr-oh_whatever.wav"
+  "$PROMPTS_DIR/invalid-entry-1.wav"
+  "$PROMPTS_DIR/invalid-entry-2.wav"
+  "$PROMPTS_DIR/invalid-entry-3.wav"
+  "$PROMPTS_DIR/invalid-entry-4.wav"
+  "$PROMPTS_DIR/invalid-entry-5.wav"
+  "$PROMPTS_DIR/invalid-entry-6.wav"
 )
 
 # Sorted oldest-first (lexical == chronological because of the name prefix).

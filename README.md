@@ -65,6 +65,7 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
+| [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, and invalid prompts. |
 | [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
 | [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`bella_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
 
@@ -82,7 +83,7 @@ menu at `700`.
 
 ### 3.2 The menu
 [`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) plays the greeting
-(`recordings/main-menu.wav`) and collects the option with `play_and_get_digits` (1–3 digits, `*`
+(`prompts/main-menu.wav`) and collects the option with `play_and_get_digits` (1–3 digits, `*`
 terminator, validated to the set below). The collected option (`bella_opt`) is dispatched on a
 second routing pass:
 
@@ -95,7 +96,7 @@ second routing pass:
 | **411** | `DISCO_LOWER` | Lower the disco ball |
 | **#** | `DISCO_STOP` | Stop the disco ball |
 
-Anything else plays **one of six random "invalid" prompts** (from
+Anything else plays **one of six random "invalid" prompts** (`prompts/invalid-entry-1..6.wav`, via
 [`scripts/bella-messages`](scripts/bella-messages) `invalid-prompt`). **Every** action — valid or
 invalid — returns to the main menu.
 
