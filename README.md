@@ -1,4 +1,4 @@
-# bella-novella — the "disco" FreeSWITCH appliance
+# bella-novella — a FreeSWITCH appliance
 
 A self-contained [FreeSWITCH](https://freeswitch.org/) telephony appliance that runs on a
 Raspberry Pi. Two analog phones (via an ATA) become the controls for a **motorized linear
