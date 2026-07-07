@@ -30,13 +30,15 @@
     </condition>
   </extension>
 
-  <!-- Every later return to the menu (after an action/invalid): short greeting. -->
+  <!-- Every later return to the menu (after an action/invalid): short greeting.
+       One of the main-menu-short-varient-N prompts is chosen at random. -->
   <extension name="menu-repeat">
     <condition field="destination_number" expression="^700$"/>
     <condition field="${menu_greeted}" expression="^true$">
       <action application="set" data="bella_opt="/>
+      <action application="set" data="menu_prompt=${system($${bella_messages} short-menu-prompt)}"/>
       <action application="play_and_get_digits"
-              data="1 3 1 7000 * $${prompts_dir}/main-menu-short.wav silence_stream://100 bella_opt '^(1|2|3|911|411|#)$' 2000"/>
+              data="1 3 1 7000 * ${menu_prompt} silence_stream://100 bella_opt '^(1|2|3|911|411|#)$' 2000"/>
       <action application="transfer" data="DISPATCH XML default"/>
     </condition>
   </extension>

@@ -87,7 +87,9 @@ menu at `700`.
 [`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) plays the greeting and
 collects the option with `play_and_get_digits` (1–3 digits, `*` terminator, validated to the set
 below). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the call; every
-return to the menu thereafter plays the **short** greeting (`prompts/main-menu-short.wav`) — tracked
+return to the menu thereafter plays **one of five random short greetings**
+(`prompts/main-menu-short-varient-1..5.wav`, via
+[`scripts/bella-messages`](scripts/bella-messages) `short-menu-prompt`) — tracked
 by the `menu_greeted` channel variable. The collected option (`bella_opt`) is dispatched on a
 second routing pass:
 
