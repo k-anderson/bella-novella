@@ -5,6 +5,8 @@
     <condition field="${sip_from_user}" expression="^101$">
       <action application="set" data="hangup_after_bridge=true"/>
       <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="ringback=%(2000,4000,440,480)"/>
+      <action application="set" data="instant_ringback=true"/>
       <action application="set" data="effective_caller_id_number=101"/>
       <action application="set" data="effective_caller_id_name=Line 101"/>
       <action application="bridge" data="${sofia_contact(102@$${domain})}"/>
@@ -19,6 +21,8 @@
     <condition field="${sip_from_user}" expression="^102$">
       <action application="set" data="hangup_after_bridge=true"/>
       <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="ringback=%(2000,4000,440,480)"/>
+      <action application="set" data="instant_ringback=true"/>
       <action application="set" data="effective_caller_id_number=102"/>
       <action application="set" data="effective_caller_id_name=Line 102"/>
       <action application="bridge" data="${sofia_contact(101@$${domain})}"/>

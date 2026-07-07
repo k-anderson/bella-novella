@@ -25,10 +25,15 @@ main-menu-short-varient-5:
 
 Invalid:
 1. [dry, flat] Darling, that's not one of the numbers I mentioned. [low, sultry] Or one of the ones I don't say out loud. [beat] Try again.
+
 2. [low, amused] Mmm, no. [wry] One, two, or three — [beat, low, teasing] there could be more. [playful] I'll never tell. [low] But that wasn't any of them.
-3. cool, arch] Careful now — a girl could take that personally. [beat, dry] One, two, three. [low, sly] Some things I keep to myself. [beat, playful] That wasn't one of them, though.
+
+3. [cool, arch] Careful now — a girl could take that personally. [beat, dry] One, two, three. [low, sly] Some things I keep to myself. [beat, playful] That wasn't one of them, though.
+
 4. [low, tired-but-warm] Not it, darling. [beat] One, two, three — that's what I hand out. [low, teasing] The rest is just for me to know. [beat] But that wasn't one of those, was it.
+
 5. [low, playful, slow] Wrong number, stranger. [beat, low, teasing] There's more than three, if you're clever enough to find them. [low] That wasn't it, though. [beat] Try again.
+
 6. [flat, clipped] That's not a choice. [dry, pointed] One, two, three. [beat, low, sly] There might be a few I've never mentioned. [flat, playful] but that wasn't one of them. [beat] Try again darling.
 
 vm-record_message:
