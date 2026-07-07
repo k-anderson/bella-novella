@@ -88,11 +88,25 @@
     </condition>
   </extension>
 
-  <!-- Catch-all: invalid or no selection -> one of six random prompts -> menu. -->
+  <!-- Catch-all: invalid or no selection -> one of six random prompts. The caller
+       can interrupt the prompt by pressing a valid option; that digit is collected
+       and acted on immediately. Otherwise we fall back to the menu greeting. -->
   <extension name="dispatch-invalid">
     <condition field="destination_number" expression="^DISPATCH$">
-      <action application="playback" data="${system($${bella_messages} invalid-prompt)}"/>
+      <action application="set" data="bella_opt="/>
+      <action application="play_and_get_digits"
+              data="1 3 1 7000 * ${system($${bella_messages} invalid-prompt)} silence_stream://100 bella_opt '^(1|2|3|911|411|#)$' 2000"/>
+      <action application="transfer" data="DISPATCH_AFTER_INVALID XML default"/>
+    </condition>
+  </extension>
+
+  <!-- If a valid option was entered during/after the invalid prompt, dispatch it;
+       otherwise return to the menu greeting. -->
+  <extension name="dispatch-after-invalid">
+    <condition field="destination_number" expression="^DISPATCH_AFTER_INVALID$"/>
+    <condition field="${bella_opt}" expression="^$">
       <action application="transfer" data="700 XML default"/>
+      <anti-action application="transfer" data="DISPATCH XML default"/>
     </condition>
   </extension>
 
