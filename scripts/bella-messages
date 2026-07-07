@@ -57,9 +57,10 @@ list_messages() {
   find "$MESSAGES_DIR" -maxdepth 1 -type f -name 'msg_*.wav' 2>/dev/null | sort
 }
 
-# The playable window: the newest PLAYBACK_LIMIT messages, still oldest-first.
+# The playable window: the newest PLAYBACK_LIMIT messages, newest-first (so the
+# IVR plays newest to oldest; index 1 == newest).
 playback_list() {
-  list_messages | tail -n "$PLAYBACK_LIMIT"
+  list_messages | tail -n "$PLAYBACK_LIMIT" | tac
 }
 
 # True when free space on the messages filesystem is below MIN_FREE_MB.
