@@ -2,8 +2,8 @@
 
 A self-contained [FreeSWITCH](https://freeswitch.org/) telephony appliance that runs on a
 Raspberry Pi. Two analog phones (via an ATA) become the controls for a **motorized linear
-actuator** and an intercom: lift a handset, navigate a short voice menu, and press a digit to
-raise or lower the mechanism or ring the other phone.
+actuator** and an intercom: lift a handset, navigate voice menus that respect bella's personailty,
+and press a digit toraise or lower the mechanism or ring the other phone.
 
 This repository **is** the Pi's `/usr/local/freeswitch` directory, so it doubles as a complete,
 redeployable backup of the appliance: binaries, configuration, sounds, and the relay-control
