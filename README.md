@@ -116,6 +116,11 @@ prompt is acted on immediately; another invalid key plays a fresh scold — Bell
 valid option is pressed or the caller stays silent (a timeout), which returns to the menu greeting.
 Completed actions return to the menu.
 
+> **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else on the
+> menu is *unannounced* and spreads by word of mouth: the disco controls (**911** raise, **411** lower,
+> **#** stop), the branching story (**0**, see §3.7), and the guess-my-number game (**5**, see §3.8).
+> Bella hints that there's more — *"one of the ones I don't say out loud"* — but never names them.
+
 ### 3.3 The actions
 
 - **Intercom (`CALL_OTHER`)** — [`10_option1_intercom.xml`](conf/dialplan/default/10_option1_intercom.xml):
@@ -756,3 +761,26 @@ SpanDSP and Sofia-SIP are dependencies of this build — install them first with
 `sudo ./install.sh --build-spandsp --build-sofia` (see [6.3](#63-build-spandsp---build-spandsp)
 and [6.4](#64-build-sofia-sip---build-sofia)).
 
+Wifi
+
+sudo nmcli connection add type wifi ifname wlan0 con-name "Location1" ssid "YOUR_SSID_1" \
+  wifi-sec.key-mgmt wpa-psk wifi-sec.psk "PASSWORD_1" \
+  connection.autoconnect yes connection.autoconnect-priority 100
+
+  nmcli connection add type wifi ifname wlan0 con-name "Hotspot" ssid "ArtCar" \
+  802-11-wireless.mode ap 802-11-wireless.band bg \
+  ipv4.method shared \
+  connection.autoconnect no
+
+sudo cp system/usr/local/bin/wifi-fallback.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/wifi-fallback.sh
+
+sudo cp system/etc/systemd/system/wifi-fallback.service /etc/systemd/system/
+sudo cp system/etc/systemd/system/wifi-fallback.timer /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now wifi-fallback.timer
+
+# Run it once immediately to test
+sudo systemctl start wifi-fallback.service
+journalctl -t wifi-fallback -n 20
