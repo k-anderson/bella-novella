@@ -1,27 +1,28 @@
 main-menu:
-[low, sultry, smoke-curling] Well now. You picked up my phone. [half-smile, knowing] That either makes you lost... [long beat, unhurried] ...or exactly where you're meant to be.
+[low, sultry, smoke-curling] Well now. You picked up my phone.
+[half-smile, knowing] That either makes you lost... [long beat, unhurried] ...or exactly where you're meant to be.
 [hushed, almost a whisper] If you already know my numbers... [sly, lips-curled] ...you know what to do with them.
 [velvet, commanding but unhurried] But if this is your first time on my line, [slow, sultry] here's how it works.
-[low, deliberate] Dial 1, and I'll send you down the wire to whoever's still answering that old phone. [wry, half-laughing] Could be anyone, darling. [darker] I've just never had the heart to stop calling it.
-[low, amused, private] dial 2, and I'll play you what's been left behind, every secret somebody handed me thinking I'd forget it by morning. [sad] Just echoes of the ones who came before you.
-[intimate, leaning in, almost touching the mic] And dial 3, if you've got something to add to the pile. [low, private, trailing off] Everybody leaves something with me eventually.
-[soft, smoky, drawn-out] Whatever brought you to this phone tonight... [long pause] ...the universe doesn't tend to send you anywhere by accident.
-[warm, low, half-dismissive] Go on now, darling. Make your selection.
+[low, deliberate] Dial 1, and I'll send you down the wire to whoever's still answering that old phone.  [darker, low] Half of me still expects a certain someone to pick up [wry, half-laughing] but it could be anyone, darling.
+[low, amused, private] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [sad, quiet] Funny how they linger. Echoes of the ones who came before you.
+[intimate, leaning in, almost touching the mic] And dial 3, if you've got something you want to add to the collection. [low, private, trailing off] Everybody leaves something with me eventually. [beat]
+[low, velvet, quiet] Those are just the options I give to strangers. [sly] Not everything's meant for an audience.
+[warm, low, half-dismissive] So go on now, darling. Make your selection. [low, sly] The obvious choice isn't always the most interesting one.
 
 main-menu-short-varient-1:
-[dry, arch] Let me help you find your way back. [low, a little amused] Dial 1 for the other line [wry] Could be anyone, darling. [playful] Could be fun. [flat, sultry] Dial 2 for what the ones before you left behind. [low, almost a whisper] Their secrets never leave me. [cool, half-smiling] Dial 3 if you have something to say worth me keeping. [warm, dry] Tick tock, sugar... [beat] I'm not getting any younger.
+[dry, arch] Let me help you find your way. [low, a little amused] Dial 1 for the other line — [wry] could be anyone, darling. [playful] Could be fun. [flat, sultry] Dial 2 for what the ones before you left behind — [low, almost a whisper] their secrets never leave me. [cool, half-smiling] Dial 3, if you've got something worth me keeping. [sly, half-smile] Or don't. Maybe there's something else. [warm, dry] Tick tock, sugar... [beat] I'm not getting any younger.
 
 main-menu-short-varient-2:
 [low, velvet] Still here. Still listening. [dry, amused] Time can be patient. So am I — I've had practice. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, half-laughing] Who you'll find is anyone's guess. [smoky, slower] Dial 2, and I'll pour you what's been whispered to me. [hushed] The kind of things that improve with age, like a good bottle left long enough to breathe.. [cool, deliberate] Dial 3, if there's something burning in your thoughts that needs to be let out. [warm, dry] No time like the present.
 
 main-menu-short-varient-3:
-[low, smoke-curled] You're still with me. [sly, amused] That's not nothing, darling — not everyone stays on the line. [velvet, unhurried] Dial 1, and I'll cast you across the wire [wry, half-laughing] same gamble it's always been, hoping for a voice on the other end that answers back. [hushed, smoky] Dial 2, and I'll share with you what the others left curled in my ear [low, reverent] kept warm, the way I keep everything I was never meant to hold onto. [cool, inviting] Dial 3 if you've got a thought you'd trust me with. [low, trailing off] Everyone's carrying something out here, darling. [warm, dry] So — what'll it be?
+[low, smoke-curled] You're still with me. [sly, amused] That's not nothing, darling — not everyone stays on the line. [velvet, unhurried] Dial 1, and I'll cast you across the wire [wry, half-laughing] same gamble it's always been, hoping that the other end answers back. [hushed, smoky] Dial 2, and I'll share with you what the others left curled in my ear [low, reverent] kept warm, the way I keep everything I was never meant to hold onto. [cool, inviting] Dial 3 if you've got a thought you'd trust me with. [low, trailing off] Everyone's carrying something out here, darling. [sly, low] Though those aren't the only numbers I answer to. [warm, dry] So — what'll it be?
 
 main-menu-short-varient-4:
 [low, playful] Onward, darling? [dry, amused] Time moves strange out here [break] has for years, if you ask me. [velvet, low] Dial 1, and I'll set you loose on the wire to the other side [wry, half-smiling] never the same voice twice [laughing] that line stopped being predictable a long time ago. [cool, deliberate] Dial 2, to hear the things I have tucked away. [low, private] Things that become clearest once the fire's burned low. [cool, deliberate] Dial 3, if you've got something precious enough to part with. [low, trailing off] I keep those closest, sugar. [warm, dry] Tick tock now — [sly] don't make a girl wait.
  
 main-menu-short-varient-5:
-[sly, happy] I do like the persistent ones. I was persistent myself once,[beat, soft] and some part of me still is, if I'm honest. [velvet, low] Dial 1, and I'll thread you through to the other side [wry, half-smiling] never the same voice twice, darling. [smoky, hushed] Dial 2, if you want to hear what the sands of time have already swallowed. [cool, deliberate] Dial 3, if there is something you want to give me. [low, trailing off] I collect it all like jewelry. Same drawer, same reasons. [warm, cheeky] Go on, don't be shy.
+[sly, happy] I do like the persistent ones — I was persistent myself, once. [beat, soft] Some part of me still is, if I'm honest. [velvet, low] Dial 1, and I'll thread you through to the other side — [wry, half-smiling] the thread never lands in the same place twice, darling. [smoky, hushed] Dial 2, for what the sands of time have already swallowed — [low, private] it still whispers back to me, some nights. [cool, deliberate] Dial 3, if there's something you're willing to part with. [low, trailing off] I collect it all like jewelry — same drawer, same reasons. [warm, cheeky] Go on, don't be shy. [sly, low] The bold ones always find more than they were looking for.
 
 Invalid:
 1. [dry, flat] Darling, that's not one of the numbers I mentioned. [low, sultry] Or one of the ones I don't say out loud. [beat] Try again.
