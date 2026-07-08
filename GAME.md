@@ -99,7 +99,7 @@ Bracketed notes are delivery cues, not spoken.
 [velvet, wry] Lower. A touch less ambition.
 
 ### game-win
-[delighted, low] Well, well. You found me. [impressed, warm] Not many do that, darling — and not so quick. [sly, purring] Beginner's luck... or are you trouble? [beat, warm] Either way — colour me impressed. And I don't impress easy. [sly] Tell the driver you once met me in Salzburg, there might be something in it for you.
+[delighted, low] Well, well. You found me. [impressed, warm] Not many do that, darling — and not so quick. [sly, purring] Beginner's luck... or are you trouble? [beat, warm] Either way — colour me impressed. And I don't impress easy.
 
 ### game-lose
 [low, amused] And that's the last of your guesses, sugar. [teasing] No — I'm not going to tell you what it was. [sly, warm] A lady keeps a few secrets, doesn't she. [beat, inviting] Come try me again sometime. Perhaps I'll be in a giving mood.

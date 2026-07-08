@@ -85,13 +85,14 @@ standard). Bracketed notes are delivery cues, not spoken.
 [warm, the book closing slow] ...And every lantern took the flame, and not one burned dimmer for the giving. They walked the traveler to dawn on a road paved with their own borrowed light.
 [intimate, setting the book down] That's the end of the story. [low, knowing] But not the end of you, darling. You're the kind that gives the fire away — [beat] and never once notices you're the warmest thing in the room. [sly, soft] I noticed. I always do.
 
+
 ### tale-end-hide
 [low, quiet] ...So they walked on alone, the candle hidden, the cold ones left to the cold. And the traveler reached the dawn — safe, untouched, [slower] and entirely unremembered.
 [closing the book, gentle but pointed] A light kept only for yourself, sugar... is just a secret that burns. [worldly] I know the type — careful, guarded, arrives with everything they left with. [beat, a little sad] Nothing lost. Nothing given, either. [soft] There's still time to change that. There always is — till there isn't.
 
 ### tale-end-revel
 [delighted, letting loose] ...So you burned it all — every page of that map, every reason — and the desert lit up like a second sunrise, and you both danced. No road home. No wish for one.
-[smoky, closing the book slow] Some souls aren't built to find their way back, darling. They give the whole thing to the fire and call it living. [a private laugh] ...I've burned a book or two myself, once. [sultry] Glorious. [beat, softer] Just — mind the ones still holding a candle at the window for you. [warm] You and I should have a drink. The strong kind.
+[smoky, closing the book slow] Some souls aren't built to find their way back, darling. They give the whole thing to the fire and call it living. [a private laugh] ...I've burned a book or two myself, once. [sultry] Glorious. [beat, softer] Just — mind the ones still holding a candle at the window for you. [warm] You and I should have a drink. The strong kind. [sly] Tell the driver you once met me in Salzburg, there might be something in it for you.
 
 ### tale-end-ash
 [low, steadying] ...The map was ash. But the traveler knelt and let the desert teach them its bones — the lean of the dunes, the cold that means north, the stars that never lie. They walked on by heart, and reached the dawn changed.
