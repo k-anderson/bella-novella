@@ -76,9 +76,9 @@ Record each as `prompts/<name>.wav` (8 kHz mono 16-bit — the repo's standard).
 Bracketed notes are delivery cues, not spoken.
 
 ### game-intro
-[low, sly, delighted] Ohh. So you want to play a little game with me. [warm, amused] How could a girl say no.
-[velvet, leaning in] It's simple, darling. I'm thinking of a number — somewhere between one and nine. [teasing] You dial a single guess, and I'll tell you if mine is higher... or lower.
-[low, purring] You've a handful of tries to find me out. [sly] I won't make it easy. [warm, inviting] Go on, then. Your first guess.
+[low, sly, delighted] Ohh. A little game with me? [warm, amused] How could a girl say no.
+[velvet, leaning in] Its simple, darling. I'm thinking of a number, one through nine. [teasing] Dial your guess — I'll tell you higher, or lower.
+[low, purring] A handful of tries to find me out. [sly] I won't make it easy. [warm, inviting] Go on then. First guess.
 
 ### game-higher-1
 [low, teasing] Higher, darling. Don't be shy.

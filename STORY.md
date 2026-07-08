@@ -65,9 +65,9 @@ Record each of these as `prompts/<name>.wav` (8 kHz mono 16-bit — the repo's
 standard). Bracketed notes are delivery cues, not spoken.
 
 ### tale-open
-[low, delighted] There you are. Not everyone finds their way to this one. [beat] Sit — take the good chair. [amused, dry] Don't be shy, darling.
+[low, delighted] Not everyone finds their way to this one. [beat] Sit — take the good chair. [amused, dry] Don't be shy, darling.
 [velvet] Let me pick you a book... [happy] Ah. This one. It always finds the right pair of hands.
-[settling in, intimate] A small story, then. A traveler stands at the edge of the desert at dusk, and an old woman — [sly, private] someone not unlike me — lights a candle, and folds the traveler's hands around it. "Carry it till dawn," she says, "and it will carry you."
+[settling in, intimate] A short fable, then. A traveler stands at the edge of the desert at dusk, and an older woman — [sly, private] someone not unlike me — lights a candle, and folds the traveler's hands around it. "Carry it till dawn," she says, "and it will carry you."
 [slower, smoky] So they walk. The night comes down cold, and the wind comes looking for that little flame. [beat] It trembles in their hands.
 [low, deliberate] First choice, sugar. Dial 1 to cup it close — shield it with your own body, and walk slower. [beat, teasing] Or dial 2 to feed it — tear a page from the book you carry, and let it flare up bright and bold.
 
