@@ -103,7 +103,7 @@ playback-announcement-8:
 [low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead.
 
 playback-announcement-9:
-[low, amused] Careful with that one, darling. [low, private, trailing off] Some of these I keep closer than others.
+--> [low, amused] Careful with that one, darling. [low, private, trailing off] Some of these I keep closer than others.
 
 playback-announcement-10:
 [low, warm, private] This is the last of them. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, almost tender] every voice that ever trusted this line with something. [low, private] And now you know too.

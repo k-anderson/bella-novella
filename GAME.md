@@ -13,7 +13,7 @@ prompts.
   hits it (**win**) or uses up their tries (**lose**).
 - **Persona:** the 1920s matriarch — teasing, warm, and never gives the secret
   away, even on a loss ("a lady keeps a few secrets").
-- **Tries:** default **5**, tunable via the `game_tries_max` var in
+- **Tries:** default **3**, tunable via the `game_tries_max` var in
   [conf/vars.xml](conf/vars.xml).
 - **Voice:** same bracketed emotional-cue style as [PROMPTS.md](PROMPTS.md); this
   file is the source of truth for generating the prompt audio.

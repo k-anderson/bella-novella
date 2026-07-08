@@ -187,7 +187,7 @@ full prompt scripts are in [`STORY.md`](STORY.md). Prompts: `prompts/tale-*.wav`
 ### 3.8 Hidden — "guess my number" (`5`)
 Dialing **`5`** (never announced) starts a keypad guessing game. Bella picks a secret number
 **1–9**; each single keypress is a guess, and she answers with a random *higher* / *lower* until
-the caller wins or runs out of tries (default **5**, tunable via `game_tries_max` in
+the caller wins or runs out of tries (default **3**, tunable via `game_tries_max` in
 [`conf/vars.xml`](conf/vars.xml)). She never reveals the number on a loss. The comparison and
 randomness live in [`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` /
 `hint`), driven by [`60_game.xml`](conf/dialplan/default/60_game.xml); see [`GAME.md`](GAME.md).
