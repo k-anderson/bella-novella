@@ -10,7 +10,7 @@ set -euo pipefail
 
 FS_CLI="${FS_CLI:-/usr/local/freeswitch/bin/fs_cli}"
 DOMAIN="${BELLA_DOMAIN:-192.168.50.1}"
-RING_TIMEOUT="${BELLA_RING_TIMEOUT:-10}"
+RING_TIMEOUT="${BELLA_RING_TIMEOUT:-20}"
 LOG_TAG="bella-ring"
 
 fs() { "$FS_CLI" -x "$1" 2>/dev/null; }
