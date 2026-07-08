@@ -47,6 +47,11 @@
        ${msg_file} is populated for the branch below. -->
   <extension name="message-play">
     <condition field="destination_number" expression="^MESSAGE_PLAY$">
+      <!-- Every message cycle passes through here. Each dialplan transfer
+           decrements max_forwards; without resetting it, long browsing sessions
+           exhaust the per-call budget and FreeSWITCH drops the call with
+           EXCHANGE_ROUTING_ERROR. Reset it so navigation is unbounded. -->
+      <action application="set" data="max_forwards=70"/>
       <action application="set" data="msg_file=${system($${bella_messages} resolve ${msg_idx})}"/>
       <action application="set" data="msg_nav="/>
       <action application="transfer" data="MESSAGE_PLAY2 XML default"/>
