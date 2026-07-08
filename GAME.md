@@ -77,7 +77,7 @@ Bracketed notes are delivery cues, not spoken.
 
 ### game-intro
 [low, sly, delighted] Ohh. A little game with me? [warm, amused] How could a girl say no.
-[velvet, leaning in] Its simple, darling. I'm thinking of a number, one through nine. [teasing] Dial your guess — I'll tell you higher, or lower.
+[velvet, leaning in] Its simple, darling. I'm thinking of a number, one through nine. [teasing] You guess — I'll tell you higher, or lower.
 [low, purring] A handful of tries to find me out. [sly] I won't make it easy. [warm, inviting] Go on then. First guess.
 
 ### game-higher-1
