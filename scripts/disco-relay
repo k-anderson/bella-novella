@@ -213,12 +213,35 @@ write_position() {
   logger -t "$LOG_TAG" "position=$1"
 }
 
+# Sleep that a brake can interrupt. A bare `sleep` defers a trapped TERM/INT
+# until it finishes, which would keep the movement — and the lock fd it holds —
+# alive after a brake; backgrounding the sleep and `wait`-ing lets the trap run
+# at once. The current sleep's pid is tracked so the trap can kill it.
+movement_sleep_pid=""
+interruptible_sleep() {
+  sleep "$1" &
+  movement_sleep_pid=$!
+  wait "$movement_sleep_pid"
+}
+
+# TERM/INT handler for a running movement (brake): stop the motor, kill any
+# in-progress sleep so its inherited lock fd is released, drop the pid file, and
+# exit. This frees the flock promptly so the next raise/lower can start.
+preempt_movement() {
+  trap - TERM INT
+  [ -n "$movement_sleep_pid" ] && kill "$movement_sleep_pid" 2>/dev/null || true
+  motor_stop
+  rm -f "$PID_FILE"
+  exit 143
+}
+
 perform_raise() {
   local seconds="$1"
   local on_after_percent="$2"
 
-  # brake (or any TERM) preempts this movement cleanly.
-  trap 'motor_stop; rm -f "$PID_FILE"; exit 143' TERM INT
+  # brake (or any TERM) preempts this movement cleanly; interruptible sleeps let
+  # the trap fire at once and release the movement lock.
+  trap preempt_movement TERM INT
   trap 'rm -f "$PID_FILE"' EXIT
 
   local lights_on_at before_lights_on after_lights_on
@@ -229,14 +252,14 @@ perform_raise() {
   logger -t "$LOG_TAG" "perform=raise seconds=${seconds} spot_lights_on_after_percent=${on_after_percent} spot_lights_on_at=${lights_on_at}s"
 
   motor_stop
-  sleep "$SETTLE_TIME"
+  interruptible_sleep "$SETTLE_TIME"
 
   motor_up
 
-  sleep "$before_lights_on"
+  interruptible_sleep "$before_lights_on"
   spot_lights_on
 
-  sleep "$after_lights_on"
+  interruptible_sleep "$after_lights_on"
 
   motor_stop
   spot_lights_on
@@ -248,8 +271,9 @@ perform_lower() {
   local seconds="$1"
   local off_after_percent="$2"
 
-  # brake (or any TERM) preempts this movement cleanly.
-  trap 'motor_stop; rm -f "$PID_FILE"; exit 143' TERM INT
+  # brake (or any TERM) preempts this movement cleanly; interruptible sleeps let
+  # the trap fire at once and release the movement lock.
+  trap preempt_movement TERM INT
   trap 'rm -f "$PID_FILE"' EXIT
 
   local lights_off_at before_lights_off after_lights_off
@@ -263,14 +287,14 @@ perform_lower() {
   spot_lights_on
 
   motor_stop
-  sleep "$SETTLE_TIME"
+  interruptible_sleep "$SETTLE_TIME"
 
   motor_down
 
-  sleep "$before_lights_off"
+  interruptible_sleep "$before_lights_off"
   spot_lights_off
 
-  sleep "$after_lights_off"
+  interruptible_sleep "$after_lights_off"
 
   motor_stop
   spot_lights_off
