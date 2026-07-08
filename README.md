@@ -109,8 +109,10 @@ second routing pass:
 | **5** | `GAME_START` | *(hidden, unspoken)* Guess-my-number game — see §3.8 |
 
 Anything else plays **one of six random "invalid" prompts** (`prompts/invalid-entry-1..6.wav`, via
-[`scripts/bella-messages`](scripts/bella-messages) `invalid-prompt`). **Every** action — valid or
-invalid — returns to the main menu.
+[`scripts/bella-messages`](scripts/bella-messages) `invalid-prompt`). A valid option pressed over that
+prompt is acted on immediately; another invalid key plays a fresh scold — Bella keeps scolding until a
+valid option is pressed or the caller stays silent (a timeout), which returns to the menu greeting.
+Completed actions return to the menu.
 
 ### 3.3 The actions
 
@@ -118,7 +120,7 @@ invalid — returns to the main menu.
   checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
   **101** (with an "invalid entry" fallback). When the bridge ends it returns to the menu.
 - **Listen (`LISTEN_MESSAGES`)** — [`20_option2_listen.xml`](conf/dialplan/default/20_option2_listen.xml):
-  plays the **newest 10** messages **oldest-first**, each preceded by its numbered announcement
+  plays the **newest 10** messages **newest-first**, each preceded by its numbered announcement
   (`prompts/playback-announcement-<idx>.wav`) as a lead-in prompt. During a message, **1 = next**
   and **2 = previous**; navigating by key (or pressing a key during an announcement) **skips the
   announcement** and plays the message directly. When a message finishes with no key it
@@ -160,8 +162,8 @@ of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).
 
 ### 3.5 The message store
 [`scripts/bella-messages`](scripts/bella-messages) manages `recordings/messages/` for the IVR
-(runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback in
-the order received, resolves an index to a file for playback, steps the next/previous index, and
+(runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback
+newest-first, resolves an index to a file for playback, steps the next/previous index, and
 returns a random invalid prompt. Older messages are **kept on disk** and pruned oldest-first only
 when free space is low. All output is newline-free for use in `${system(...)}`.
 
