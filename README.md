@@ -46,7 +46,9 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | Path | What it is | Custom? |
 |---|---|---|
 | [`conf/`](conf/) | All FreeSWITCH configuration — the heart of the project (see below). | **Yes** |
-| [`scripts/disco-relay`](scripts/disco-relay) | Bash controller for the Waveshare 3-relay HAT (raise/lower/brake/K3 timing). | **Yes** |
+| [`scripts/`](scripts/) | Project bash helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV). | **Yes** |
+| [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs (menu, disco, message, invalid, story `tale-*`, game `game-*`). | **Yes** |
+| [`system/`](system/) | systemd unit files (the `bella-ring` timer/service), installed by `install.sh`. | **Yes** |
 | [`bin/`](bin/) | FreeSWITCH executables (`freeswitch`, `fs_cli`, …), **aarch64**. | stock |
 | [`lib/`](lib/) | `libfreeswitch.so`. | stock |
 | [`mod/`](mod/) | Loadable modules (`.so`), **aarch64**. Only a minimal set is used. | stock |
