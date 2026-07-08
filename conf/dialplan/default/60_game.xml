@@ -36,8 +36,10 @@
     <condition field="destination_number" expression="^GAME_ASK$">
       <action application="set" data="max_forwards=70"/>
       <action application="set" data="game_guess="/>
+      <!-- args: min max tries timeout terminators FILE INVALID-AUDIO VAR REGEX digit-timeout.
+           Both audio slots are silence (feedback is played in GAME_VERDICT/START). -->
       <action application="play_and_get_digits"
-              data="1 1 1 7000 # silence_stream://300 game_guess '^[1-9]$' 2000"/>
+              data="1 1 1 7000 # silence_stream://300 silence_stream://100 game_guess '^[1-9]$' 2000"/>
       <action application="transfer" data="GAME_EVAL XML default"/>
     </condition>
   </extension>
