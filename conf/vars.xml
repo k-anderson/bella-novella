@@ -42,4 +42,8 @@
 
   <!-- IVR message store helper (runs as the freeswitch user; no sudo needed) -->
   <X-PRE-PROCESS cmd="set" data="bella_messages=/usr/local/freeswitch/scripts/bella-messages"/>
+
+  <!-- "Guess my number" game (hidden menu option 5): helper + try cap -->
+  <X-PRE-PROCESS cmd="set" data="bella_game=/usr/local/freeswitch/scripts/bella-game"/>
+  <X-PRE-PROCESS cmd="set" data="game_tries_max=5"/>
 </include>

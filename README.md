@@ -30,7 +30,8 @@ no app, screen, or internet dependency:
    FreeSWITCH as SIP line **101** or **102** over the isolated LAN.
 2. Picking up a phone (or dialing `700`) drops the caller into a **voice menu**.
 3. Menu choices either **raise/lower the actuator** (via the relay HAT) or **intercom the other
-   phone**. A hidden option lets you **re-record the menu greeting** from the handset itself.
+   phone**. A hidden option lets you **re-record the menu greeting** from the handset itself;
+   other hidden digits reveal a **branching story** (`0`) and a **guess-my-number game** (`5`).
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -61,12 +62,15 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | File | Purpose |
 |---|---|
 | [`conf/freeswitch.xml`](conf/freeswitch.xml) | Root config: includes vars, autoload configs, the `default` dialplan, and the inline user directory. |
-| [`conf/vars.xml`](conf/vars.xml) | Global settings: paths, the `192.168.50.1` bind IP, `PCMU` codec, and the `disco_raise`/`disco_lower` actuator commands. |
+| [`conf/vars.xml`](conf/vars.xml) | Global settings: paths, the `192.168.50.1` bind IP, `PCMU` codec, the `disco_raise`/`disco_lower` actuator commands, and the hidden number-game helper (`bella_game`, `game_tries_max`). |
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
-| [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, and invalid prompts. |
+| [`STORY.md`](STORY.md) | Design + full prompt scripts for the hidden branching story (`0`, `50_tale.xml`). |
+| [`GAME.md`](GAME.md) | Design + full prompt scripts for the hidden number game (`5`, `60_game.xml`). |
+| [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, invalid, story (`tale-*`), and game (`game-*`) prompts. |
 | [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
+| [`scripts/bella-game`](scripts/bella-game) | Number-guessing-game helper for the hidden `5` option (random secret, guess verdict, higher/lower prompt). |
 | [`scripts/bella-ring`](scripts/bella-ring) | Rings a phone every 15-45 min (systemd timer) and routes it to the menu on answer. |
 | [`scripts/bella-convert-prompts`](scripts/bella-convert-prompts) | Rebuilds the prompt WAVs from their MP3 sources (8 kHz mono); run by `install.sh`. |
 | [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`bella_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
@@ -101,6 +105,8 @@ second routing pass:
 | **911** | `DISCO_RAISE` | Raise the disco ball |
 | **411** | `DISCO_LOWER` | Lower the disco ball |
 | **#** | `DISCO_STOP` | Stop the disco ball |
+| **0** | `TALE_OPEN` | *(hidden, unspoken)* Bella reads a branching story — see §3.7 |
+| **5** | `GAME_START` | *(hidden, unspoken)* Guess-my-number game — see §3.8 |
 
 Anything else plays **one of six random "invalid" prompts** (`prompts/invalid-entry-1..6.wav`, via
 [`scripts/bella-messages`](scripts/bella-messages) `invalid-prompt`). **Every** action — valid or
@@ -169,6 +175,23 @@ quietly. The schedule lives in
 [`system/etc/systemd/system/bella-ring.timer`](system/etc/systemd/system/bella-ring.timer) /
 [`bella-ring.service`](system/etc/systemd/system/bella-ring.service); `install.sh` enables the
 timer.
+
+### 3.7 Hidden — the branching story (`0`)
+Dialing **`0`** (never announced) opens **"The Ember"**, a short branching fable Bella reads aloud
+from her lounge. Each node narrates and collects one digit; the choices lead to one of **five
+endings**, each a small moral that reflects the path taken. An invalid key plays a story-specific
+prompt and re-offers the node, so the caller stays inside the story; endings return to the menu.
+The nodes live in [`50_tale.xml`](conf/dialplan/default/50_tale.xml); the tree, choice table, and
+full prompt scripts are in [`STORY.md`](STORY.md). Prompts: `prompts/tale-*.wav`.
+
+### 3.8 Hidden — "guess my number" (`5`)
+Dialing **`5`** (never announced) starts a keypad guessing game. Bella picks a secret number
+**1–9**; each single keypress is a guess, and she answers with a random *higher* / *lower* until
+the caller wins or runs out of tries (default **5**, tunable via `game_tries_max` in
+[`conf/vars.xml`](conf/vars.xml)). She never reveals the number on a loss. The comparison and
+randomness live in [`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` /
+`hint`), driven by [`60_game.xml`](conf/dialplan/default/60_game.xml); see [`GAME.md`](GAME.md).
+Prompts: `prompts/game-*.wav`.
 
 ---
 

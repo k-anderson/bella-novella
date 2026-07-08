@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Helper for the hidden "guess my number" IVR game (menu option 5).
+#
+# Stateless: the dialplan holds the per-call state in channel variables
+# (game_secret, game_tries) and calls this helper for the random secret, the
+# guess verdict, the tries counter, and a random higher/lower prompt. All output
+# is newline-free so it can be used directly in the dialplan via ${system(...)}.
+# It runs as the freeswitch user (no sudo needed).
+#
+# Commands:
+#   secret <min> <max>
+#       print a random integer in [min,max] (empty on bad args).
+#   verdict <min> <max> <secret> <guess> <tries> <maxtries>
+#       print one of: bad | hit | high | low | lose
+#         bad  = guess is not an integer within [min,max]  (no try consumed)
+#         hit  = guess == secret
+#         high = secret is higher than the guess  (caller should aim higher)
+#         low  = secret is lower than the guess   (caller should aim lower)
+#         lose = wrong guess, and this guess reaches maxtries
+#   incr <n>
+#       print n+1 (treats missing/invalid n as 0). Newline-free counter bump.
+#   hint high|low
+#       print the absolute path of a random game-higher-N.wav / game-lower-N.wav,
+#       or empty if none exist.
+
+PROMPTS_DIR="${BELLA_PROMPTS_DIR:-/usr/local/freeswitch/prompts}"
+
+is_uint() { case "${1:-}" in ''|*[!0-9]*) return 1 ;; *) return 0 ;; esac; }
+
+cmd_secret() {
+  local min="${1:-}" max="${2:-}"
+  is_uint "$min" && is_uint "$max" || { printf ''; return 0; }
+  [ "$min" -le "$max" ] || { printf ''; return 0; }
+  printf '%s' "$(( RANDOM % (max - min + 1) + min ))"
+}
+
+cmd_verdict() {
+  local min="${1:-}" max="${2:-}" secret="${3:-}" guess="${4:-}" tries="${5:-}" maxtries="${6:-}"
+  # If any of the game context is malformed, fail safe as a non-scoring "bad".
+  is_uint "$min" && is_uint "$max" && is_uint "$secret" && is_uint "$tries" && is_uint "$maxtries" || { printf 'bad'; return 0; }
+  is_uint "$guess" || { printf 'bad'; return 0; }
+  { [ "$guess" -ge "$min" ] && [ "$guess" -le "$max" ]; } || { printf 'bad'; return 0; }
+
+  local newtries=$(( tries + 1 ))
+  if [ "$guess" -eq "$secret" ]; then
+    printf 'hit'
+  elif [ "$newtries" -ge "$maxtries" ]; then
+    printf 'lose'
+  elif [ "$secret" -gt "$guess" ]; then
+    printf 'high'
+  else
+    printf 'low'
+  fi
+}
+
+cmd_incr() {
+  local n="${1:-0}"
+  is_uint "$n" || n=0
+  printf '%s' "$(( n + 1 ))"
+}
+
+cmd_hint() {
+  local dir="${1:-}" prefix
+  case "$dir" in
+    high) prefix="game-higher" ;;
+    low)  prefix="game-lower" ;;
+    *)    printf ''; return 0 ;;
+  esac
+  shopt -s nullglob
+  local files=( "$PROMPTS_DIR/$prefix"-*.wav )
+  local n="${#files[@]}"
+  [ "$n" -gt 0 ] || { printf ''; return 0; }
+  printf '%s' "${files[$(( RANDOM % n ))]}"
+}
+
+main() {
+  local cmd="${1:-}"
+  case "$cmd" in
+    secret)  cmd_secret "${2:-}" "${3:-}" ;;
+    verdict) cmd_verdict "${2:-}" "${3:-}" "${4:-}" "${5:-}" "${6:-}" "${7:-}" ;;
+    incr)    cmd_incr "${2:-}" ;;
+    hint)    cmd_hint "${2:-}" ;;
+    *)
+      echo "usage: bella-game {secret <min> <max>|verdict <min> <max> <secret> <guess> <tries> <maxtries>|incr <n>|hint high|low}" >&2
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"
