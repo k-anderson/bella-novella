@@ -1,10 +1,9 @@
 # The Ember — Bella's branching fable (hidden menu option `0`)
 
 A choose-your-own-path audio fable that Bella reads to the caller by the fire.
-It lives on the lounge/mobile-library art car: bookshelves, low warm light, a
-fireplace, and Bella — the 1920s matriarch — pulling a book off the shelf and
-reading you a small story. Every ending is a moral that reads the *caller* back,
-based on the choices they made.
+Bella — the 1920s matriarch — pulling a book off the shelf and
+reads you a small story. Every ending is a moral based on the choices the
+caller made.
 
 ## Overview
 
