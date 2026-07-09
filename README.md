@@ -29,9 +29,10 @@ no app, screen, or internet dependency:
 1. An analog phone is plugged into an **ATA** (analog telephone adapter). The ATA registers to
    FreeSWITCH as SIP line **101** or **102** over the isolated LAN.
 2. Picking up a phone (or dialing `700`) drops the caller into a **voice menu**.
-3. Menu choices either **raise/lower the actuator** (via the relay HAT) or **intercom the other
-   phone**. Other hidden digits reveal a **branching story** (`0`) and a **guess-my-number
-   game** (`5`).
+3. Menu choices either **raise/lower the actuator** (via the relay HAT), **intercom the other
+   phone**, or use the built-in **answering machine** to **leave a message** or **listen to
+   stored messages**. Other hidden digits reveal a **branching story** (`0`) and a
+   **guess-my-number game** (`5`).
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
