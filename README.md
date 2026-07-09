@@ -69,8 +69,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
-| [`STORY.md`](STORY.md) | Design + full prompt scripts for the hidden branching story (`0`, `50_tale.xml`). |
-| [`GAME.md`](GAME.md) | Design + full prompt scripts for the hidden number game (`5`, `60_game.xml`). |
+| [`STORY.md`](STORY.md) | Design + full prompt scripts for the hidden branching story (`0`, `50_option0_tale.xml`). |
+| [`GAME.md`](GAME.md) | Design + full prompt scripts for the hidden number game (`5`, `60_option5_game.xml`). |
 | [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, invalid, story (`tale-*`), and game (`game-*`) prompts. |
 | [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
 | [`scripts/bella-game`](scripts/bella-game) | Number-guessing-game helper for the hidden `5` option (random secret, guess verdict, higher/lower prompt). |
@@ -196,7 +196,7 @@ Dialing **`0`** (never announced) opens **"The Ember"**, a short branching fable
 from her lounge. Each node narrates and collects one digit; the choices lead to one of **five
 endings**, each a small moral that reflects the path taken. An invalid key plays a story-specific
 prompt and re-offers the node, so the caller stays inside the story; endings return to the menu.
-The nodes live in [`50_tale.xml`](conf/dialplan/default/50_tale.xml); the tree, choice table, and
+The nodes live in [`50_option0_tale.xml`](conf/dialplan/default/50_option0_tale.xml); the tree, choice table, and
 full prompt scripts are in [`STORY.md`](STORY.md). Prompts: `prompts/tale-*.wav`.
 
 ### 3.8 Hidden — "guess my number" (`5`)
@@ -205,7 +205,7 @@ Dialing **`5`** (never announced) starts a keypad guessing game. Bella picks a s
 the caller wins or runs out of tries (default **3**, tunable via `game_tries_max` in
 [`conf/vars.xml`](conf/vars.xml)). She never reveals the number on a loss. The comparison and
 randomness live in [`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` /
-`hint`), driven by [`60_game.xml`](conf/dialplan/default/60_game.xml); see [`GAME.md`](GAME.md).
+`hint`), driven by [`60_option5_game.xml`](conf/dialplan/default/60_option5_game.xml); see [`GAME.md`](GAME.md).
 Prompts: `prompts/game-*.wav`.
 
 ---

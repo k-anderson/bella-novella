@@ -11,8 +11,8 @@
          911 = raise the disco ball      (DISCO_RAISE,     40_disco_controls.xml)
          411 = lower the disco ball      (DISCO_LOWER,     40_disco_controls.xml)
          #   = stop the disco ball       (DISCO_STOP,      40_disco_controls.xml)
-         0   = hidden fable "The Ember"   (TALE_OPEN,       50_tale.xml), unspoken
-         5   = hidden number game         (GAME_START,      60_game.xml), unspoken
+         0   = hidden fable "The Ember"   (TALE_OPEN,       50_option0_tale.xml), unspoken
+         5   = hidden number game         (GAME_START,      60_option5_game.xml), unspoken
        Anything else plays a random "invalid" prompt. Every path returns here.
        =================================================================== -->
 
@@ -94,7 +94,7 @@
     </condition>
   </extension>
 
-  <!-- Hidden option 0: Bella's branching fable "The Ember" (50_tale.xml). Never
+  <!-- Hidden option 0: Bella's branching fable "The Ember" (50_option0_tale.xml). Never
        announced in any greeting; only callers who dial 0 find it. -->
   <extension name="dispatch-story">
     <condition field="destination_number" expression="^DISPATCH$"/>
@@ -103,7 +103,7 @@
     </condition>
   </extension>
 
-  <!-- Hidden option 5: Bella's "guess my number" game (60_game.xml). Never
+  <!-- Hidden option 5: Bella's "guess my number" game (60_option5_game.xml). Never
        announced in any greeting; only callers who dial 5 find it. -->
   <extension name="dispatch-game">
     <condition field="destination_number" expression="^DISPATCH$"/>

@@ -22,7 +22,7 @@ prompts.
 
 It is a **secret**: at the main menu the caller dials **`5`**. Bella never
 announces it. Internally, menu option `5` routes to `GAME_START` (see
-[conf/dialplan/default/60_game.xml](conf/dialplan/default/60_game.xml) and the
+[conf/dialplan/default/60_option5_game.xml](conf/dialplan/default/60_option5_game.xml) and the
 `dispatch-game` entry in
 [conf/dialplan/default/00_inbound_and_menu.xml](conf/dialplan/default/00_inbound_and_menu.xml)).
 

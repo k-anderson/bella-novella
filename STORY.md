@@ -19,7 +19,7 @@ based on the choices they made.
 
 It is a **secret**: at the main menu the caller dials **`0`**. Bella never
 announces it in any greeting. Internally, menu option `0` routes to `TALE_OPEN`
-(see [conf/dialplan/default/50_tale.xml](conf/dialplan/default/50_tale.xml) and
+(see [conf/dialplan/default/50_option0_tale.xml](conf/dialplan/default/50_option0_tale.xml) and
 the `dispatch-story` entry in
 [conf/dialplan/default/00_inbound_and_menu.xml](conf/dialplan/default/00_inbound_and_menu.xml)).
 
