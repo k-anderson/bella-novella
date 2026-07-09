@@ -22,20 +22,20 @@ When you create a Codespace, GitHub asks which dev container to use:
 ## How the emulated configuration works
 
 - `.devcontainer/freeswitch-arm64/Dockerfile` — `FROM --platform=linux/arm64 debian:bookworm`
-  (matches Raspberry Pi OS bookworm) plus the shared libraries the binaries need and a headless
-  softphone (`baresip`).
+  (matches Raspberry Pi OS bookworm) plus the shared libraries the binaries need and headless
+  call tools (`baresip`, and `sipp` via `sip-tester`).
 - `initializeCommand` registers the QEMU `aarch64` binfmt handler so the arm64 image can run on
   the x86_64 host.
 - `.devcontainer/common/setup.sh` (post-create) makes the checkout behave like the Pi:
   - symlinks the repo to `/usr/local/freeswitch` (so `base_dir` in `conf/vars.xml` matches and
-    the committed binaries/config/sounds are what run);
+    the committed binaries/config/prompts are what run);
   - adds `192.168.50.1/24` to `lo` so `mod_sofia` can bind the isolated ATA address and a local
     softphone can register (within the `bella_ata_only` ACL);
   - installs **GPIO command stubs** (`pinctrl`, `raspi-gpio`) so the real `scripts/disco-relay`
     runs unchanged — every relay action is logged to `/var/log/disco-gpio.log` instead of moving
     hardware;
-  - links `disco-relay` to `/usr/local/bin/` (where `conf/vars.xml` expects it) and installs the
-    `fs-start` launcher.
+  - installs the `fs-start` launcher on `PATH`; `disco-relay` stays at
+    `/usr/local/freeswitch/scripts/disco-relay`, exactly where `conf/vars.xml` calls it.
 
 ## Running FreeSWITCH
 
@@ -53,13 +53,15 @@ fs_cli -x 'reloadxml'             # after editing conf/
 
 ## Simulating the actuator (no hardware)
 
-The IVR runs `sudo /usr/local/freeswitch/scripts/disco-relay raise|lower ...` via `bgsystem`. You can also run it
-directly:
+The IVR runs `sudo /usr/local/freeswitch/scripts/disco-relay raise|lower …` via `${system(...)}`
+from the dialplan (the script starts the movement in the background and returns immediately). You
+can also run it directly (it isn't on `PATH`, so use the full path):
 
 ```bash
-sudo disco-relay raise 5 15     # honors real timing; logs K1/K2/K3 transitions
-sudo disco-relay lower 5 15
-sudo disco-relay status
+sudo /usr/local/freeswitch/scripts/disco-relay raise 5 15   # honors real timing; logs K1/K2/K3
+sudo /usr/local/freeswitch/scripts/disco-relay lower 5 15
+sudo /usr/local/freeswitch/scripts/disco-relay status
+sudo /usr/local/freeswitch/scripts/disco-relay brake        # stop + reset position to unknown
 
 tail -f /var/log/disco-gpio.log  # watch the simulated relay activity
 ```
@@ -78,10 +80,14 @@ answers in the background; line 101 is interactive. In the `baresip` console:
 
 ```
 /dial 700     # reach the main menu
-2             # raise  -> see /var/log/disco-gpio.log
-3             # lower
 1             # intercom -> rings line 102
-9             # record a new greeting
+2             # listen to stored messages
+3             # leave a message (records after the beep)
+911           # raise the disco ball -> see /var/log/disco-gpio.log
+411           # lower the disco ball
+#             # stop the disco ball
+0             # hidden: Bella's branching story
+5             # hidden: guess-my-number game
 b             # hang up
 /quit
 ```
@@ -102,4 +108,5 @@ b             # hang up
 Nothing here changes the deployable tree. On the Pi, `git pull` into `/usr/local/freeswitch` (or
 re-clone) still yields a complete, runnable install: the aarch64 `bin/ lib/ mod/`, `conf/`,
 `prompts/` (custom voice prompts), and `scripts/` are all tracked. Only runtime-generated
-files (`db/*.db`, `log/*.log`, `run/*.pid`) and `*.backup.*` are ignored.
+files (`db/*.db`, `log/*.log`, `run/*.pid`), recorded caller messages (`recordings/*`), and
+`*.backup.*` are ignored.

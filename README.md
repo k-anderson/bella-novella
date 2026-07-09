@@ -30,8 +30,8 @@ no app, screen, or internet dependency:
    FreeSWITCH as SIP line **101** or **102** over the isolated LAN.
 2. Picking up a phone (or dialing `700`) drops the caller into a **voice menu**.
 3. Menu choices either **raise/lower the actuator** (via the relay HAT) or **intercom the other
-   phone**. A hidden option lets you **re-record the menu greeting** from the handset itself;
-   other hidden digits reveal a **branching story** (`0`) and a **guess-my-number game** (`5`).
+   phone**. Other hidden digits reveal a **branching story** (`0`) and a **guess-my-number
+   game** (`5`).
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -48,15 +48,16 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/`](conf/) | All FreeSWITCH configuration — the heart of the project (see below). | **Yes** |
 | [`scripts/`](scripts/) | Project bash helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV). | **Yes** |
 | [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs (menu, disco, message, invalid, story `tale-*`, game `game-*`). | **Yes** |
-| [`system/`](system/) | systemd unit files (the `bella-ring` timer/service), installed by `install.sh`. | **Yes** |
+| [`system/`](system/) | Host files installed by `install.sh`: the `freeswitch` and `bella-ring` systemd units, plus sysctl/limits/sudoers/dnsmasq/NetworkManager drop-ins and helper scripts. Also carries the **optional** `wifi-fallback` unit + script (see [§9](#9-optional-wi-fi-fallback-and-hotspot)). | **Yes** |
+| [`build/`](build/) | [`build/modules.conf`](build/modules.conf) — the minimal module list used to (re)build FreeSWITCH from source (see [§8](#8-optional-build-freeswitch-from-scratch)). | **Yes** |
 | [`bin/`](bin/) | FreeSWITCH executables (`freeswitch`, `fs_cli`, …), **aarch64**. | stock |
 | [`lib/`](lib/) | `libfreeswitch.so`. | stock |
 | [`mod/`](mod/) | Loadable modules (`.so`), **aarch64**. Only a minimal set is used. | stock |
 | [`include/`](include/) | FreeSWITCH C headers. | stock |
-| [`sounds/`](sounds/) | Prompt audio and hold music. The recorded IVR greeting lives under `recordings/`. | stock + recording |
 | [`fonts/`](fonts/), [`htdocs/`](htdocs/), [`images/`](images/) | Assets shipped with FreeSWITCH (unused by this appliance). | stock |
 | [`certs/`](certs/) | TLS/DTLS certificates. | stock |
 | `db/`, `log/`, `run/` | Runtime state (SQLite DBs, logs, PID). **Regenerated on boot; git-ignored.** | generated |
+| [`recordings/`](recordings/) | Caller messages recorded by the IVR (`recordings/messages/`). **Git-ignored** (the folder is kept via `.gitkeep`). | generated |
 | [`.devcontainer/`](.devcontainer/), [`CODESPACES.md`](CODESPACES.md) | GitHub Codespaces setup (see below). | tooling |
 
 ### 2.1 `conf/` in detail
@@ -125,7 +126,9 @@ Completed actions return to the menu.
 
 - **Intercom (`CALL_OTHER`)** — [`10_option1_intercom.xml`](conf/dialplan/default/10_option1_intercom.xml):
   checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
-  **101** (with an "invalid entry" fallback). When the bridge ends it returns to the menu.
+  **101**, with a ringback tone while the far phone rings. If the other line doesn't answer (or
+  the call arrives from an unexpected line) it plays `no-answer.wav`. Either way it returns to the
+  menu when finished.
 - **Listen (`LISTEN_MESSAGES`)** — [`20_option2_listen.xml`](conf/dialplan/default/20_option2_listen.xml):
   plays the **newest 10** messages **newest-first**, each preceded by its numbered announcement
   (`prompts/playback-announcement-<idx>.wav`) as a lead-in prompt. During a message, **1 = next**
@@ -153,8 +156,8 @@ into timed GPIO relay states on the Waveshare HAT:
 
 - **K1/K2** drive the actuator motor: `raise` = `motor_up` (K1 on), `lower` = `motor_down`
   (K2 on), `brake` = `motor_stop` (both off).
-- **K3** is the **spot lights**, switched (`spot_lights_on`/`spot_lights_off`) at a configurable
-  percentage of the travel time.
+- **K3** is the **spot lights**: on a `raise` they turn **on** after a configurable percentage of
+  the travel time and stay on; on a `lower` they start on and turn **off** after that percentage.
 - `raise`/`lower` take a **non-blocking** `flock` and run the movement in the **background**: if
   the lock is already held they print `busy` and change nothing, otherwise they print `started`.
   A completed raise records `up`, a completed lower records `down`.
@@ -164,15 +167,18 @@ into timed GPIO relay states on the Waveshare HAT:
   `position` prints `up`/`down`/`unknown` (stored in `/run/disco-relay.state`, so `unknown` at
   boot).
 
-`disco_raise=... raise 5 15` means: drive for **5 seconds**, switching the spot lights at **15%**
-of that time. Tune these in [`conf/vars.xml`](conf/vars.xml).
+The commands in [`conf/vars.xml`](conf/vars.xml) set the timing: `disco_raise` runs
+`disco-relay raise 120 75` (drive **120 s**; spot lights **on** after **75%** of that time) and
+`disco_lower` runs `disco-relay lower 120 5` (drive **120 s**; spot lights **off** after **5%**).
+Tune the seconds and percentages there.
 
 ### 3.5 The message store
 [`scripts/bella-messages`](scripts/bella-messages) manages `recordings/messages/` for the IVR
 (runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback
-newest-first, resolves an index to a file for playback, steps the next/previous index, and
-returns a random invalid prompt. Older messages are **kept on disk** and pruned oldest-first only
-when free space is low. All output is newline-free for use in `${system(...)}`.
+newest-first, resolves an index to a file, maps an index to its lead-in announcement, steps the
+next/previous index, and returns random invalid / short-menu prompts. Older messages are **kept
+on disk** and pruned oldest-first only when free space is low. All output is newline-free for use
+in `${system(...)}`.
 
 ### 3.6 The periodic ring
 At a random interval between **15 and 45 minutes** a systemd timer runs
@@ -519,7 +525,12 @@ install -D -m 0755 system/usr/local/bin/freeswitch-wait-eth0 /usr/local/bin/free
 install -D -m 0644 system/etc/systemd/system/freeswitch.service /etc/systemd/system/freeswitch.service
 install -D -m 0644 system/etc/security/limits.d/99-freeswitch.conf /etc/security/limits.d/99-freeswitch.conf
 
+# Periodic-ring timer/service: ring a random line every 15-45 min -> the menu.
+install -D -m 0644 system/etc/systemd/system/bella-ring.service /etc/systemd/system/bella-ring.service
+install -D -m 0644 system/etc/systemd/system/bella-ring.timer   /etc/systemd/system/bella-ring.timer
+
 systemctl daemon-reload
+systemctl enable --now bella-ring.timer
 ```
 
 Load the new PATH/PKG_CONFIG in your current shell without logging out:
@@ -655,9 +666,10 @@ scripts/disco-relay status
 
 ### 6.9 Prompts and message directories
 
-The custom voice prompts (menu greeting, disco-ball, message, and invalid prompts) ship in
-`prompts/` as 8 kHz mono WAV and are tracked in the repo. Just create the runtime directory the
-IVR records caller messages into:
+The custom voice prompts — menu greeting (and its short variants), disco-ball, message,
+invalid-entry, playback-announcement, story (`tale-*`), and game (`game-*`) — ship in `prompts/`
+as 8 kHz mono WAV and are tracked in the repo. Just create the runtime directory the IVR records
+caller messages into:
 
 ```sh
 mkdir -p /usr/local/freeswitch/prompts /usr/local/freeswitch/recordings/messages
@@ -761,26 +773,49 @@ SpanDSP and Sofia-SIP are dependencies of this build — install them first with
 `sudo ./install.sh --build-spandsp --build-sofia` (see [6.3](#63-build-spandsp---build-spandsp)
 and [6.4](#64-build-sofia-sip---build-sofia)).
 
-Wifi
+---
 
-sudo nmcli connection add type wifi ifname wlan0 con-name "Location1" ssid "YOUR_SSID_1" \
-  wifi-sec.key-mgmt wpa-psk wifi-sec.psk "PASSWORD_1" \
+## 9. Optional: Wi-Fi fallback and hotspot
+
+An **optional** convenience for a roaming appliance (e.g. on an art car): keep the Pi reachable
+over Wi-Fi by auto-joining a known network when one is in range, and otherwise starting its own
+access point. This is **not** run by [`install.sh`](install.sh) — the unit and script ship in
+[`system/`](system/) and are wired up by hand.
+
+[`wifi-fallback.sh`](system/usr/local/bin/wifi-fallback.sh) runs every **2 minutes** (via
+[`wifi-fallback.timer`](system/etc/systemd/system/wifi-fallback.timer)). It rescans `wlan0`,
+connects to the highest-priority known NetworkManager profile that is in range, and if none are
+found brings up a hotspot profile instead. The profile names it looks for are set at the top of
+the script (`KNOWN_CONS=("Location1" "Location2")`, `HOTSPOT_CON="Hotspot"`).
+
+**1. Define your known networks** (repeat per site; highest `autoconnect-priority` wins) and the
+fallback hotspot AP. The `con-name`s must match the names in the script:
+
+```sh
+# A known network (add Location2, Location3, … the same way).
+sudo nmcli connection add type wifi ifname wlan0 con-name "Location1" ssid "YOUR_SSID" \
+  wifi-sec.key-mgmt wpa-psk wifi-sec.psk "YOUR_PASSWORD" \
   connection.autoconnect yes connection.autoconnect-priority 100
 
-  nmcli connection add type wifi ifname wlan0 con-name "Hotspot" ssid "ArtCar" \
+# The fallback hotspot (NetworkManager shares the wlan0 radio as an AP).
+sudo nmcli connection add type wifi ifname wlan0 con-name "Hotspot" ssid "bella-novella" \
   802-11-wireless.mode ap 802-11-wireless.band bg \
-  ipv4.method shared \
-  connection.autoconnect no
+  ipv4.method shared connection.autoconnect no
+```
 
-sudo cp system/usr/local/bin/wifi-fallback.sh /usr/local/bin/
-sudo chmod +x /usr/local/bin/wifi-fallback.sh
+**2. Install the script and timer:**
 
-sudo cp system/etc/systemd/system/wifi-fallback.service /etc/systemd/system/
-sudo cp system/etc/systemd/system/wifi-fallback.timer /etc/systemd/system/
-
+```sh
+sudo install -D -m 0755 system/usr/local/bin/wifi-fallback.sh /usr/local/bin/wifi-fallback.sh
+sudo install -D -m 0644 system/etc/systemd/system/wifi-fallback.service /etc/systemd/system/wifi-fallback.service
+sudo install -D -m 0644 system/etc/systemd/system/wifi-fallback.timer   /etc/systemd/system/wifi-fallback.timer
 sudo systemctl daemon-reload
 sudo systemctl enable --now wifi-fallback.timer
+```
 
-# Run it once immediately to test
+**3. Test it once immediately:**
+
+```sh
 sudo systemctl start wifi-fallback.service
 journalctl -t wifi-fallback -n 20
+```

@@ -12,7 +12,7 @@ IFACE="wlan0"
 
 # List your known connection profile names here, in priority order
 # (must match the con-name used in `nmcli connection add`)
-KNOWN_CONS=("Location1" "Location2")
+KNOWN_CONS=("geezerville" "Taylor's House" "Karl's House")
 
 HOTSPOT_CON="Hotspot"
 LOG_TAG="wifi-fallback"
