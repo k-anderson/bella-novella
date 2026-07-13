@@ -11,6 +11,7 @@
          911 = raise the disco ball      (DISCO_RAISE,     50_disco_controls.xml)
          411 = lower the disco ball      (DISCO_LOWER,     50_disco_controls.xml)
          #   = stop the disco ball       (DISCO_STOP,      50_disco_controls.xml)
+         101-104 = dial that SIP line     (00_extensions.xml)
          0   = hidden fable "The Ember"   (TALE_OPEN,       60_option0_tale.xml), unspoken
          5   = hidden number game         (GAME_START,      70_option5_game.xml), unspoken
        Anything else plays a random "invalid" prompt. Every path returns here.
@@ -28,9 +29,9 @@
       <action application="set" data="menu_greeted=true"/>
       <action application="set" data="bella_opt="/>
       <!-- min=1 max=3, '*' terminator (so '#' stays a valid option), validate
-           to the known options; 2s inter-digit timeout resolves 1 vs 911. -->
+           to the known options; 2s inter-digit timeout resolves 1 vs 101-104. -->
       <action application="play_and_get_digits"
-              data="1 3 1 7000 * $${prompts_dir}/main-menu.wav silence_stream://100 bella_opt '^(0|1|2|3|5|911|411|#)$' 2000"/>
+              data="1 3 1 7000 * $${prompts_dir}/main-menu.wav silence_stream://100 bella_opt '^(0|1|2|3|5|911|411|10[1-4]|#)$' 2000"/>
       <action application="transfer" data="DISPATCH XML default"/>
     </condition>
   </extension>
@@ -44,7 +45,7 @@
       <action application="set" data="bella_opt="/>
       <action application="set" data="menu_prompt=${system($${bella_messages} short-menu-prompt)}"/>
       <action application="play_and_get_digits"
-              data="1 3 1 7000 * ${menu_prompt} silence_stream://100 bella_opt '^(0|1|2|3|5|911|411|#)$' 2000"/>
+              data="1 3 1 7000 * ${menu_prompt} silence_stream://100 bella_opt '^(0|1|2|3|5|911|411|10[1-4]|#)$' 2000"/>
       <action application="transfer" data="DISPATCH XML default"/>
     </condition>
   </extension>
@@ -91,6 +92,15 @@
     <condition field="destination_number" expression="^DISPATCH$"/>
     <condition field="${bella_opt}" expression="^#$">
       <action application="transfer" data="DISCO_STOP XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Dial a SIP line (101-104) straight from the menu; the dial-1NN extensions
+       in 00_extensions.xml ring the phone. -->
+  <extension name="dispatch-extension">
+    <condition field="destination_number" expression="^DISPATCH$"/>
+    <condition field="${bella_opt}" expression="^(10[1-4])$">
+      <action application="transfer" data="$1 XML default"/>
     </condition>
   </extension>
 
