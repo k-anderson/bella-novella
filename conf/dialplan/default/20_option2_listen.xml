@@ -63,7 +63,7 @@
     <condition field="${msg_file}" expression="^$">
       <!-- Empty path => no messages, or advanced past the last one. -->
       <action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
-      <action application="sleep" data="500"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
       <!-- Non-empty: flush any digit left over from skipping the announcement so it
            can't instantly advance the index, then play the message and collect one
