@@ -20,6 +20,7 @@
       <action application="set" data="bella_rotate=${system($${bella_messages} rotate)}"/>
       <!-- "saved" prompt. -->
       <action application="playback" data="$${prompts_dir}/vm-saved.wav"/>
+      <action application="sleep" data="500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
