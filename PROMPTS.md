@@ -34,12 +34,12 @@ updated to match this file.
 
 ```text
 [low, sultry, smoke-curling] Well now. You picked up my phone.
-[half-smile, knowing] That either makes you lost... [chuckle][long beat, unhurried] ...or exactly where you're meant to be.
-[hushed, almost a whisper] If you already know my numbers... [sly, lips-curled] ...you know what to do with them.
-[velvet, commanding but unhurried] But if this is your first time on my line, [slow, sultry] here's how it works.
-[low, deliberate] Dial 1, and I'll send you down the wire to whoever's still answering that old phone.  [darker, low] Half of me still expects a certain someone to pick up [wry, half-laughing] but it could be anyone, darling.
-[low, amused, private] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [sad, quiet] Funny how the echoes of the ones who came before you linger.
-[intimate, leaning in, almost touching the mic] And dial 3, if you've got something you want to add to the collection. [low, private, trailing off] Everybody leaves something with me eventually. [beat]
+[half-smile, knowing] That either makes you lost... [long beat] ...or exactly where you're meant to be.
+[hushed, almost a whisper, quickly] If you already know my numbers... [sly, lips-curled] ...you know what to do with them.
+[velvet, commanding] But if this is your first time on my line, [slow, sultry] here's how it works.
+[low, deliberate, unhurried] Dial 1, and I'll send you down the wire to whoever's still answering that old phone.  [darker, low] Half of me still expects a certain someone to pick up [wry, half-laughing] but it could be anyone, darling.
+[low, amused, private, unhurried] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [sad, quiet] Funny how the echoes of the ones who came before you linger.
+[intimate, leaning in, almost touching the mic, unhurried] And dial 3, if you've got something you want to add to the collection. [low, private, trailing off] Everybody leaves something with me eventually. [beat]
 [low, velvet, quiet] Those are just the options I give to strangers. [sly] Not everything's meant for an audience.
 [warm, low, half-dismissive] So go on now, darling. Make your selection. [low, sly] The obvious choice isn't always the most interesting one.
 ```
