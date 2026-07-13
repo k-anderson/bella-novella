@@ -523,7 +523,7 @@ IVR options:
   3   = leave a message (max 60s)
   911 = raise the disco ball
   411 = lower the disco ball
-  #   = stop the disco ball
+  11  = stop the disco ball
 
 Relay command:
   /usr/local/freeswitch/scripts/disco-relay status

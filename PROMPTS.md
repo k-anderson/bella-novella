@@ -1,7 +1,8 @@
 # Prompts
 
 Source text used to generate the voice prompts. The bracketed cues and spoken
-lines below are reproduced verbatim and must not be altered.
+lines below are reproduced verbatim and must not be altered.  They are generated
+by a custom voice on https://elevenlabs.io.
 
 ## Main Menu
 

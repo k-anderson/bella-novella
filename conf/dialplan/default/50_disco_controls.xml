@@ -51,7 +51,7 @@
     </condition>
   </extension>
 
-  <!-- #: stop the disco ball, cancelling any movement in progress. This also
+  <!-- 11: stop the disco ball, cancelling any movement in progress. This also
        resets the tracked position to "unknown" so 911 or 411 work next. -->
   <extension name="disco-stop">
     <condition field="destination_number" expression="^DISCO_STOP$">

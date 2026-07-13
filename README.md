@@ -31,7 +31,7 @@ no app, screen, or internet dependency:
    typical build uses two handsets (**101**/**102**).
 2. Picking up a phone (or dialing `700`) drops the caller into a **voice menu**.
 3. From the menu the caller can:
-   - **Raise / lower / stop the actuator** via the relay HAT — `911` raise, `411` lower, `#` stop.
+   - **Raise / lower / stop the actuator** via the relay HAT — `911` raise, `411` lower, `11` stop.
    - **Intercom the other phone** — `1` rings the far handset with ringback.
    - **Leave a message** — `3` records to the built-in answering machine (max 60 s).
    - **Listen to stored messages** — `2` plays the newest messages back, newest-first.
@@ -94,7 +94,7 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`20_option1_intercom.xml`](conf/dialplan/default/20_option1_intercom.xml) | Option `1` (`CALL_OTHER`): rings the other line by transferring to its `dial-1NN` extension. |
 | [`30_option2_listen.xml`](conf/dialplan/default/30_option2_listen.xml) | Option `2` (`LISTEN_MESSAGES`): browse/playback of stored messages. |
 | [`40_option3_leave.xml`](conf/dialplan/default/40_option3_leave.xml) | Option `3` (`LEAVE_MESSAGE`): record a message to `recordings/messages/`. |
-| [`50_disco_controls.xml`](conf/dialplan/default/50_disco_controls.xml) | Disco-ball controls `911` raise / `411` lower / `#` stop (`DISCO_RAISE`/`DISCO_LOWER`/`DISCO_STOP`). |
+| [`50_disco_controls.xml`](conf/dialplan/default/50_disco_controls.xml) | Disco-ball controls `911` raise / `411` lower / `11` stop (`DISCO_RAISE`/`DISCO_LOWER`/`DISCO_STOP`). |
 | [`60_option9_tale.xml`](conf/dialplan/default/60_option9_tale.xml) | Hidden option `9` (`TALE_OPEN`): the branching story "The Ember" — see [`STORY.md`](STORY.md). |
 | [`70_option5_game.xml`](conf/dialplan/default/70_option5_game.xml) | Hidden option `5` (`GAME_START`): the guess-my-number game — see [`GAME.md`](GAME.md). |
 
@@ -148,7 +148,7 @@ second routing pass:
 | **3** | `LEAVE_MESSAGE` | Leave a message (max 60s) |
 | **911** | `DISCO_RAISE` | Raise the disco ball |
 | **411** | `DISCO_LOWER` | Lower the disco ball |
-| **#** | `DISCO_STOP` | Stop the disco ball |
+| **11** | `DISCO_STOP` | Stop the disco ball |
 | **101**–**104** | `dial-1NN` | Dial that SIP line directly (see §3.1a) |
 | **0** | `104` | Shortcut: dial SIP line 104 |
 | **9** | `TALE_OPEN` | *(hidden, unspoken)* Bella reads a branching story — see §3.7 |
@@ -162,7 +162,7 @@ Completed actions return to the menu.
 
 > **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else on the
 > menu is *unannounced* and spreads by word of mouth: the disco controls (**911** raise, **411** lower,
-> **#** stop), direct line dialing (**101**–**104**, and **0** for line 104), the branching story
+> **11** stop), direct line dialing (**101**–**104**, and **0** for line 104), the branching story
 > (**9**, see §3.7), and the guess-my-number game (**5**, see §3.8). Bella hints that there's more —
 > *"one of the ones I don't say out loud"* — but never names them.
 
@@ -192,9 +192,9 @@ Completed actions return to the menu.
   [`50_disco_controls.xml`](conf/dialplan/default/50_disco_controls.xml): each reads the ball's
   tracked position via `${system($${disco_position})}` (`up` / `down` / `unknown`). **911** raises
   unless already `up` (plays `disco-already-up.wav`); **411** lowers unless already `down` (plays
-  `disco-already-down.wav`); **#** runs `disco-relay brake`, which cancels any movement **and
+  `disco-already-down.wav`); **11** runs `disco-relay brake`, which cancels any movement **and
   resets the position to `unknown`** so either 911 or 411 will run next. Every path returns to the
-  menu. Position is `unknown` at boot and after `#` (state lives on `/run`, tmpfs).
+  menu. Position is `unknown` at boot and after `11` (state lives on `/run`, tmpfs).
 
 ### 3.5 The relay controller
 [`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status`/`position`

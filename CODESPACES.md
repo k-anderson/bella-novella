@@ -85,8 +85,8 @@ answers in the background; line 101 is interactive. In the `baresip` console:
 3             # leave a message (records after the beep)
 911           # raise the disco ball -> see /var/log/disco-gpio.log
 411           # lower the disco ball
-#             # stop the disco ball
-0             # hidden: Bella's branching story
+11            # stop the disco ball
+9             # hidden: Bella's branching story
 5             # hidden: guess-my-number game
 b             # hang up
 /quit
