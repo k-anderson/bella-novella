@@ -1,0 +1,350 @@
+#!/usr/bin/env python3
+"""Regenerate Bella Novella voice prompts from PROMPTS.md using ElevenLabs.
+
+PROMPTS.md is the source of truth for the spoken text of every prompt. This
+tool parses it, compares each prompt against a baseline copy kept in the repo
+(PROMPTS.baseline.md), and re-synthesizes only the prompts whose text changed.
+After (re)generating the MP3s it updates the baseline so the next run starts
+from a clean slate, and (unless --no-convert) runs bella-convert-prompts to
+rebuild the 8 kHz WAVs FreeSWITCH actually plays.
+
+The prompts are voiced by the custom "Bella Novella" voice under "My Voices" on
+https://elevenlabs.io. The bracketed emotional cues in PROMPTS.md are audio
+tags and are sent to ElevenLabs verbatim (they must not be altered).
+
+Requirements (on the developer machine, not the appliance):
+  - Python 3.8+
+  - pip install elevenlabs
+  - export ELEVENLABS_API_KEY=...
+
+Usage:
+  bella-regen-prompts [options]
+
+Options:
+  --all, --force     Regenerate every prompt, ignoring the baseline diff.
+  --prompt NAME      Regenerate only the named prompt (repeatable), e.g.
+                     --prompt main-menu --prompt vm-saved. Bypasses the diff.
+  --dry-run          Show what would change; do not call the API or write files.
+  --list             List every prompt parsed from PROMPTS.md and exit.
+  --no-convert       Skip the MP3 -> WAV conversion step.
+  --model ID         ElevenLabs model id (default: env BELLA_TTS_MODEL or
+                     eleven_multilingual_v2).
+  --voice NAME       Look up the voice by name instead of using the built-in
+                     Bella Novella id (default env BELLA_VOICE_NAME).
+  --voice-id ID      Use this voice id directly (default: env BELLA_VOICE_ID,
+                     else the built-in Bella Novella id).
+  -h, --help         Show this help.
+
+Environment:
+  ELEVENLABS_API_KEY   Required (unless --dry-run/--list).
+  BELLA_VOICE_NAME     Look up this voice name instead of the built-in id.
+  BELLA_VOICE_ID       Explicit voice id (default: Bella Novella's id).
+  BELLA_TTS_MODEL      Model id (default eleven_multilingual_v2).
+  BELLA_PROMPTS_DIR    Output dir for MP3/WAV (default <repo>/prompts).
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+OUTPUT_FORMAT = "mp3_44100_128"
+DEFAULT_VOICE_NAME = "Bella Novella"
+# Voice id for the custom "Bella Novella" voice under "My Voices". Used directly
+# so no per-run voice lookup is needed; override with --voice-id/BELLA_VOICE_ID,
+# or force a name lookup with --voice.
+DEFAULT_VOICE_ID = "vljOxWWRrxx7vfqVlFR0"
+DEFAULT_MODEL = "eleven_multilingual_v2"
+
+# Headings in PROMPTS.md whose (multiple) code blocks map onto a numbered family
+# of prompt files rather than a single file named after the heading. The
+# "Invalid" heading holds six blocks that become invalid-entry-1..6.mp3.
+SPECIAL_HEADINGS = {
+    "invalid": "invalid-entry",
+}
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+PROMPTS_MD = REPO_ROOT / "PROMPTS.md"
+BASELINE_MD = REPO_ROOT / "PROMPTS.baseline.md"
+
+
+def die(msg: str, code: int = 1) -> "None":
+    print(f"ERROR: {msg}", file=sys.stderr)
+    sys.exit(code)
+
+
+def parse_prompts(text: str) -> "dict[str, str]":
+    """Parse PROMPTS.md text into an ordered {prompt_name: spoken_text} map.
+
+    A prompt name is the identifier in backticks on a `###` heading. Its text is
+    the content of the fenced ```text block(s) that follow, up to the next
+    heading. Headings listed in SPECIAL_HEADINGS expand their blocks into a
+    numbered family (e.g. invalid-entry-1..N).
+    """
+    prompts: "dict[str, str]" = {}
+    lines = text.splitlines()
+    i = 0
+    heading: "str | None" = None
+    n = len(lines)
+
+    def flush(key: str, blocks: "list[str]") -> None:
+        if not blocks:
+            return
+        special = SPECIAL_HEADINGS.get(key.lower())
+        if special is not None:
+            for idx, block in enumerate(blocks, start=1):
+                prompts[f"{special}-{idx}"] = block
+        else:
+            if len(blocks) == 1:
+                prompts[key] = blocks[0]
+            else:
+                # Unexpected multi-block heading without a special mapping;
+                # number them so nothing is silently dropped.
+                for idx, block in enumerate(blocks, start=1):
+                    prompts[f"{key}-{idx}"] = block
+
+    heading = None
+    pending_blocks: "list[str]" = []
+    while i < n:
+        line = lines[i]
+        m = re.match(r"^###\s+`([^`]+)`", line)
+        if m:
+            if heading is not None:
+                flush(heading, pending_blocks)
+            heading = m.group(1).strip()
+            pending_blocks = []
+            i += 1
+            continue
+        if re.match(r"^##\s+", line):
+            # A section (## ) heading ends the current prompt heading's scope.
+            if heading is not None:
+                flush(heading, pending_blocks)
+            heading = None
+            pending_blocks = []
+            i += 1
+            continue
+        fence = re.match(r"^```(\w*)\s*$", line)
+        if fence and heading is not None:
+            i += 1
+            body: "list[str]" = []
+            while i < n and not re.match(r"^```\s*$", lines[i]):
+                body.append(lines[i])
+                i += 1
+            i += 1  # skip closing fence
+            block_text = "\n".join(body).strip()
+            if block_text:
+                pending_blocks.append(block_text)
+            continue
+        i += 1
+
+    if heading is not None:
+        flush(heading, pending_blocks)
+    return prompts
+
+
+def load_prompts(path: Path) -> "dict[str, str]":
+    if not path.exists():
+        return {}
+    return parse_prompts(path.read_text(encoding="utf-8"))
+
+
+def resolve_voice_id(client, voice_name: str) -> str:
+    """Find the voice id for a custom voice by name (case-insensitive)."""
+    names: "list[str]" = []
+
+    # Newer SDKs expose a search helper; fall back to get_all.
+    candidates = []
+    try:
+        result = client.voices.search(search=voice_name)
+        candidates = list(getattr(result, "voices", result) or [])
+    except Exception:
+        candidates = []
+
+    if not candidates:
+        try:
+            result = client.voices.get_all()
+            candidates = list(getattr(result, "voices", result) or [])
+        except Exception as exc:  # pragma: no cover - network/SDK dependent
+            die(f"could not list voices from ElevenLabs: {exc}")
+
+    for v in candidates:
+        name = getattr(v, "name", None) or (v.get("name") if isinstance(v, dict) else None)
+        vid = getattr(v, "voice_id", None) or (v.get("voice_id") if isinstance(v, dict) else None)
+        if name:
+            names.append(name)
+        if name and vid and name.strip().lower() == voice_name.strip().lower():
+            return vid
+
+    hint = ", ".join(sorted(names)) if names else "(none found)"
+    die(
+        f'voice "{voice_name}" not found under your account.\n'
+        f"Available voices: {hint}\n"
+        f"Pass --voice-id or set BELLA_VOICE_ID to use an id directly."
+    )
+    raise AssertionError  # unreachable
+
+
+def synthesize(client, text: str, voice_id: str, model_id: str, out_path: Path) -> None:
+    audio = client.text_to_speech.convert(
+        text=text,
+        voice_id=voice_id,
+        model_id=model_id,
+        output_format=OUTPUT_FORMAT,
+    )
+    tmp = out_path.with_suffix(out_path.suffix + ".tmp")
+    with open(tmp, "wb") as fh:
+        if isinstance(audio, (bytes, bytearray)):
+            fh.write(audio)
+        else:
+            for chunk in audio:
+                if chunk:
+                    fh.write(chunk)
+    tmp.replace(out_path)
+
+
+def main(argv: "list[str]") -> int:
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--all", "--force", dest="force", action="store_true")
+    parser.add_argument("--prompt", dest="prompts", action="append", default=[])
+    parser.add_argument("--dry-run", dest="dry_run", action="store_true")
+    parser.add_argument("--list", dest="list_only", action="store_true")
+    parser.add_argument("--no-convert", dest="no_convert", action="store_true")
+    parser.add_argument("--model", dest="model")
+    parser.add_argument("--voice", dest="voice")
+    parser.add_argument("--voice-id", dest="voice_id")
+    parser.add_argument("-h", "--help", action="store_true", dest="help")
+    args = parser.parse_args(argv)
+
+    if args.help:
+        print(__doc__)
+        return 0
+
+    if not PROMPTS_MD.exists():
+        die(f"PROMPTS.md not found: {PROMPTS_MD}")
+
+    prompts_dir = Path(os.environ.get("BELLA_PROMPTS_DIR", REPO_ROOT / "prompts"))
+    model_id = args.model or os.environ.get("BELLA_TTS_MODEL", DEFAULT_MODEL)
+    # An explicit --voice (or BELLA_VOICE_NAME) forces a name lookup; otherwise
+    # use the known Bella Novella id directly.
+    voice_name = args.voice or os.environ.get("BELLA_VOICE_NAME")
+    voice_id = args.voice_id or os.environ.get("BELLA_VOICE_ID")
+    if not voice_id and not voice_name:
+        voice_id = DEFAULT_VOICE_ID
+
+    current = load_prompts(PROMPTS_MD)
+    if not current:
+        die("no prompts parsed from PROMPTS.md")
+
+    if args.list_only:
+        for name in current:
+            print(name)
+        print(f"\n{len(current)} prompt(s) in {PROMPTS_MD.name}", file=sys.stderr)
+        return 0
+
+    # Establish the baseline on first run: assume everything currently matches.
+    baseline_existed = BASELINE_MD.exists()
+    if not baseline_existed:
+        if not args.dry_run:
+            BASELINE_MD.write_text(PROMPTS_MD.read_text(encoding="utf-8"), encoding="utf-8")
+        print(
+            f"baseline {BASELINE_MD.name} did not exist; created from PROMPTS.md "
+            f"(assuming all prompts currently match)."
+        )
+
+    baseline = load_prompts(BASELINE_MD) if baseline_existed else current
+
+    # Decide what to (re)generate.
+    if args.prompts:
+        unknown = [p for p in args.prompts if p not in current]
+        if unknown:
+            die(f"unknown prompt(s): {', '.join(unknown)}\nUse --list to see valid names.")
+        changed = list(dict.fromkeys(args.prompts))
+        removed: "list[str]" = []
+    elif args.force:
+        changed = list(current.keys())
+        removed = []
+    else:
+        changed = [name for name, text in current.items() if baseline.get(name) != text]
+        removed = [name for name in baseline if name not in current]
+
+    if removed:
+        print("note: these prompts are in the baseline but no longer in PROMPTS.md:")
+        for name in removed:
+            print(f"  - {name}")
+
+    if not changed:
+        print("Nothing to regenerate: all prompts match the baseline.")
+        # Keep the baseline in sync in case of non-text edits.
+        if not args.dry_run and baseline_existed:
+            BASELINE_MD.write_text(PROMPTS_MD.read_text(encoding="utf-8"), encoding="utf-8")
+        return 0
+
+    print(f"{len(changed)} prompt(s) to regenerate:")
+    for name in changed:
+        print(f"  - {name}")
+
+    if args.dry_run:
+        print("\n(dry run: no audio generated, baseline unchanged)")
+        return 0
+
+    prompts_dir.mkdir(parents=True, exist_ok=True)
+
+    api_key = os.environ.get("ELEVENLABS_API_KEY")
+    if not api_key:
+        die("ELEVENLABS_API_KEY is not set.")
+
+    try:
+        from elevenlabs.client import ElevenLabs
+    except ImportError:
+        die("the 'elevenlabs' package is not installed. Run: pip install elevenlabs")
+
+    client = ElevenLabs(api_key=api_key)
+
+    if not voice_id:
+        voice_id = resolve_voice_id(client, voice_name)
+        print(f'using voice "{voice_name}" (id {voice_id})')
+    else:
+        print(f"using voice id {voice_id}")
+    print(f"using model {model_id}\n")
+
+    failures: "list[str]" = []
+    for name in changed:
+        out_path = prompts_dir / f"{name}.mp3"
+        try:
+            synthesize(client, current[name], voice_id, model_id, out_path)
+            print(f"generated: {out_path.name}")
+        except Exception as exc:  # pragma: no cover - network/SDK dependent
+            print(f"FAILED: {name}: {exc}", file=sys.stderr)
+            failures.append(name)
+
+    if failures:
+        die(
+            f"{len(failures)} prompt(s) failed; baseline left unchanged so they "
+            f"will be retried next run: {', '.join(failures)}"
+        )
+
+    # All requested prompts succeeded: update the baseline to match PROMPTS.md.
+    BASELINE_MD.write_text(PROMPTS_MD.read_text(encoding="utf-8"), encoding="utf-8")
+    print(f"\nupdated baseline: {BASELINE_MD.name}")
+
+    if not args.no_convert:
+        convert = REPO_ROOT / "scripts" / "bella-convert-prompts"
+        if convert.exists():
+            print("\nconverting MP3 -> WAV...")
+            rc = subprocess.call([str(convert)], env={**os.environ, "BELLA_PROMPTS_DIR": str(prompts_dir)})
+            if rc != 0:
+                die(f"bella-convert-prompts exited with {rc}", code=rc)
+        else:
+            print(
+                "\nnote: bella-convert-prompts not found; run it manually to build WAVs."
+            )
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
