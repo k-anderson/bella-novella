@@ -1,0 +1,78 @@
+<include>
+  <!-- ===================================================================
+       SIP line extensions: dialing a line (101-104) rings that phone.
+
+       Each line has its own explicit extension that bridges to it with
+       ringback; on no-answer/busy it plays no-answer.wav and drops back to the
+       menu (700). Option 1 (20_option1_intercom.xml) rings the other line by
+       transferring to its extension number here.
+
+       Load order matters: this file sorts before 10_inbound_and_menu.xml, so a
+       dialed 101-104 is matched here and reaches the phone instead of being
+       swallowed by that file's numeric all-calls-to-menu catch-all.
+       =================================================================== -->
+
+  <extension name="dial-101">
+    <condition field="destination_number" expression="^101$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="ringback=%(2000,4000,440,480)"/>
+      <action application="set" data="instant_ringback=true"/>
+      <action application="set" data="effective_caller_id_number=${sip_from_user}"/>
+      <action application="set" data="effective_caller_id_name=Line ${sip_from_user}"/>
+      <action application="bridge" data="${sofia_contact(101@$${domain})}"/>
+      <!-- Only reached if the bridge failed (no answer / busy). -->
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="dial-102">
+    <condition field="destination_number" expression="^102$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="ringback=%(2000,4000,440,480)"/>
+      <action application="set" data="instant_ringback=true"/>
+      <action application="set" data="effective_caller_id_number=${sip_from_user}"/>
+      <action application="set" data="effective_caller_id_name=Line ${sip_from_user}"/>
+      <action application="bridge" data="${sofia_contact(102@$${domain})}"/>
+      <!-- Only reached if the bridge failed (no answer / busy). -->
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="dial-103">
+    <condition field="destination_number" expression="^103$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="ringback=%(2000,4000,440,480)"/>
+      <action application="set" data="instant_ringback=true"/>
+      <action application="set" data="effective_caller_id_number=${sip_from_user}"/>
+      <action application="set" data="effective_caller_id_name=Line ${sip_from_user}"/>
+      <action application="bridge" data="${sofia_contact(103@$${domain})}"/>
+      <!-- Only reached if the bridge failed (no answer / busy). -->
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="dial-104">
+    <condition field="destination_number" expression="^104$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="set" data="continue_on_fail=true"/>
+      <action application="set" data="ringback=%(2000,4000,440,480)"/>
+      <action application="set" data="instant_ringback=true"/>
+      <action application="set" data="effective_caller_id_number=${sip_from_user}"/>
+      <action application="set" data="effective_caller_id_name=Line ${sip_from_user}"/>
+      <action application="bridge" data="${sofia_contact(104@$${domain})}"/>
+      <!-- Only reached if the bridge failed (no answer / busy). -->
+      <action application="playback" data="$${prompts_dir}/no-answer.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+</include>

@@ -70,8 +70,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
-| [`STORY.md`](STORY.md) | Design + full prompt scripts for the hidden branching story (`0`, `50_option0_tale.xml`). |
-| [`GAME.md`](GAME.md) | Design + full prompt scripts for the hidden number game (`5`, `60_option5_game.xml`). |
+| [`STORY.md`](STORY.md) | Design + full prompt scripts for the hidden branching story (`0`, `60_option0_tale.xml`). |
+| [`GAME.md`](GAME.md) | Design + full prompt scripts for the hidden number game (`5`, `70_option5_game.xml`). |
 | [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, invalid, story (`tale-*`), and game (`game-*`) prompts. |
 | [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
 | [`scripts/bella-game`](scripts/bella-game) | Number-guessing-game helper for the hidden `5` option (random secret, guess verdict, higher/lower prompt). |
@@ -87,12 +87,12 @@ Every call from the ATA lands in the IVR, and each menu digit `transfer`s to a v
 destination handled by the dialplan.
 
 ### 3.1 Entry — any call → the menu
-[`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) (`all-calls-to-menu`):
+[`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) (`all-calls-to-menu`):
 dialing `700` (the ATA off-hook auto-dial), or **any** number from the ATA, is routed to the main
 menu at `700`.
 
 ### 3.2 The menu
-[`00_inbound_and_menu.xml`](conf/dialplan/default/00_inbound_and_menu.xml) plays the greeting and
+[`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) plays the greeting and
 collects the option with `play_and_get_digits` (1–3 digits, `*` terminator, validated to the set
 below). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the call; every
 return to the menu thereafter plays **one of five random short greetings**
@@ -125,12 +125,12 @@ Completed actions return to the menu.
 
 ### 3.3 The actions
 
-- **Intercom (`CALL_OTHER`)** — [`10_option1_intercom.xml`](conf/dialplan/default/10_option1_intercom.xml):
+- **Intercom (`CALL_OTHER`)** — [`20_option1_intercom.xml`](conf/dialplan/default/20_option1_intercom.xml):
   checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
   **101**, with a ringback tone while the far phone rings. If the other line doesn't answer (or
   the call arrives from an unexpected line) it plays `no-answer.wav`. Either way it returns to the
   menu when finished.
-- **Listen (`LISTEN_MESSAGES`)** — [`20_option2_listen.xml`](conf/dialplan/default/20_option2_listen.xml):
+- **Listen (`LISTEN_MESSAGES`)** — [`30_option2_listen.xml`](conf/dialplan/default/30_option2_listen.xml):
   plays the **newest 10** messages **newest-first**, each preceded by its numbered announcement
   (`prompts/playback-announcement-<idx>.wav`) as a lead-in prompt. During a message, **1 = next**
   and **2 = previous**; navigating by key (or pressing a key during an announcement) **skips the
@@ -138,13 +138,13 @@ Completed actions return to the menu.
   **auto-advances** to the next message *with* its announcement, and after the last one it returns
   to the menu. The browse loop (`MESSAGE_ANN` → `MESSAGE_PLAY` → `MESSAGE_NAV`) uses `bella-messages`
   `announcement`/`resolve`/`step` to map the index to files.
-- **Leave (`LEAVE_MESSAGE`)** — [`30_option3_leave.xml`](conf/dialplan/default/30_option3_leave.xml):
+- **Leave (`LEAVE_MESSAGE`)** — [`40_option3_leave.xml`](conf/dialplan/default/40_option3_leave.xml):
   plays a prompt and a beep, then records up to **60 s** to
   `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech
   recordings. Messages are **kept on disk**; `bella-messages rotate` only prunes the oldest when
   free space runs low.
 - **Disco ball (`DISCO_RAISE` / `DISCO_LOWER` / `DISCO_STOP`)** —
-  [`40_disco_controls.xml`](conf/dialplan/default/40_disco_controls.xml): each reads the ball's
+  [`50_disco_controls.xml`](conf/dialplan/default/50_disco_controls.xml): each reads the ball's
   tracked position via `${system($${disco_position})}` (`up` / `down` / `unknown`). **911** raises
   unless already `up` (plays `disco-already-up.wav`); **411** lowers unless already `down` (plays
   `disco-already-down.wav`); **#** runs `disco-relay brake`, which cancels any movement **and
@@ -197,7 +197,7 @@ Dialing **`0`** (never announced) opens **"The Ember"**, a short branching fable
 from her lounge. Each node narrates and collects one digit; the choices lead to one of **five
 endings**, each a small moral that reflects the path taken. An invalid key plays a story-specific
 prompt and re-offers the node, so the caller stays inside the story; endings return to the menu.
-The nodes live in [`50_option0_tale.xml`](conf/dialplan/default/50_option0_tale.xml); the tree, choice table, and
+The nodes live in [`60_option0_tale.xml`](conf/dialplan/default/60_option0_tale.xml); the tree, choice table, and
 full prompt scripts are in [`STORY.md`](STORY.md). Prompts: `prompts/tale-*.wav`.
 
 ### 3.8 Hidden — "guess my number" (`5`)
@@ -206,7 +206,7 @@ Dialing **`5`** (never announced) starts a keypad guessing game. Bella picks a s
 the caller wins or runs out of tries (default **3**, tunable via `game_tries_max` in
 [`conf/vars.xml`](conf/vars.xml)). She never reveals the number on a loss. The comparison and
 randomness live in [`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` /
-`hint`), driven by [`60_option5_game.xml`](conf/dialplan/default/60_option5_game.xml); see [`GAME.md`](GAME.md).
+`hint`), driven by [`70_option5_game.xml`](conf/dialplan/default/70_option5_game.xml); see [`GAME.md`](GAME.md).
 Prompts: `prompts/game-*.wav`.
 
 ---
@@ -693,7 +693,7 @@ chown -R freeswitch:freeswitch /usr/local/freeswitch/conf /usr/local/freeswitch/
 test -f /usr/local/freeswitch/conf/freeswitch.xml
 test -f /usr/local/freeswitch/conf/autoload_configs/modules.conf.xml
 test -f /usr/local/freeswitch/conf/sip_profiles/ata.xml
-test -f /usr/local/freeswitch/conf/dialplan/default/00_inbound_and_menu.xml
+test -f /usr/local/freeswitch/conf/dialplan/default/10_inbound_and_menu.xml
 
 systemctl enable freeswitch
 systemctl restart freeswitch

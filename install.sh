@@ -484,7 +484,7 @@ echo "==> Validating installed config file presence"
 test -f "${FS_DIR}/conf/freeswitch.xml"
 test -f "${FS_DIR}/conf/autoload_configs/modules.conf.xml"
 test -f "${FS_DIR}/conf/sip_profiles/ata.xml"
-test -f "${FS_DIR}/conf/dialplan/default/00_inbound_and_menu.xml"
+test -f "${FS_DIR}/conf/dialplan/default/10_inbound_and_menu.xml"
 
 if [ "${DO_RESTART}" -eq 1 ]; then
   echo "==> Enabling and restarting FreeSWITCH"

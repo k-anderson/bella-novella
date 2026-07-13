@@ -3,7 +3,7 @@
        Hidden option 5: "Guess My Number" — Bella picks a secret 1-9 and the
        caller guesses one keypress at a time.
 
-       Entry: 00_inbound_and_menu.xml routes menu option 5 (secret, never
+       Entry: 10_inbound_and_menu.xml routes menu option 5 (secret, never
        announced) to GAME_START. Flow:
 
          GAME_START  pick secret, reset tries, queue the rules, -> GAME_ASK

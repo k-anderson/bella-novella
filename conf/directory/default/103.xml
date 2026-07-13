@@ -1,0 +1,13 @@
+<include>
+  <user id="103">
+    <params>
+      <param name="password" value="not-used"/>
+    </params>
+    <variables>
+      <variable name="user_context" value="default"/>
+      <variable name="accountcode" value="103"/>
+      <variable name="effective_caller_id_number" value="103"/>
+      <variable name="effective_caller_id_name" value="Line 103"/>
+    </variables>
+  </user>
+</include>
