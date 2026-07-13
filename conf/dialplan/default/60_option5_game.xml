@@ -105,6 +105,7 @@
   <extension name="game-win">
     <condition field="destination_number" expression="^GAME_WIN$">
       <action application="playback" data="$${prompts_dir}/game-win.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -112,6 +113,7 @@
   <extension name="game-lose">
     <condition field="destination_number" expression="^GAME_LOSE$">
       <action application="playback" data="$${prompts_dir}/game-lose.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>

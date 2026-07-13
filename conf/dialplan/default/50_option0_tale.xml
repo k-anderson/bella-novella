@@ -132,6 +132,7 @@
   <extension name="tale-end-share">
     <condition field="destination_number" expression="^TALE_END_SHARE$">
       <action application="playback" data="$${prompts_dir}/tale-end-share.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -139,6 +140,7 @@
   <extension name="tale-end-hide">
     <condition field="destination_number" expression="^TALE_END_HIDE$">
       <action application="playback" data="$${prompts_dir}/tale-end-hide.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -146,6 +148,7 @@
   <extension name="tale-end-revel">
     <condition field="destination_number" expression="^TALE_END_REVEL$">
       <action application="playback" data="$${prompts_dir}/tale-end-revel.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -153,6 +156,7 @@
   <extension name="tale-end-ash">
     <condition field="destination_number" expression="^TALE_END_ASH$">
       <action application="playback" data="$${prompts_dir}/tale-end-ash.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -160,6 +164,7 @@
   <extension name="tale-end-still">
     <condition field="destination_number" expression="^TALE_END_STILL$">
       <action application="playback" data="$${prompts_dir}/tale-end-still.wav"/>
+      <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
