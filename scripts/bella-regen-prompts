@@ -28,7 +28,7 @@ Options:
   --list             List every prompt parsed from PROMPTS.md and exit.
   --no-convert       Skip the MP3 -> WAV conversion step.
   --model ID         ElevenLabs model id (default: env BELLA_TTS_MODEL or
-                     eleven_multilingual_v2).
+                     eleven_v3).
   --voice NAME       Look up the voice by name instead of using the built-in
                      Bella Novella id (default env BELLA_VOICE_NAME).
   --voice-id ID      Use this voice id directly (default: env BELLA_VOICE_ID,
@@ -39,7 +39,7 @@ Environment:
   ELEVENLABS_API_KEY   Required (unless --dry-run/--list).
   BELLA_VOICE_NAME     Look up this voice name instead of the built-in id.
   BELLA_VOICE_ID       Explicit voice id (default: Bella Novella's id).
-  BELLA_TTS_MODEL      Model id (default eleven_multilingual_v2).
+  BELLA_TTS_MODEL      Model id (default eleven_v3).
   BELLA_PROMPTS_DIR    Output dir for MP3/WAV (default <repo>/prompts).
 """
 
@@ -58,7 +58,7 @@ DEFAULT_VOICE_NAME = "Bella Novella"
 # so no per-run voice lookup is needed; override with --voice-id/BELLA_VOICE_ID,
 # or force a name lookup with --voice.
 DEFAULT_VOICE_ID = "vljOxWWRrxx7vfqVlFR0"
-DEFAULT_MODEL = "eleven_multilingual_v2"
+DEFAULT_MODEL = "eleven_v3"
 
 # Headings in PROMPTS.md whose (multiple) code blocks map onto a numbered family
 # of prompt files rather than a single file named after the heading. The
@@ -75,6 +75,38 @@ BASELINE_MD = REPO_ROOT / "PROMPTS.baseline.md"
 def die(msg: str, code: int = 1) -> "None":
     print(f"ERROR: {msg}", file=sys.stderr)
     sys.exit(code)
+
+
+def reexec_in_venv() -> None:
+    """Re-run this script under the repo's .venv interpreter if one exists.
+
+    bella-regen-prompts has a `#!/usr/bin/env python3` shebang, so without this
+    it would run under the system Python, where `elevenlabs` is intentionally
+    not installed on Debian (PEP 668 blocks system-wide pip). Both
+    `install.sh --fresh` and the devcontainer setup create `<repo>/.venv` with
+    `elevenlabs`; prefer it automatically so the tool "just works".
+    """
+    if os.environ.get("BELLA_VENV_ACTIVE"):
+        return
+    venv_dir = REPO_ROOT / ".venv"
+    venv_python = venv_dir / "bin" / "python"
+    if not venv_python.exists():
+        return
+    # Already running inside this venv? sys.prefix points at the active
+    # environment root, so compare it to the venv dir. (Comparing the python
+    # executables would false-match: the venv's python is just a symlink to the
+    # system interpreter.)
+    try:
+        if os.path.samefile(sys.prefix, str(venv_dir)):
+            return
+    except OSError:
+        pass
+    os.environ["BELLA_VENV_ACTIVE"] = "1"
+    os.execv(
+        str(venv_python),
+        [str(venv_python), str(Path(__file__).resolve()), *sys.argv[1:]],
+    )
+
 
 
 def parse_prompts(text: str) -> "dict[str, str]":
@@ -129,15 +161,22 @@ def parse_prompts(text: str) -> "dict[str, str]":
             continue
         fence = re.match(r"^```(\w*)\s*$", line)
         if fence and heading is not None:
+            lang = fence.group(1)
             i += 1
             body: "list[str]" = []
             while i < n and not re.match(r"^```\s*$", lines[i]):
                 body.append(lines[i])
                 i += 1
             i += 1  # skip closing fence
-            block_text = "\n".join(body).strip()
-            if block_text:
-                pending_blocks.append(block_text)
+            # Only ```text fences hold spoken prompt text. Any other fenced
+            # block in a prompt section (e.g. an example) is skipped so its
+            # contents never leak into the synthesized audio. Prose between the
+            # heading and the text block (e.g. **Theme:**/**Lesson:** context)
+            # is not fenced and is ignored automatically.
+            if lang == "text":
+                block_text = "\n".join(body).strip()
+                if block_text:
+                    pending_blocks.append(block_text)
             continue
         i += 1
 
@@ -207,6 +246,7 @@ def synthesize(client, text: str, voice_id: str, model_id: str, out_path: Path) 
 
 
 def main(argv: "list[str]") -> int:
+    reexec_in_venv()
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--all", "--force", dest="force", action="store_true")
     parser.add_argument("--prompt", dest="prompts", action="append", default=[])
@@ -300,7 +340,12 @@ def main(argv: "list[str]") -> int:
     try:
         from elevenlabs.client import ElevenLabs
     except ImportError:
-        die("the 'elevenlabs' package is not installed. Run: pip install elevenlabs")
+        die(
+            "the 'elevenlabs' package is not installed. Create the venv and "
+            "install it (this is what 'install.sh --fresh' and the devcontainer "
+            "setup do):\n"
+            "  python3 -m venv .venv && .venv/bin/pip install elevenlabs"
+        )
 
     client = ElevenLabs(api_key=api_key)
 

@@ -73,7 +73,7 @@ bootstrap_fresh() {
     libcurl4-openssl-dev libldns-dev libspeex-dev libspeexdsp-dev \
     libopus-dev libsndfile1-dev liblua5.4-dev lua5.4 \
     libpq-dev libtiff-dev libjpeg-dev uuid-dev \
-    yasm nasm python3 python3-dev python3-pip \
+    yasm nasm python3 python3-dev python3-pip python3-venv \
     dnsmasq tshark sngrep sox libsox-fmt-all jq rsync \
     vim htop iftop tcpdump net-tools unzip lsof tmux ncdu tree \
     linux-cpupower || true
@@ -181,6 +181,23 @@ JOURNALD
 RuntimeWatchdogSec=15s
 RebootWatchdogSec=2min
 WATCHDOG
+
+  # --- Prompt-regeneration toolchain (bella-regen-prompts) --------------------
+  # Debian (PEP 668) blocks system-wide pip, so the ElevenLabs SDK lives in a
+  # dedicated venv at <repo>/.venv. bella-regen-prompts auto-re-execs into it.
+  # sox + libsox-fmt-all (installed above) handle the MP3 -> 8 kHz WAV step.
+  BELLA_VENV="${PACKAGE_DIR}/.venv"
+  if [ ! -x "${BELLA_VENV}/bin/python" ]; then
+    python3 -m venv "${BELLA_VENV}" || true
+  fi
+  if [ -x "${BELLA_VENV}/bin/pip" ]; then
+    "${BELLA_VENV}/bin/pip" install --upgrade pip >/dev/null 2>&1 || true
+    "${BELLA_VENV}/bin/pip" install --upgrade elevenlabs \
+      && echo "OK: elevenlabs installed in ${BELLA_VENV}" \
+      || echo "WARN: could not install elevenlabs into ${BELLA_VENV}"
+  else
+    echo "WARN: venv creation failed at ${BELLA_VENV}; bella-regen-prompts unavailable"
+  fi
 
   echo "OK: fresh-Pi bootstrap complete"
 }

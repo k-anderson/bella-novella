@@ -10,6 +10,9 @@
 # --- Hand-edit backups (not needed for redeploy) ----------------------------
 *.backup.*
 
+# --- Python venv for bella-regen-prompts (dev-only, recreated by install.sh) --
+/.venv/
+
 # --- Recorded IVR greetings (regenerated from the handset) -------------------
 # The recordings/ directory itself is tracked (via .gitkeep) so FreeSWITCH has
 # a place to write main-menu.wav, but the recordings themselves are not.

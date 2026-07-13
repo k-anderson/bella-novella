@@ -83,6 +83,34 @@ log "linked /usr/local/freeswitch/scripts/disco-relay"
 install -m 0755 "${COMMON_DIR}/fs-start" /usr/local/bin/fs-start
 log "installed fs-start"
 
+# ---------------------------------------------------------------------------
+# 7. Prompt-regeneration toolchain (bella-regen-prompts).
+#    Mirrors what `install.sh --fresh` provisions on the Pi: python3 + a venv
+#    holding the ElevenLabs SDK (PEP 668 blocks system-wide pip on bookworm),
+#    plus sox/libsox-fmt-all for the MP3 -> 8 kHz WAV conversion. Best-effort:
+#    editing/call-testing does not depend on it, so failures only warn.
+# ---------------------------------------------------------------------------
+export DEBIAN_FRONTEND=noninteractive
+if apt-get install -y --no-install-recommends \
+     python3 python3-venv python3-pip sox libsox-fmt-all >/dev/null 2>&1; then
+  BELLA_VENV="${REPO_ROOT}/.venv"
+  if [ ! -x "${BELLA_VENV}/bin/python" ]; then
+    python3 -m venv "${BELLA_VENV}" 2>/dev/null || true
+  fi
+  if [ -x "${BELLA_VENV}/bin/pip" ]; then
+    "${BELLA_VENV}/bin/pip" install --upgrade pip >/dev/null 2>&1 || true
+    if "${BELLA_VENV}/bin/pip" install --upgrade elevenlabs >/dev/null 2>&1; then
+      log "prompt toolchain ready (.venv + elevenlabs, sox)"
+    else
+      log "WARNING: could not install elevenlabs into ${BELLA_VENV}"
+    fi
+  else
+    log "WARNING: venv creation failed; bella-regen-prompts unavailable"
+  fi
+else
+  log "WARNING: could not install python/sox; bella-regen-prompts unavailable"
+fi
+
 cat <<'DONE'
 
 [disco-setup] Ready.
