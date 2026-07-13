@@ -38,7 +38,7 @@
   </extension>
 
   <!-- Every later return to the menu (after an action/invalid): short greeting.
-       One of the main-menu-short-varient-N prompts is chosen at random. -->
+       One of the main-menu-short-variant-N prompts is chosen at random. -->
   <extension name="menu-repeat">
     <condition field="destination_number" expression="^700$"/>
     <condition field="${menu_greeted}" expression="^true$">

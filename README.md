@@ -95,7 +95,7 @@ menu at `700`.
 collects the option with `play_and_get_digits` (1–3 digits, `*` terminator, validated to the set
 below). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the call; every
 return to the menu thereafter plays **one of five random short greetings**
-(`prompts/main-menu-short-varient-1..5.wav`, via
+(`prompts/main-menu-short-variant-1..5.wav`, via
 [`scripts/bella-messages`](scripts/bella-messages) `short-menu-prompt`) — tracked
 by the `menu_greeted` channel variable. The collected option (`bella_opt`) is dispatched on a
 second routing pass:

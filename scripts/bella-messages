@@ -45,11 +45,11 @@ INVALID_PROMPTS=(
 # Variants of the short main-menu greeting; one is picked at random each time the
 # caller returns to the menu.
 SHORT_MENU_PROMPTS=(
-  "$PROMPTS_DIR/main-menu-short-varient-1.wav"
-  "$PROMPTS_DIR/main-menu-short-varient-2.wav"
-  "$PROMPTS_DIR/main-menu-short-varient-3.wav"
-  "$PROMPTS_DIR/main-menu-short-varient-4.wav"
-  "$PROMPTS_DIR/main-menu-short-varient-5.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-1.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-2.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-3.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-4.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-5.wav"
 )
 
 # Sorted oldest-first (lexical == chronological because of the name prefix).
