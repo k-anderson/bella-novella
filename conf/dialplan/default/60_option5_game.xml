@@ -6,15 +6,21 @@
        Entry: 00_inbound_and_menu.xml routes menu option 5 (secret, never
        announced) to GAME_START. Flow:
 
-         GAME_START  pick secret, reset tries, play the rules, -> GAME_ASK
-         GAME_ASK    collect one digit (1-9),                  -> GAME_EVAL
+         GAME_START  pick secret, reset tries, queue the rules, -> GAME_ASK
+         GAME_ASK    play ${game_prompt} and collect one digit (1-9) -> GAME_EVAL
          GAME_EVAL   empty/invalid -> nudge + re-ask;
                      else ask scripts/bella-game for a verdict -> GAME_VERDICT
          GAME_VERDICT  hit  -> GAME_WIN
                        lose -> GAME_LOSE
-                       high -> bump tries, play "higher", re-ask
-                       low  -> bump tries, play "lower",  re-ask
+                       high -> bump tries, queue "higher", re-ask
+                       low  -> bump tries, queue "lower",  re-ask
          GAME_WIN / GAME_LOSE  play the close, back to the menu (700)
+
+       Prompts (intro, higher/lower, invalid) are played *inside* GAME_ASK's
+       play_and_get_digits as ${game_prompt}, so any key pressed while they play
+       is taken as the guess. That lets a returning caller barge in and skip
+       through the prompts by guessing as they hear them. Each step just sets
+       game_prompt to the file it wants played next and transfers to GAME_ASK.
 
        The secret is never spoken (no TTS needed) and never revealed on a loss.
        Range 1-9 is passed literally; the try cap is $${game_tries_max}. Every
@@ -26,20 +32,23 @@
     <condition field="destination_number" expression="^GAME_START$">
       <action application="set" data="game_secret=${system($${bella_game} secret 1 9)}"/>
       <action application="set" data="game_tries=0"/>
-      <action application="playback" data="$${prompts_dir}/game-intro.wav"/>
+      <action application="set" data="game_prompt=$${prompts_dir}/game-intro.wav"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
 
-  <!-- Collect a single guess. Reset the per-call transfer budget first. -->
+  <!-- Collect a single guess. Reset the per-call transfer budget first. The
+       prompt for this step (${game_prompt}: intro, higher/lower, or invalid) is
+       played as the FILE arg, so a key pressed while it plays is the guess —
+       letting returning callers barge in and skip ahead. -->
   <extension name="game-ask">
     <condition field="destination_number" expression="^GAME_ASK$">
       <action application="set" data="max_forwards=70"/>
       <action application="set" data="game_guess="/>
       <!-- args: min max tries timeout terminators FILE INVALID-AUDIO VAR REGEX digit-timeout.
-           Both audio slots are silence (feedback is played in GAME_VERDICT/START). -->
+           FILE is the current step's prompt (barge-in-able); INVALID-AUDIO is silence. -->
       <action application="play_and_get_digits"
-              data="1 1 1 7000 # silence_stream://300 silence_stream://100 game_guess '^[1-9]$' 2000"/>
+              data="1 1 1 7000 # ${game_prompt} silence_stream://100 game_guess '^[1-9]$' 2000"/>
       <action application="transfer" data="GAME_EVAL XML default"/>
     </condition>
   </extension>
@@ -50,7 +59,7 @@
   <extension name="game-eval-empty">
     <condition field="destination_number" expression="^GAME_EVAL$"/>
     <condition field="${game_guess}" expression="^$">
-      <action application="playback" data="$${prompts_dir}/game-invalid.wav"/>
+      <action application="set" data="game_prompt=$${prompts_dir}/game-invalid.wav"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -80,7 +89,7 @@
     <condition field="destination_number" expression="^GAME_VERDICT$"/>
     <condition field="${game_verdict}" expression="^high$">
       <action application="set" data="game_tries=${system($${bella_game} incr ${game_tries})}"/>
-      <action application="playback" data="${system($${bella_game} hint high)}"/>
+      <action application="set" data="game_prompt=${system($${bella_game} hint high)}"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -89,7 +98,7 @@
     <condition field="destination_number" expression="^GAME_VERDICT$"/>
     <condition field="${game_verdict}" expression="^low$">
       <action application="set" data="game_tries=${system($${bella_game} incr ${game_tries})}"/>
-      <action application="playback" data="${system($${bella_game} hint low)}"/>
+      <action application="set" data="game_prompt=${system($${bella_game} hint low)}"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -97,7 +106,7 @@
   <!-- Defensive catch-all (e.g. the helper is unavailable): nudge and re-ask. -->
   <extension name="game-verdict-other">
     <condition field="destination_number" expression="^GAME_VERDICT$">
-      <action application="playback" data="$${prompts_dir}/game-invalid.wav"/>
+      <action application="set" data="game_prompt=$${prompts_dir}/game-invalid.wav"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
