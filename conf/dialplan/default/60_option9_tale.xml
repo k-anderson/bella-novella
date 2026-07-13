@@ -1,8 +1,8 @@
 <include>
   <!-- ===================================================================
-       Hidden option 0: "The Ember" — a branching fable Bella reads aloud.
+       Hidden option 9: "The Ember" — a branching fable Bella reads aloud.
 
-       Entry: 10_inbound_and_menu.xml routes menu option 0 (secret, never
+       Entry: 10_inbound_and_menu.xml routes menu option 9 (secret, never
        announced) to TALE_OPEN. Each node narrates, then collects a single
        digit and transfers to a per-node dispatch pass (a fresh routing pass so
        the chosen digit can be tested in a <condition>). Invalid input or no

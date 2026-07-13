@@ -16,9 +16,9 @@ caller made.
 
 ## How to reach it
 
-It is a **secret**: at the main menu the caller dials **`0`**. Bella never
-announces it in any greeting. Internally, menu option `0` routes to `TALE_OPEN`
-(see [conf/dialplan/default/60_option0_tale.xml](conf/dialplan/default/60_option0_tale.xml) and
+It is a **secret**: at the main menu the caller dials **`9`**. Bella never
+announces it in any greeting. Internally, menu option `9` routes to `TALE_OPEN`
+(see [conf/dialplan/default/60_option9_tale.xml](conf/dialplan/default/60_option9_tale.xml) and
 the `dispatch-story` entry in
 [conf/dialplan/default/10_inbound_and_menu.xml](conf/dialplan/default/10_inbound_and_menu.xml)).
 

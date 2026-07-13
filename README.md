@@ -2,8 +2,8 @@
 
 A self-contained [FreeSWITCH](https://freeswitch.org/) telephony appliance that runs on a
 Raspberry Pi. Two analog phones (via an ATA) become the controls for a **motorized linear
-actuator** and an intercom: lift a handset, navigate voice menus that respect bella's personailty,
-and press a digit toraise or lower the mechanism or ring the other phone.
+actuator** and an intercom: lift a handset, navigate voice menus that respect Bella's personality,
+and press a digit to raise or lower the mechanism or ring the other phone.
 
 This repository **is** the Pi's `/usr/local/freeswitch` directory, so it doubles as a complete,
 redeployable backup of the appliance: binaries, configuration, sounds, and the relay-control
@@ -27,12 +27,18 @@ The appliance turns a pair of ordinary POTS phones into a two-button remote plus
 no app, screen, or internet dependency:
 
 1. An analog phone is plugged into an **ATA** (analog telephone adapter). The ATA registers to
-   FreeSWITCH as SIP line **101** or **102** over the isolated LAN.
+   FreeSWITCH as a SIP line over the isolated LAN. Four lines are defined (**101**–**104**); a
+   typical build uses two handsets (**101**/**102**).
 2. Picking up a phone (or dialing `700`) drops the caller into a **voice menu**.
-3. Menu choices either **raise/lower the actuator** (via the relay HAT), **intercom the other
-   phone**, or use the built-in **answering machine** to **leave a message** or **listen to
-   stored messages**. Other hidden digits reveal a **branching story** (`0`) and a
-   **guess-my-number game** (`5`).
+3. From the menu the caller can:
+   - **Raise / lower / stop the actuator** via the relay HAT — `911` raise, `411` lower, `#` stop.
+   - **Intercom the other phone** — `1` rings the far handset with ringback.
+   - **Leave a message** — `3` records to the built-in answering machine (max 60 s).
+   - **Listen to stored messages** — `2` plays the newest messages back, newest-first.
+   - **Dial another line directly** — `101`–`104` ring that handset; `0` is a shortcut to line
+     `104`.
+   - **Discover hidden extras** — an unannounced **branching story** (`9`) and a
+     **guess-my-number game** (`5`).
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -49,6 +55,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`conf/`](conf/) | All FreeSWITCH configuration — the heart of the project (see below). | **Yes** |
 | [`scripts/`](scripts/) | Project bash helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV). | **Yes** |
 | [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs (menu, disco, message, invalid, story `tale-*`, game `game-*`). | **Yes** |
+| [`install.sh`](install.sh) | Installer: stages this tree into `/usr/local/freeswitch`, installs the host drop-ins under `system/`, rebuilds the prompt WAVs, and enables the systemd units. | **Yes** |
+| [`README.md`](README.md), [`STORY.md`](STORY.md), [`GAME.md`](GAME.md), [`PROMPTS.md`](PROMPTS.md), [`CODESPACES.md`](CODESPACES.md) | Project docs: overview (this file), the hidden story design (`9`), the number-game design (`5`), the prompt scripts/regeneration guide, and the Codespaces guide. | **Yes** |
 | [`system/`](system/) | Host files installed by `install.sh`: the `freeswitch` and `bella-ring` systemd units, plus sysctl/limits/sudoers/dnsmasq/NetworkManager drop-ins and helper scripts. Also carries the **optional** `wifi-fallback` unit + script (see [§9](#9-optional-wi-fi-fallback-and-hotspot)). | **Yes** |
 | [`build/`](build/) | [`build/modules.conf`](build/modules.conf) — the minimal module list used to (re)build FreeSWITCH from source (see [§8](#8-optional-build-freeswitch-from-scratch)). | **Yes** |
 | [`bin/`](bin/) | FreeSWITCH executables (`freeswitch`, `fs_cli`, …), **aarch64**. | stock |
@@ -63,21 +71,44 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 
 ### 2.1 `conf/` in detail
 
+**Root + profiles**
+
 | File | Purpose |
 |---|---|
-| [`conf/freeswitch.xml`](conf/freeswitch.xml) | Root config: includes vars, autoload configs, the `default` dialplan, and the inline user directory. |
-| [`conf/vars.xml`](conf/vars.xml) | Global settings: paths, the `192.168.50.1` bind IP, `PCMU` codec, the `disco_raise`/`disco_lower` actuator commands, and the hidden number-game helper (`bella_game`, `game_tries_max`). |
+| [`conf/freeswitch.xml`](conf/freeswitch.xml) | Root config: includes `vars.xml`, the autoload configs, the `default` dialplan, and the user directory. |
+| [`conf/vars.xml`](conf/vars.xml) | Global settings: paths (`prompts_dir`, `recordings_dir`), the `192.168.50.1` bind IP and ACL CIDR, `PCMU` codec prefs, the `disco_raise`/`disco_lower`/`disco_stop`/`disco_position` actuator commands, and the helper paths `bella_messages`, `bella_game` (+ `game_tries_max`). |
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
-| [`conf/directory/default/101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml) | The two SIP lines (passwords unused — blind registration). |
-| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR menu (see the dialplan section). |
-| [`STORY.md`](STORY.md) | Design + full prompt scripts for the hidden branching story (`0`, `60_option0_tale.xml`). |
-| [`GAME.md`](GAME.md) | Design + full prompt scripts for the hidden number game (`5`, `70_option5_game.xml`). |
-| [`prompts/`](prompts/) | Custom voice prompts (8 kHz mono WAV) — menu greeting, disco-ball, message, invalid, story (`tale-*`), and game (`game-*`) prompts. |
-| [`scripts/bella-messages`](scripts/bella-messages) | Message-store helper for the IVR (record retention, playback navigation). |
-| [`scripts/bella-game`](scripts/bella-game) | Number-guessing-game helper for the hidden `5` option (random secret, guess verdict, higher/lower prompt). |
-| [`scripts/bella-ring`](scripts/bella-ring) | Rings a phone every 15-45 min (systemd timer) and routes it to the menu on answer. |
-| [`scripts/bella-convert-prompts`](scripts/bella-convert-prompts) | Rebuilds the prompt WAVs from their MP3 sources (8 kHz mono); run by `install.sh`. |
-| [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`bella_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
+
+**Directory — the SIP lines** ([`conf/directory/default/`](conf/directory/default/))
+
+| File | Purpose |
+|---|---|
+| [`101.xml`](conf/directory/default/101.xml), [`102.xml`](conf/directory/default/102.xml), [`103.xml`](conf/directory/default/103.xml), [`104.xml`](conf/directory/default/104.xml) | The four SIP lines (passwords unused — blind registration). Each sets its own `effective_caller_id` and the `default` context. |
+
+**Dialplan — routing + IVR** ([`conf/dialplan/default/`](conf/dialplan/default/), loaded in filename order)
+
+| File | Purpose |
+|---|---|
+| [`00_extensions.xml`](conf/dialplan/default/00_extensions.xml) | Direct dial of the SIP lines: `dial-101`…`dial-104` each ring their handset with ringback (loaded first, before the menu's numeric catch-all). |
+| [`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) | Inbound routing (`all-calls-to-menu` → `700`), the main menu greeting/collection, and the `DISPATCH` extensions that route each option. |
+| [`20_option1_intercom.xml`](conf/dialplan/default/20_option1_intercom.xml) | Option `1` (`CALL_OTHER`): rings the other line by transferring to its `dial-1NN` extension. |
+| [`30_option2_listen.xml`](conf/dialplan/default/30_option2_listen.xml) | Option `2` (`LISTEN_MESSAGES`): browse/playback of stored messages. |
+| [`40_option3_leave.xml`](conf/dialplan/default/40_option3_leave.xml) | Option `3` (`LEAVE_MESSAGE`): record a message to `recordings/messages/`. |
+| [`50_disco_controls.xml`](conf/dialplan/default/50_disco_controls.xml) | Disco-ball controls `911` raise / `411` lower / `#` stop (`DISCO_RAISE`/`DISCO_LOWER`/`DISCO_STOP`). |
+| [`60_option9_tale.xml`](conf/dialplan/default/60_option9_tale.xml) | Hidden option `9` (`TALE_OPEN`): the branching story "The Ember" — see [`STORY.md`](STORY.md). |
+| [`70_option5_game.xml`](conf/dialplan/default/70_option5_game.xml) | Hidden option `5` (`GAME_START`): the guess-my-number game — see [`GAME.md`](GAME.md). |
+
+**Autoload module configs** ([`conf/autoload_configs/`](conf/autoload_configs/))
+
+| File | Purpose |
+|---|---|
+| [`modules.conf.xml`](conf/autoload_configs/modules.conf.xml) | The minimal set of modules loaded at boot (13). |
+| [`acl.conf.xml`](conf/autoload_configs/acl.conf.xml) | The `bella_ata_only` allow-list = `192.168.50.0/24`. |
+| [`event_socket.conf.xml`](conf/autoload_configs/event_socket.conf.xml) | ESL bound to `127.0.0.1` (used by `bella-ring`). |
+| [`sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | SIP stack settings; loads the `ata` profile. |
+| [`switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core switch settings (RTP ports, timers, defaults). |
+| [`ivr.conf.xml`](conf/autoload_configs/ivr.conf.xml) | IVR menu subsystem defaults. |
+| [`console.conf.xml`](conf/autoload_configs/console.conf.xml), [`logfile.conf.xml`](conf/autoload_configs/logfile.conf.xml) | Console and file logging configuration. |
 
 ---
 
@@ -89,9 +120,18 @@ destination handled by the dialplan.
 ### 3.1 Entry — any call → the menu
 [`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) (`all-calls-to-menu`):
 dialing `700` (the ATA off-hook auto-dial), or **any** number from the ATA, is routed to the main
-menu at `700`.
+menu at `700` — **except** a directly dialed line `101`–`104`, which is matched first by
+[`00_extensions.xml`](conf/dialplan/default/00_extensions.xml) (it sorts before this file) and
+rings that handset instead of entering the menu.
 
-### 3.2 The menu
+### 3.2 Extensions — direct dial & the ring layer
+[`00_extensions.xml`](conf/dialplan/default/00_extensions.xml) holds one explicit extension per
+line (`dial-101` … `dial-104`). Dialing `101`–`104` — from a handset **or** from the menu — rings
+that phone: each sets the caller ID from `${sip_from_user}` (so the far phone shows who's calling),
+plays ringback while it rings, and on no-answer/busy plays `no-answer.wav` and drops back to the
+menu (`700`). The intercom (§3.3) reuses these extensions rather than bridging on its own.
+
+### 3.3 The menu
 [`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) plays the greeting and
 collects the option with `play_and_get_digits` (1–3 digits, `*` terminator, validated to the set
 below). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the call; every
@@ -109,7 +149,9 @@ second routing pass:
 | **911** | `DISCO_RAISE` | Raise the disco ball |
 | **411** | `DISCO_LOWER` | Lower the disco ball |
 | **#** | `DISCO_STOP` | Stop the disco ball |
-| **0** | `TALE_OPEN` | *(hidden, unspoken)* Bella reads a branching story — see §3.7 |
+| **101**–**104** | `dial-1NN` | Dial that SIP line directly (see §3.1a) |
+| **0** | `104` | Shortcut: dial SIP line 104 |
+| **9** | `TALE_OPEN` | *(hidden, unspoken)* Bella reads a branching story — see §3.7 |
 | **5** | `GAME_START` | *(hidden, unspoken)* Guess-my-number game — see §3.8 |
 
 Anything else plays **one of six random "invalid" prompts** (`prompts/invalid-entry-1..6.wav`, via
@@ -120,16 +162,19 @@ Completed actions return to the menu.
 
 > **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else on the
 > menu is *unannounced* and spreads by word of mouth: the disco controls (**911** raise, **411** lower,
-> **#** stop), the branching story (**0**, see §3.7), and the guess-my-number game (**5**, see §3.8).
-> Bella hints that there's more — *"one of the ones I don't say out loud"* — but never names them.
+> **#** stop), direct line dialing (**101**–**104**, and **0** for line 104), the branching story
+> (**9**, see §3.7), and the guess-my-number game (**5**, see §3.8). Bella hints that there's more —
+> *"one of the ones I don't say out loud"* — but never names them.
 
-### 3.3 The actions
+### 3.4 The actions
 
 - **Intercom (`CALL_OTHER`)** — [`20_option1_intercom.xml`](conf/dialplan/default/20_option1_intercom.xml):
-  checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
-  **101**, with a ringback tone while the far phone rings. If the other line doesn't answer (or
-  the call arrives from an unexpected line) it plays `no-answer.wav`. Either way it returns to the
-  menu when finished.
+  checks the caller's SIP user and rings the other handset by transferring to its line extension in
+  [`00_extensions.xml`](conf/dialplan/default/00_extensions.xml) — from **101** it dials **102**,
+  from **102** it dials **101**. That extension sets the caller ID and plays ringback while the far
+  phone rings; if it doesn't answer (or the call arrives from an unexpected line) `no-answer.wav`
+  plays and control returns to the menu. (Four lines are defined, **101**–**104**; the intercom
+  pairs **101 ↔ 102** — the other lines are reached by dialing them directly, see §3.1a.)
 - **Listen (`LISTEN_MESSAGES`)** — [`30_option2_listen.xml`](conf/dialplan/default/30_option2_listen.xml):
   plays the **newest 10** messages **newest-first**, each preceded by its numbered announcement
   (`prompts/playback-announcement-<idx>.wav`) as a lead-in prompt. During a message, **1 = next**
@@ -151,7 +196,7 @@ Completed actions return to the menu.
   resets the position to `unknown`** so either 911 or 411 will run next. Every path returns to the
   menu. Position is `unknown` at boot and after `#` (state lives on `/run`, tmpfs).
 
-### 3.4 The relay controller
+### 3.5 The relay controller
 [`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status`/`position`
 into timed GPIO relay states on the Waveshare HAT:
 
@@ -173,7 +218,7 @@ The commands in [`conf/vars.xml`](conf/vars.xml) set the timing: `disco_raise` r
 `disco_lower` runs `disco-relay lower 120 5` (drive **120 s**; spot lights **off** after **5%**).
 Tune the seconds and percentages there.
 
-### 3.5 The message store
+### 3.6 The message store
 [`scripts/bella-messages`](scripts/bella-messages) manages `recordings/messages/` for the IVR
 (runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback
 newest-first, resolves an index to a file, maps an index to its lead-in announcement, steps the
@@ -181,7 +226,7 @@ next/previous index, and returns random invalid / short-menu prompts. Older mess
 on disk** and pruned oldest-first only when free space is low. All output is newline-free for use
 in `${system(...)}`.
 
-### 3.6 The periodic ring
+### 3.7 The periodic ring
 At a random interval between **15 and 45 minutes** a systemd timer runs
 [`scripts/bella-ring`](scripts/bella-ring), which picks
 one of the two lines (101/102) at random and, if it is registered, `originate`s a call to it via
@@ -192,21 +237,23 @@ quietly. The schedule lives in
 [`bella-ring.service`](system/etc/systemd/system/bella-ring.service); `install.sh` enables the
 timer.
 
-### 3.7 Hidden — the branching story (`0`)
-Dialing **`0`** (never announced) opens **"The Ember"**, a short branching fable Bella reads aloud
+### 3.8 Hidden — the branching story (`9`)
+Dialing **`9`** (never announced) opens **"The Ember"**, a short branching fable Bella reads aloud
 from her lounge. Each node narrates and collects one digit; the choices lead to one of **five
 endings**, each a small moral that reflects the path taken. An invalid key plays a story-specific
 prompt and re-offers the node, so the caller stays inside the story; endings return to the menu.
-The nodes live in [`60_option0_tale.xml`](conf/dialplan/default/60_option0_tale.xml); the tree, choice table, and
+The nodes live in [`60_option9_tale.xml`](conf/dialplan/default/60_option9_tale.xml); the tree, choice table, and
 full prompt scripts are in [`STORY.md`](STORY.md). Prompts: `prompts/tale-*.wav`.
 
-### 3.8 Hidden — "guess my number" (`5`)
+### 3.9 Hidden — "guess my number" (`5`)
 Dialing **`5`** (never announced) starts a keypad guessing game. Bella picks a secret number
 **1–9**; each single keypress is a guess, and she answers with a random *higher* / *lower* until
 the caller wins or runs out of tries (default **3**, tunable via `game_tries_max` in
-[`conf/vars.xml`](conf/vars.xml)). She never reveals the number on a loss. The comparison and
-randomness live in [`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` /
-`hint`), driven by [`70_option5_game.xml`](conf/dialplan/default/70_option5_game.xml); see [`GAME.md`](GAME.md).
+[`conf/vars.xml`](conf/vars.xml)). Each prompt (intro, higher/lower, invalid) is played *inside*
+the digit collector, so a returning caller can barge in and guess over the prompt to skip ahead.
+She never reveals the number on a loss. The comparison and randomness live in
+[`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` / `hint`), driven by
+[`70_option5_game.xml`](conf/dialplan/default/70_option5_game.xml); see [`GAME.md`](GAME.md).
 Prompts: `prompts/game-*.wav`.
 
 ---
