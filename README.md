@@ -34,9 +34,9 @@ screen, or internet dependency:
 3. **Intercom** — dial `1` to ring the other participant line (101 ↔ 102).
 4. **Listen to messages** — dial `2` to hear the messages callers have left, newest first.
 5. **Leave a message** — dial `3` to record a message into the store.
-6. **Dial a line directly** — dial `101`–`104` to ring that specific phone, or `0` to reach the
+6. **Hidden — Dial a line directly** — dial `101`–`104` to ring that specific phone, or `0` to reach the
    concierge (line 104).
-7. **Raise / lower / stop the actuator** — dial `911` to raise, `411` to lower, and `11` to stop
+7. **Hidden — Raise / lower / stop the actuator** — dial `911` to raise, `411` to lower, and `11` to stop
    the "disco ball" (the motorized mirror), via the relay HAT.
 8. **Hidden — branching story** — dial `9` (never announced) for Bella's branching fable.
 9. **Hidden — guess-my-number game** — dial `5` (never announced) to play.
@@ -236,7 +236,7 @@ reflective sign-off (`prompts/playback-end.wav`); if the store was empty it inst
 **"Bella's drawer of secrets"** (`PLAYBACK_END_KEY` → `DRAWER_*`): the **full** archive,
 newest-first, continuing past the curated window (`drawer-start` = `PLAYBACK_LIMIT+1`) into every
 stored recording — no lead-in announcements, a short tone separating each message. In the drawer,
-**1** = next, **2** = previous, **7** = **delete** the current message, any other key replays it,
+**1** = next, **2** = previous, **7** = **delete** the current message (never announced), any other key replays it,
 and no key auto-advances. Because `bella-messages` re-lists the store on every call, a `delete-all`
 takes effect at once and every index renumbers as if the message never existed; reaching the oldest
 signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
