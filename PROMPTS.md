@@ -31,7 +31,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 [smiling, knowing, brisk] That either makes you lost... [beat] ...or exactly where you're meant to be.
 [hushed, low, quickly] If you already know my numbers... [sly] ...you know what to do with them.
 [velvet, quickly] But if this is your first time on my line, [low, dry] you can call me [proudly] Bella
-Novella. [low, private] Most things I keep to myself stranger. [amuzed] But these three, I'll tell you
+Novella. [low, private] Most things I keep to myself darling. [amuzed] But these three, I'll tell you
 outright.
 [low, smoky] Dial 1, and I'll send you down the wire to whoever's still answering that old phone.
 [darker, low] Half of me still expects a certain someone to pick up [wry, soft laugh] but it could be anyone
@@ -184,7 +184,7 @@ something so they can find you. [low, trailing off] I keep every voice that come
 **Lesson:** Time can heal.
 
 ```text
-[exhales] [low, sly] Take your time, darling. No rush on my end. [dry, amused] Even the fire that slowly grew
+[exhales] [low, sly] Take your time sugar. No rush on my end. [dry, amused] Even the fire that slowly grew
 and nearly took this place down left something worth keeping. [sly] That funny old broken mirror from that
 night reflects the light ever so interestingly. [low, soft] Funny what an emergency starts to look like, once
 it's had years enough to settle.
@@ -278,7 +278,7 @@ them.
 ### `invalid-entry-8`
 
 ```text
-[wry, private] Mm-mm. Wrong key, sugar. [sly, low] A girl keeps a few things just for herself — a name from
+[wry, private] Mm-mm. Wrong key, darling. [sly, low] A girl keeps a few things just for herself — a name from
 before this one, for instance.
 [dry, low] Have another go, sugar.
 ```
@@ -323,7 +323,7 @@ one for you.
 ```text
 [low, wistful] That's all of them, sugar [beat, sly] that I wish to share for now.
 [dry, low] Come back later. Somebody's always got something they need to settle. [sly, low] Or... you could
-leave one now yourself. [low, unhurried] Just a thought, sugar.
+leave one now yourself. [low, unhurried] Just a thought, stranger.
 ```
 
 ## Disco Ball
@@ -344,7 +344,7 @@ gave you anything.
 [sly, low] What more do you want from me, hm? [teasing] Fireworks? [dry, soft laugh] I don't do fireworks. Not
 anymore.
 [low, sultry] But this— [beat] this one's mine to give. All that light, just for you. [sultry, slow] So what's
-it going to be, darling?
+it going to be?
 [low, sultry, strong Argentinian accent] Shall we dance?
 ```
 
@@ -562,7 +562,7 @@ don't be shy, sugar. [inviting] First guess — surprise me.
 ### `game-higher-4`
 
 ```text
-[low, playful] Higher still, sugar. [dry, amused] You're being far too polite with me.
+[low, playful] Higher still, darling. [dry, amused] You're being far too polite with me.
 ```
 
 ### `game-higher-5`
@@ -708,7 +708,7 @@ it, darling.
 ```text
 [low, delighted, amazed] Found me. [impressed] And so fast — colour me thoroughly charmed, sugar.
 [beat, low, confiding] Since you won, let me give you the good one.
-[smoky, remembering] That old mirror that I mentioned, the one that broke into so many pieces during the fire?
+[smoky, remembering] That old mirror that I sometimes mention, the one that broke into so many pieces during the fire?
 [low] I kept it and still have it — [reverent] It's just hidden.
 [beat, distant] But you can draw the curtan back if you know how, and it will scatter light in the darkness
 once more. [warm] You just have to listen carefully and you'll eventually figure out how to do it.
@@ -719,7 +719,7 @@ once more. [warm] You just have to listen carefully and you'll eventually figure
 ```text
 [delighted, low, intrigued] Well, well, well. [a soft laugh] Aren't you the clever one. [impressed, warm]
 Nobody's read me that quick in a long while.
-[beat, sly, low] So here's what winning buys you, darling. [low, private, amused] I don't keep photographs,
+[beat, sly, low] So here's what winning buys you. [low, private, amused] I don't keep photographs,
 darling. I keep memories. Much longer shelf life. [soft laugh]
 [confiding] I keep the things people hand me thinking I'll forget them by morning. [beat, amused] And I run a
 quiet little arrangement or two of my own, on the side — [sly, purring] if you want to hear all the secrets,
@@ -745,7 +745,7 @@ I'll be in a giving mood.
 ### `game-lose-2`
 
 ```text
-[low, amused] And there go the last of your guesses, darling. [teasing] The number stays with me — [sly] you
+[low, amused] And there go the last of your guesses. [teasing] The number stays with me — [sly] you
 didn't really think I'd just hand it over?
 [beat, low, confiding] Patience, darling. I know something about that. [wistful] I spent years waiting on a
 line that never answered by the one I hoped for. [low, soft] Still do, if I'm honest.
@@ -769,7 +769,7 @@ down at the table.
 ### `game-lose-4`
 
 ```text
-[low, amused] And that's all the guesses you get, darling. [teasing] The answer walks out of here with me —
+[low, amused] And that's all the guesses you get. [teasing] The answer walks out of here with me —
 [sly, warm] a girl's got to keep something.
 [beat, low, confiding] Don't look so glum, darling. [soft] I've come up short more times than I'd ever admit
 at this table. [low, tender] Somebody carried me once, when I couldn't carry myself — [wry] and I've been
