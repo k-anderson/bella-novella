@@ -19,6 +19,31 @@ script are all here.
 > **Version note:** this is FreeSWITCH **1.11.1** built from git *master* for **aarch64**
 > (Raspberry Pi OS 64-bit, Debian 13 "trixie"). It is not a stable-release package.
 
+### Contents
+
+- [1. Use case](#1-use-case)
+- [2. Discoveries](#2-discoveries)
+- [3. Repository layout](#3-repository-layout)
+- [4. Current dialplan & call flow](#4-current-dialplan--call-flow)
+- [5. The scripts](#5-the-scripts)
+- [6. Open in GitHub Codespaces](#6-open-in-github-codespaces)
+- [7. Quick deployment](#7-quick-deployment)
+- [8. Manual deployment](#8-manual-deployment)
+- [9. Updating an existing deployment](#9-updating-an-existing-deployment)
+- [10. Optional: build FreeSWITCH from scratch](#10-optional-build-freeswitch-from-scratch)
+- [11. Optional: Wi-Fi fallback and hotspot](#11-optional-wi-fi-fallback-and-hotspot)
+
+### Documentation
+
+Other Markdown documents in this repo:
+
+- [`BELLA-NOVELLA.md`](BELLA-NOVELLA.md): Bella's character bible — the personality and backstory every prompt draws from.
+- [`PROMPTS.md`](PROMPTS.md): Source text for every voice prompt, plus how to (re)generate them (§5.6).
+- [`PROMPTS.baseline.md`](PROMPTS.baseline.md): Baseline snapshot of the prompt text; `bella-regen-prompts` diffs against it to regenerate only what changed.
+- [`STORY.md`](STORY.md): Design notes and the full prompt scripts for the hidden branching story "The Ember" (§4.7).
+- [`GAME.md`](GAME.md): Design notes and the full prompt scripts for the hidden guess-my-number game (§4.8).
+- [`CODESPACES.md`](CODESPACES.md): GitHub Codespaces / dev-container usage and its limitations (§6).
+
 ---
 
 ## 1. Use case
@@ -48,7 +73,46 @@ network with just the Pi, the ATA, and the phones.
 
 ---
 
-## 2. Repository layout
+## 2. Discoveries
+
+The plain menu only ever offers **1**, **2**, and **3**; everything else is earned. Bella's hidden
+features (§4) don't just *do* things — they hand the persistent caller fragments of her backstory,
+and quiet tips toward the phone system's own hidden controls, one secret at a time. Every reveal
+ends the same way: she tells you to *"tell the bartender,"* an out-of-band wink that turns a
+discovered secret into a real-world passphrase.
+
+**Backstory a caller can uncover:**
+
+| Discovery | What the caller learns | How to reach it |
+|---|---|---|
+| **Her real name — Ilaria Kalergis** | The name she went by before "Bella", traded away "before this city, this room, all of it" — and never worn since. | Win the guess-my-number game (dial **5**, §4.8) — `game-win-1`. |
+| **Her grandmother — Despina Novella** | The grandmother who raised her and taught her that the safest place for a secret is a trusted person; the reason she runs the room the way she does. | Win the game (dial **5**, §4.8) — `game-win-2`. |
+| **Her lost love — Tobi** | The owner of "that old phone" she keeps connecting callers to (the intercom line, option 1): a brief, intense romance cut short when she was forced to leave. She still dials it some nights — it's never them. | Win the game (dial **5**, §4.8) — `game-win-3`. |
+| **A city she once visited — Salzburg** | Where she once "burned a book or two"; offered explicitly as a passphrase — *"tell the bartender you once met me in Salzburg, there might be something in it for you."* | Reach the **"revel"** ending of the branching story (dial **9**, §4.7): choose **2** (feed the ember) → **1** (burn the whole book) → `tale-end-revel`. |
+
+**Hidden phone features a caller can be tipped off to:** two of the winning prompts don't hand over
+backstory — they point the caller toward controls the spoken menu never mentions:
+
+| Tip | What it points to | Prompt |
+|---|---|---|
+| **The broken mirror / disco ball** | Hints that the mirror salvaged from the fire is "just hidden" and can "scatter light in the darkness once more" if you "listen carefully" — a nudge toward the unspoken disco-ball controls (**911** raise, **411** lower, **11** stop; §4.6). The main-menu greetings (notably short variants 3 and 8) drop the matching hint that an *emergency* number brings the light back. | `game-win-4` |
+| **Bella's drawer of secrets** | Tells the winner she keeps *every* message, not just the last ten, and that dialing **9** at the "that's all of the messages I care to share right now" sign-off keeps going into the full archive — the hidden message drawer (§4.4). | `game-win-5` |
+
+A few things worth knowing:
+
+- **The reveals are spread across the five winning prompts** (`game-win-1..5`), and Bella plays
+  **one at random** each time you win (`bella-game pick game-win`, §5.3). Winning repeatedly is how
+  you surface all of them — a single win only ever reveals one.
+- **The bartender is the recurring thread.** Nearly every secret closes by pointing back to the
+  same off-line bartender; sharing what you found is the real prize.
+- **The discoverable lore and tips live entirely in the prompt scripts** in
+  [`PROMPTS.md`](PROMPTS.md). Editing or regenerating those prompts (`bella-regen-prompts`, §5.6)
+  changes what — and how much — a caller can find, so keep this list in sync with the `game-win-*`
+  and `tale-end-*` scripts.
+
+---
+
+## 3. Repository layout
 
 This is a standard FreeSWITCH install tree. The **project-specific** parts are `conf/` and
 `scripts/`; the rest is stock FreeSWITCH runtime kept here so the Pi can be rebuilt from the repo.
@@ -56,10 +120,10 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | Path | What it is | Custom? |
 |---|---|---|
 | [`conf/`](conf/) | All FreeSWITCH configuration — the heart of the project (see below). | **Yes** |
-| [`scripts/`](scripts/) | Project bash/Python helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV), `bella-regen-prompts` (ElevenLabs TTS). Documented per-script in [§4](#4-the-scripts). | **Yes** |
+| [`scripts/`](scripts/) | Project bash/Python helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV), `bella-regen-prompts` (ElevenLabs TTS). Documented per-script in [§5](#5-the-scripts). | **Yes** |
 | [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs — the full menu greeting and its nine short variants, ten invalid-entry scolds, per-message playback announcements, the disco and message prompts, the branching story (`tale-*`), and the game (`game-*`, including randomized intro/win/lose and higher/lower variants). | **Yes** |
-| [`system/`](system/) | Host files installed by `install.sh`: the `freeswitch` and `bella-ring` systemd units, plus sysctl/limits/sudoers/dnsmasq/NetworkManager drop-ins and helper scripts. Also carries the **optional** `wifi-fallback` unit + script (see [§10](#10-optional-wi-fi-fallback-and-hotspot)). | **Yes** |
-| [`build/`](build/) | [`build/modules.conf`](build/modules.conf) — the minimal module list used to (re)build FreeSWITCH from source (see [§9](#9-optional-build-freeswitch-from-scratch)). | **Yes** |
+| [`system/`](system/) | Host files installed by `install.sh`: the `freeswitch` and `bella-ring` systemd units, plus sysctl/limits/sudoers/dnsmasq/NetworkManager drop-ins and helper scripts. Also carries the **optional** `wifi-fallback` unit + script (see [§11](#11-optional-wi-fi-fallback-and-hotspot)). | **Yes** |
+| [`build/`](build/) | [`build/modules.conf`](build/modules.conf) — the minimal module list used to (re)build FreeSWITCH from source (see [§10](#10-optional-build-freeswitch-from-scratch)). | **Yes** |
 | [`bin/`](bin/) | FreeSWITCH executables (`freeswitch`, `fs_cli`, …), **aarch64**. | stock |
 | [`lib/`](lib/) | `libfreeswitch.so`. | stock |
 | [`mod/`](mod/) | Loadable modules (`.so`), **aarch64**. Only a minimal set is used. | stock |
@@ -70,7 +134,7 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`recordings/`](recordings/) | Caller messages recorded by the IVR (`recordings/messages/`). **Git-ignored** (the folder is kept via `.gitkeep`). | generated |
 | [`.devcontainer/`](.devcontainer/), [`CODESPACES.md`](CODESPACES.md) | GitHub Codespaces setup (see below). | tooling |
 
-### 2.1 `conf/` in detail
+### 3.1 `conf/` in detail
 
 Every file under `conf/` is listed below. [`conf/freeswitch.xml`](conf/freeswitch.xml) is the root
 document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, everything in
@@ -86,7 +150,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | [`conf/directory/default/102.xml`](conf/directory/default/102.xml) | SIP line **102** — participant. |
 | [`conf/directory/default/103.xml`](conf/directory/default/103.xml) | SIP line **103** — spare / future expansion. |
 | [`conf/directory/default/104.xml`](conf/directory/default/104.xml) | SIP line **104** — concierge (driver/passenger). |
-| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option9_tale.xml`, `70_option5_game.xml`. Each is detailed in [§3](#3-current-dialplan--call-flow). |
+| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option9_tale.xml`, `70_option5_game.xml`. Each is detailed in [§4](#4-current-dialplan--call-flow). |
 | [`conf/autoload_configs/modules.conf.xml`](conf/autoload_configs/modules.conf.xml) | The **13** modules loaded at boot: loggers (`mod_console`/`mod_logfile`/`mod_timerfd`/`mod_posix_timer`), `mod_event_socket`, `mod_sofia`, the dialplan engine (`mod_dialplan_xml`/`mod_commands`/`mod_dptools`), media playback (`mod_native_file`/`mod_sndfile`/`mod_tone_stream`), and `mod_say_en`. |
 | [`conf/autoload_configs/switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core settings: small session caps (`max-sessions=10`, `sessions-per-second=5`), the RTP port range, `info` log level, `core.db` name, and `fs_cli` key-bindings. |
 | [`conf/autoload_configs/sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | Sofia global settings; includes the SIP profiles from `../sip_profiles/*.xml`. |
@@ -97,7 +161,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 
 ---
 
-## 3. Current dialplan & call flow
+## 4. Current dialplan & call flow
 
 The dialplan is a set of XML files under [`conf/dialplan/default/`](conf/dialplan/default/), loaded
 in filename order into the `default` context. Every call from the ATA lands in the IVR at `700`,
@@ -117,7 +181,7 @@ phone can dial, as opposed to a selection collected inside the menu prompt):
 | *any other digits* | `10_inbound_and_menu.xml` (`all-calls-to-menu`) | Numeric-only catch-all → transferred to the menu (`700`). |
 
 Inside the menu, `play_and_get_digits` additionally collects `0`, `1`, `2`, `3`, `5`, `9`, `11`,
-`411`, `911`, and `101`–`104` (see §3.2) — these are menu selections, not standalone extensions.
+`411`, `911`, and `101`–`104` (see §4.2) — these are menu selections, not standalone extensions.
 
 **Virtual destinations** — internal `transfer` targets. They are lettered/upper-case so they never
 collide with dialable numbers, and are grouped here by the file that handles them:
@@ -163,7 +227,7 @@ collide with dialable numbers, and are grouped here by the file that handles the
   - `GAME_VERDICT` — branch on `hit` → win, `lose` → lose, or `high`/`low` → hint and re-ask.
   - `GAME_WIN` / `GAME_LOSE` — play the closing prompt and return to the menu.
 
-### 3.1 `00_extensions.xml` — dial a SIP line (101–104)
+### 4.1 `00_extensions.xml` — dial a SIP line (101–104)
 Explicit extensions for the four lines: dialing **101**–**104** bridges to that phone with a
 ringback tone (`ringback=%(2000,4000,440,480)`, `instant_ringback`) and the caller ID set from the
 originating line. With `hangup_after_bridge`/`continue_on_fail`, a failed bridge (no answer / busy)
@@ -172,32 +236,32 @@ first**, so a dialed 101–104 is matched here and rings the phone instead of be
 numeric `all-calls-to-menu` catch-all in `10_inbound_and_menu.xml`. These extensions are also the
 target of menu option **0** (→ 104, the concierge) and of the intercom in `20_option1_intercom.xml`.
 
-### 3.2 `10_inbound_and_menu.xml` — inbound routing & the main menu (`700`)
+### 4.2 `10_inbound_and_menu.xml` — inbound routing & the main menu (`700`)
 The entry point and menu. `all-calls-to-menu` routes `700` (the ATA off-hook auto-dial) or **any**
 dialed number from the ATA to the menu; it is numeric-only and placed last so it never shadows the
-lettered internal targets (`CALL_OTHER`, `DISCO_RAISE`, …) or the 101–104 extensions in §3.1.
+lettered internal targets (`CALL_OTHER`, `DISCO_RAISE`, …) or the 101–104 extensions in §4.1.
 
 The menu greets and collects one option with `play_and_get_digits` (1–3 digits, `*` terminator,
 validated to `^(0|1|2|3|5|9|911|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves `1` vs `11`
 vs `101`–`104`). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the
 call (`menu-first`); every later return plays **one of nine random short greetings**
-(`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages short-menu-prompt`, §4.2), tracked
+(`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages short-menu-prompt`, §5.2), tracked
 by the `menu_greeted` channel variable (`menu-repeat`). The collected option (`bella_opt`) is
 dispatched on a second routing pass (`DISPATCH`), where one `dispatch-*` extension per option
 transfers away:
 
 | Dial | Transfers to | Action |
 |---|---|---|
-| **1** | `CALL_OTHER` | Intercom the *other* participant line (101 ↔ 102) — §3.3 |
-| **2** | `LISTEN_MESSAGES` | Listen to stored messages — §3.4 |
-| **3** | `LEAVE_MESSAGE` | Leave a message (max 60 s) — §3.5 |
-| **101**–**104** | `101`…`104` | Dial that SIP line directly — §3.1 |
-| **0** | `104` | Dial the concierge (line 104) — §3.1 |
-| **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball — §3.6 |
-| **411** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §3.6 |
-| **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §3.6 |
-| **9** | `TALE_OPEN` | *(hidden)* branching story — §3.7 |
-| **5** | `GAME_START` | *(hidden)* guess-my-number game — §3.8 |
+| **1** | `CALL_OTHER` | Intercom the *other* participant line (101 ↔ 102) — §4.3 |
+| **2** | `LISTEN_MESSAGES` | Listen to stored messages — §4.4 |
+| **3** | `LEAVE_MESSAGE` | Leave a message (max 60 s) — §4.5 |
+| **101**–**104** | `101`…`104` | Dial that SIP line directly — §4.1 |
+| **0** | `104` | Dial the concierge (line 104) — §4.1 |
+| **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball — §4.6 |
+| **411** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §4.6 |
+| **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §4.6 |
+| **9** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
+| **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
 
 Anything else falls through to `dispatch-invalid`, which plays **one of ten random "invalid"
 prompts** (`prompts/invalid-entry-1..10.wav`, via `bella-messages invalid-prompt`) and re-collects
@@ -208,18 +272,18 @@ Completed actions transfer back to `700`.
 > **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else is
 > *unannounced*: dialing a line directly (**101**–**104**, or **0** for the concierge), the disco
 > controls (**911** raise, **411** lower, **11** stop), the branching story (**9**), the
-> guess-my-number game (**5**), and the message drawer reached after listening to everything (§3.4).
+> guess-my-number game (**5**), and the message drawer reached after listening to everything (§4.4).
 > Bella hints there's more — *"one of the ones I don't say out loud"* — but never names them.
 
-### 3.3 `20_option1_intercom.xml` — intercom (option 1)
+### 4.3 `20_option1_intercom.xml` — intercom (option 1)
 Routes `CALL_OTHER` to the *other* participant line based on the caller's SIP user: from **101** it
 transfers to extension **102**, from **102** to **101** (the actual bridge, ringback, and
-no-answer handling live in `00_extensions.xml`, §3.1). A fallback `call-other-unknown-line` covers
+no-answer handling live in `00_extensions.xml`, §4.1). A fallback `call-other-unknown-line` covers
 option 1 pressed from any unexpected SIP user — it plays `no-answer.wav` and returns to the menu.
 Intercom is deliberately limited to the two participant lines; 103/104 are not intercom targets.
 
-### 3.4 `30_option2_listen.xml` — listen to messages (option 2) & the hidden drawer
-Two playback experiences over the message store (`bella-messages`, §4.2):
+### 4.4 `30_option2_listen.xml` — listen to messages (option 2) & the hidden drawer
+Two playback experiences over the message store (`bella-messages`, §5.2):
 
 **Curated playback (`LISTEN_MESSAGES`).** Plays the **newest 10** messages **newest-first**, each
 preceded by its numbered lead-in announcement (`prompts/playback-announcement-<idx>.wav`). During a
@@ -241,16 +305,16 @@ and no key auto-advances. Because `bella-messages` re-lists the store on every c
 takes effect at once and every index renumbers as if the message never existed; reaching the oldest
 signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
 
-### 3.5 `40_option3_leave.xml` — leave a message (option 3)
+### 4.5 `40_option3_leave.xml` — leave a message (option 3)
 `LEAVE_MESSAGE` answers, plays `vm-record_message.wav` and a beep, then `record`s up to **60 s** to
 `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech recordings;
 any DTMF digit stops the recording (`playback_terminators=any`). It then runs `bella-messages
 rotate` (prunes the oldest **only** when disk space is low — everything is kept otherwise), plays
 `vm-saved.wav`, and returns to the menu.
 
-### 3.6 `50_disco_controls.xml` — hidden disco-ball controls (911 / 411 / 11)
+### 4.6 `50_disco_controls.xml` — hidden disco-ball controls (911 / 411 / 11)
 The only "disco" component: three hidden destinations that drive the relay HAT through the `disco_*`
-commands in `vars.xml` (which shell out to `scripts/disco-relay`, §4.1). Each reads the tracked
+commands in `vars.xml` (which shell out to `scripts/disco-relay`, §5.1). Each reads the tracked
 position first via `${system($${disco_position})}` (`up` / `down` / `unknown`):
 
 - **911** (`DISCO_RAISE`) raises unless already `up` (then it plays `disco-already-up.wav` and does
@@ -264,7 +328,7 @@ position first via `${system($${disco_position})}` (`up` / `down` / `unknown`):
 Every path returns to the menu. Position is `unknown` at boot and after **11** (it lives on `/run`,
 tmpfs). Tune the drive seconds and spot-light percentages in [`conf/vars.xml`](conf/vars.xml).
 
-### 3.7 `60_option9_tale.xml` — hidden branching story "The Ember" (option 9)
+### 4.7 `60_option9_tale.xml` — hidden branching story "The Ember" (option 9)
 Dialing **9** (never announced) opens **"The Ember"**, a branching fable Bella reads aloud. Each
 node narrates and collects one digit, then transfers to a per-node dispatch pass that tests the
 digit in a `<condition>`. The tree:
@@ -279,7 +343,7 @@ and re-offers the same node, keeping the caller inside the story. Every node res
 The tree, choice table, and full prompt scripts are in [`STORY.md`](STORY.md); prompts:
 `prompts/tale-*.wav`.
 
-### 3.8 `70_option5_game.xml` — hidden guess-my-number game (option 5)
+### 4.8 `70_option5_game.xml` — hidden guess-my-number game (option 5)
 Dialing **5** (never announced) starts a keypad guessing game. `GAME_START` picks a secret **1–9**
 (`bella-game secret 1 9`), resets the try counter, and queues a random intro; `GAME_ASK` plays the
 current step's prompt as a barge-in-able `play_and_get_digits` (so a returning caller can guess
@@ -287,20 +351,20 @@ over the prompt) and collects one digit. `GAME_EVAL`/`GAME_VERDICT` ask `bella-g
 which returns `hit` (→ win), `lose` (out of tries → lose; default **3**, via `game_tries_max` in
 `vars.xml`), or `high`/`low` (bump the counter, queue a random *higher*/*lower* hint, re-ask). The
 intro, win, lose, and higher/lower prompts each have several interchangeable variants chosen at
-random per call (`bella-game pick`/`hint`, §4.3). The secret is never spoken and never revealed on
+random per call (`bella-game pick`/`hint`, §5.3). The secret is never spoken and never revealed on
 a loss. Win/lose play their close and return to the menu; see [`GAME.md`](GAME.md). Prompts:
 `prompts/game-*.wav`.
 
 ---
 
-## 4. The scripts
+## 5. The scripts
 
 The project-specific helpers in [`scripts/`](scripts/) back the dialplan and the build/deploy
 tooling. The IVR calls the runtime helpers via `${system(...)}`; the two prompt tools run at
 build/deploy time. All output from the runtime helpers is newline-free so it can be dropped
 straight into dialplan variables.
 
-### 4.1 `disco-relay`
+### 5.1 `disco-relay`
 Drives the **Waveshare 3-relay HAT** that moves the linear actuator ("disco ball") and its spot
 lights. It sets the active-low GPIO lines via `pinctrl` (or `raspi-gpio`): **K1/K2** form the
 motor's direction control and **K3** switches the spot lights. `raise`/`lower` take a non-blocking
@@ -324,12 +388,12 @@ sudo disco-relay brake
 sudo disco-relay status
 ```
 
-### 4.2 `bella-messages`
+### 5.2 `bella-messages`
 The IVR message store over `recordings/messages/` (recorded as `msg_<timestamp>_<uuid>.wav`, so a
 lexical sort is chronological). Runs as the `freeswitch` user — no sudo. The IVR plays back the
 newest `PLAYBACK_LIMIT` (**10**) messages; older ones are kept on disk and pruned oldest-first
 only when free space drops below `MIN_FREE_MB` (**200**). The `*-all` commands back the hidden
-message drawer (§3.4) over the full archive.
+message drawer (§4.4) over the full archive.
 
 | Command | Arguments | What it does |
 |---|---|---|
@@ -346,7 +410,7 @@ message drawer (§3.4) over the full archive.
 | `invalid-prompt` | — | Random `invalid-entry-*.wav` (one of ten). |
 | `short-menu-prompt` | — | Random `main-menu-short-variant-*.wav` (one of nine). |
 
-### 4.3 `bella-game`
+### 5.3 `bella-game`
 Stateless helper for the hidden guess-my-number game (menu option 5). The dialplan holds the
 per-call state (secret, tries) in channel variables and calls this for the secret, the verdict,
 the counter bump, and the random prompt variants. Runs as the `freeswitch` user.
@@ -359,14 +423,14 @@ the counter bump, and the random prompt variants. Runs as the `freeswitch` user.
 | `hint` | `high\|low` | Path of a random `game-higher-*.wav` / `game-lower-*.wav`. |
 | `pick` | `<prefix>` | Path of a random `<prefix>-*.wav` (e.g. `game-intro`, `game-win`, `game-lose`). |
 
-### 4.4 `bella-ring`
+### 5.4 `bella-ring`
 The periodic-ring helper (no arguments). Invoked by the `bella-ring.timer` systemd timer at a
 random interval (15–45 min), it picks one of the two participant lines (**101**/**102**) at
 random and, over the local event socket (`127.0.0.1:8021`), `originate`s a call to it; on answer
 the phone is routed to the menu (`700`). If the chosen line isn't registered it logs and exits
 quietly. Tunable via the environment: `FS_CLI`, `BELLA_DOMAIN`, `BELLA_RING_TIMEOUT`.
 
-### 4.5 `bella-convert-prompts`
+### 5.5 `bella-convert-prompts`
 Rebuilds the prompt **WAVs** (8 kHz mono) from their MP3 sources in `prompts/`. By default it only
 (re)generates WAVs that are missing or older than their MP3; pass `--force` to rebuild every WAV.
 Run by [`install.sh`](install.sh) and by `bella-regen-prompts` after synthesis.
@@ -376,7 +440,7 @@ bella-convert-prompts            # only missing/changed
 bella-convert-prompts --force    # rebuild all
 ```
 
-### 4.6 `bella-regen-prompts`
+### 5.6 `bella-regen-prompts`
 Re-synthesizes the voice prompts from [`PROMPTS.md`](PROMPTS.md) using the custom **Bella Novella**
 voice on ElevenLabs, then rebuilds the WAVs via `bella-convert-prompts`. It diffs each prompt
 against [`PROMPTS.baseline.md`](PROMPTS.baseline.md) so only edited prompts are regenerated.
@@ -404,9 +468,37 @@ bella-regen-prompts --list       # list every parsed prompt
 bella-regen-prompts --all        # regenerate everything
 ```
 
+### 5.7 `install.sh`
+The root-level installer/deployer (it lives at the repo root, not in `scripts/`; run as **root**
+from the repo). With **no flags** it runs the *every-invocation* steps — install the host files
+from [`system/`](system/), install/own [`conf/`](conf/), set the relay-script permissions and
+sudoers, initialize the relays, and restart FreeSWITCH — i.e. the fast path behind §7 and the
+per-run half of §8. Flags add the one-time or optional stages. The install prefix `$FS_DIR`
+(default `/usr/local/freeswitch`) must already exist.
+
+| Option | What it's for |
+|---|---|
+| `--fresh` | One-time fresh-Pi bootstrap: install the build toolchain + runtime deps + admin tools, create the `freeswitch` user/group, prune desktop/bloat services, and apply the OS tuning (governor, swap, journal, watchdog, …). See §8.1. |
+| `--network` | Configure `eth0`'s static `192.168.50.1/24` and the DHCP-only dnsmasq scope for the ATA. See §8.6. |
+| `--no-restart` | Install all files but **don't** restart FreeSWITCH (useful for staging changes). |
+| `--backup` | Back up each file (`.backup.<timestamp>`) before overwriting it (default: overwrite in place). |
+| `--build-spandsp[=BRANCH]` | Build and install SpanDSP from source, optionally from a given branch/tag (default `master`). See §8.3. |
+| `--build-sofia[=BRANCH]` | Build and install Sofia-SIP from source, optionally from a given branch/tag (default `master`). See §8.4. |
+| `-h`, `--help` | Print usage and exit. |
+
+Environment: `FS_DIR` (install prefix, default `/usr/local/freeswitch`), `FS_USER` / `FS_GROUP`
+(the service account, default `freeswitch`).
+
+```sh
+sudo ./install.sh                                                   # routine repo-update: files + restart
+sudo ./install.sh --fresh --network --build-spandsp --build-sofia   # first install on a blank Pi
+sudo ./install.sh --no-restart                                      # stage config without bouncing the service
+sudo ./install.sh --build-sofia=v1.13.17                            # rebuild Sofia from a specific tag
+```
+
 ---
 
-## 5. Open in GitHub Codespaces
+## 6. Open in GitHub Codespaces
 
 You can edit — and, where the host allows, **run** — this project in the browser. Two dev
 container configurations are provided; Codespaces lets you choose at creation time:
@@ -442,12 +534,12 @@ Codespaces doesn't forward). Physical testing stays on the Pi.
 
 ---
 
-## 6. Quick deployment
+## 7. Quick deployment
 
 The fastest path from a blank SD card to a working appliance. Every persistent step is baked
 into [`install.sh`](install.sh); only the OS image and the ATA web UI are configured by hand.
 
-### 6.1 Create the OS image
+### 7.1 Create the OS image
 
 Use **Raspberry Pi Imager** with the latest 64-bit Raspberry Pi OS (Lite is preferred — the
 installer strips the desktop anyway). In the imager's advanced options set:
@@ -467,7 +559,7 @@ Boot the Pi, then SSH in over Wi-Fi:
 ssh bella@bella-novella.local     # or ssh bella@<pi-wifi-ip>
 ```
 
-### 6.2 Clone this repo to the FreeSWITCH prefix
+### 7.2 Clone this repo to the FreeSWITCH prefix
 
 The repository **is** `/usr/local/freeswitch`, so clone it directly to that path:
 
@@ -478,7 +570,7 @@ git clone https://github.com/k-anderson/bella-novella.git /usr/local/freeswitch
 cd /usr/local/freeswitch
 ```
 
-### 6.3 Run the installer
+### 7.3 Run the installer
 
 On a brand-new Pi, run the full bootstrap plus the isolated ATA network. SpanDSP and Sofia-SIP
 are only needed if you intend to (re)build FreeSWITCH — include those flags on the first install:
@@ -494,7 +586,7 @@ changes take full effect:
 sudo reboot
 ```
 
-### 6.4 Configure the Grandstream HT814 ATA
+### 7.4 Configure the Grandstream HT814 ATA
 
 Plug the ATA into `eth0`; it receives `192.168.50.100–192.168.50.150` from the Pi's DHCP scope.
 Find its lease and open its web UI (tunnel from your laptop if needed):
@@ -504,7 +596,7 @@ cat /var/lib/misc/dnsmasq.leases
 ssh -N -L 8080:192.168.50.<lease-ip>:80 bella@bella-novella.local   # then open http://localhost:8080
 ```
 
-Set (see [7.11](#711-configure-the-grandstream-ht814-manual) for the full field list):
+Set (see [8.11](#811-configure-the-grandstream-ht814-manual) for the full field list):
 
 ```text
 Primary SIP Server: 192.168.50.1     SIP Transport: UDP     Registration: Yes
@@ -517,7 +609,7 @@ Vocoders: PCMU only     DTMF: RFC2833
 
 Apply and reboot the ATA. Lift a handset — you should hear the IVR.
 
-### 6.5 Verify
+### 7.5 Verify
 
 ```sh
 fs_cli -x "status"
@@ -528,7 +620,7 @@ sudo /usr/local/freeswitch/scripts/disco-relay status
 
 ---
 
-## 7. Manual deployment
+## 8. Manual deployment
 
 This section reproduces **exactly what [`install.sh`](install.sh) does**, step by step, with the
 real commands so you can copy them to the Pi one block at a time and see what each stage changes
@@ -542,10 +634,10 @@ sudo -i
 cd /usr/local/freeswitch
 ```
 
-> Steps 7.1, 7.3, 7.4, and 7.6 map to the `--fresh`, `--build-spandsp`, `--build-sofia`, and
-> `--network` flags respectively. Steps 7.2 and 7.5–7.10 run on **every** `install.sh` invocation.
+> Steps 8.1, 8.3, 8.4, and 8.6 map to the `--fresh`, `--build-spandsp`, `--build-sofia`, and
+> `--network` flags respectively. Steps 8.2 and 8.5–8.10 run on **every** `install.sh` invocation.
 
-### 7.1 Fresh-Pi bootstrap (`--fresh`)
+### 8.1 Fresh-Pi bootstrap (`--fresh`)
 
 One-time OS preparation. Safe to skip on routine repo-update runs.
 
@@ -696,7 +788,7 @@ watchdog take full effect:
 reboot
 ```
 
-### 7.2 Install system files
+### 8.2 Install system files
 
 Copy the tracked host configuration from [`system/`](system/) into place. The installer backs up
 any existing file first (`.backup.<timestamp>`); by hand you can skip the backups. Each file and
@@ -738,7 +830,7 @@ source /etc/profile.d/freeswitch-path.sh
 source /etc/profile.d/freeswitch-pkgconfig.sh
 ```
 
-### 7.3 Build SpanDSP (`--build-spandsp`)
+### 8.3 Build SpanDSP (`--build-spandsp`)
 
 Optional. Debian's packaged SpanDSP (`0.0.6`) is too old for this FreeSWITCH build, so it is
 compiled from source into `/usr/local`. Needed on a fresh install or when SpanDSP is updated:
@@ -757,10 +849,10 @@ pkg-config --modversion spandsp    # verify: a modern version, not 0.0.6
 
 Installer equivalent: `sudo ./install.sh --build-spandsp`.
 
-### 7.4 Build Sofia-SIP (`--build-sofia`)
+### 8.4 Build Sofia-SIP (`--build-sofia`)
 
 Optional. Same rationale — compiled from source into `/usr/local`. The persisted
-`PKG_CONFIG_PATH` from [7.2](#72-install-system-files) is what lets FreeSWITCH find it:
+`PKG_CONFIG_PATH` from [8.2](#82-install-system-files) is what lets FreeSWITCH find it:
 
 ```sh
 cd /usr/local/src
@@ -776,7 +868,7 @@ pkg-config --modversion sofia-sip-ua    # verify it resolves
 
 Installer equivalent: `sudo ./install.sh --build-sofia`.
 
-### 7.5 Validate required modules
+### 8.5 Validate required modules
 
 Confirm every module the appliance loads is present under [`mod/`](mod/) before continuing — a
 missing `.so` means FreeSWITCH won't start with this config:
@@ -790,7 +882,7 @@ for mod in mod_console mod_logfile mod_timerfd mod_posix_timer mod_event_socket 
 done
 ```
 
-### 7.6 Configure the isolated ATA network (`--network`)
+### 8.6 Configure the isolated ATA network (`--network`)
 
 Give `eth0` a static `192.168.50.1/24`, keep it off the default route (Wi-Fi stays the management
 network), disable routing, and hand out DHCP to the ATA only.
@@ -840,7 +932,7 @@ systemctl enable dnsmasq
 systemctl restart dnsmasq
 ```
 
-### 7.7 Relay script permissions and sudoers
+### 8.7 Relay script permissions and sudoers
 
 Lock down [`scripts/disco-relay`](scripts/disco-relay) and grant the `bella` and `freeswitch`
 users passwordless `sudo` to **only** that script (so the IVR can drive the actuator):
@@ -853,7 +945,7 @@ install -m 0440 system/etc/sudoers.d/disco-relay /etc/sudoers.d/disco-relay
 visudo -c    # validate sudoers syntax
 ```
 
-### 7.8 Initialize the relays
+### 8.8 Initialize the relays
 
 Put the actuator into the known brake/default state (K1/K2 off) before FreeSWITCH starts:
 
@@ -862,7 +954,7 @@ scripts/disco-relay brake
 scripts/disco-relay status
 ```
 
-### 7.9 Prompts and message directories
+### 8.9 Prompts and message directories
 
 The custom voice prompts — menu greeting (and its short variants), disco-ball, message,
 invalid-entry, playback-announcement, story (`tale-*`), and game (`game-*`) — ship in `prompts/`
@@ -873,7 +965,7 @@ caller messages into:
 mkdir -p /usr/local/freeswitch/prompts /usr/local/freeswitch/recordings/messages
 ```
 
-### 7.10 Install FreeSWITCH configuration and start
+### 8.10 Install FreeSWITCH configuration and start
 
 Install [`conf/`](conf/) from the repo, own it as `freeswitch`, sanity-check the key files, then
 enable and start the service:
@@ -902,7 +994,7 @@ fs_cli -x "sofia status profile ata"
 fs_cli -x "show registrations"
 ```
 
-### 7.11 Configure the Grandstream HT814 (manual)
+### 8.11 Configure the Grandstream HT814 (manual)
 
 The one step that cannot be scripted — the ATA is configured through its own web UI. In the
 HT814:
@@ -927,7 +1019,7 @@ Apply and reboot the ATA, then confirm with `fs_cli -x "show registrations"`.
 
 ---
 
-## 8. Updating an existing deployment
+## 9. Updating an existing deployment
 
 Because the whole install tree is tracked (minus runtime-generated files), an existing Pi is
 updated by pulling the repo and re-running the installer **without** `--fresh`:
@@ -944,7 +1036,7 @@ they are regenerated or recorded on the device.
 
 ---
 
-## 9. Optional: build FreeSWITCH from scratch
+## 10. Optional: build FreeSWITCH from scratch
 
 The repo ships prebuilt aarch64 binaries, so this is **not** required. Build from source only to
 upgrade FreeSWITCH itself. The build list in [`build/modules.conf`](build/modules.conf) compiles
@@ -970,12 +1062,12 @@ sudo make install
 > 8 kHz mono WAV (or at least tested through the ATA).
 
 SpanDSP and Sofia-SIP are dependencies of this build — install them first with
-`sudo ./install.sh --build-spandsp --build-sofia` (see [7.3](#73-build-spandsp---build-spandsp)
-and [7.4](#74-build-sofia-sip---build-sofia)).
+`sudo ./install.sh --build-spandsp --build-sofia` (see [8.3](#83-build-spandsp---build-spandsp)
+and [8.4](#84-build-sofia-sip---build-sofia)).
 
 ---
 
-## 10. Optional: Wi-Fi fallback and hotspot
+## 11. Optional: Wi-Fi fallback and hotspot
 
 An **optional** convenience for a roaming appliance (e.g. on an art car): keep the Pi reachable
 over Wi-Fi by auto-joining a known network when one is in range, and otherwise starting its own
