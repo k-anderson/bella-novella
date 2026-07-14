@@ -36,7 +36,7 @@ updated to match this file.
 [low, sultry, unhurried] Well now. You picked up my phone.
 [smiling, knowing, brisk] That either makes you lost... [beat] ...or exactly where you're meant to be.
 [hushed, low, quickly] If you already know my numbers... [sly] ...you know what to do with them.
-[velvet, quickly] But if this is your first time on my line, [low, dry] you'll want a name to go with the voice — [proudly] Bella Novella. [dry] Here's how it works.
+[velvet, quickly] But if this is your first time on my line, [low, dry] let me introduce myself, I am — [proudly] Bella Novella. [dry] Here's how it works.
 [low, smoky] Dial 1, and I'll send you down the wire to whoever's still answering that old phone. [darker, low] Half of me still expects a certain someone to pick up [wry, soft laugh] but it could be anyone, darling.
 [low, amused] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [wry, unhurried] Funny how the echoes of the ones who came before you linger.
 [low, intimate] And dial 3, if you've got something you want to add to the collection. [low, private] Everybody leaves something with me eventually. [beat]
@@ -339,6 +339,18 @@ updated to match this file.
 ```text
 [low, private] Thats all of them that I care to share right now. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, tender] every voice that ever trusted this line with something. [low, private] Mine included, once, though that's a story for a night when the drinks are stronger.
 ```
+
+### `playback-special`
+
+```text
+[low, sly, delighted] Well now — you went and opened the drawer.
+[velvet, intimate] Bella's drawer of secrets, darling. Nobody sees the bottom of it but me... and now you.
+[low, purring] Everything I've ever been handed and never quite let go of — it all lives in here.
+[warm, coaxing] Take your time. Dial 1 to skip ahead to the next, [teasing] dial 2 to slip back to the one before.
+[sly, low] Go on, then. Have a good look. [hushed] Just... don't tell a soul what you find.
+```
+
+
 
 ## Game
 

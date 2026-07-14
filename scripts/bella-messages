@@ -24,7 +24,10 @@ set -euo pipefail
 #   count-all               print the total number of stored messages (unwindowed)
 #   resolve-all <index>     like resolve, but over ALL stored messages, newest-first
 #   step-all <index> next|prev  like step, but clamped to the full archive
-#   ext-start               print the 1-based full-archive index just past the
+#   delete-all <index>      delete the Nth full-archive message (newest-first); the
+#                           store re-lists on every call so the remaining indices
+#                           renumber at once, as if it had never been stored
+#   drawer-start            print the 1-based full-archive index just past the
 #                           playback window (PLAYBACK_LIMIT+1), or 0 when the
 #                           archive does not exceed the window
 #   invalid-prompt          print a random "invalid entry" prompt (relative path)
@@ -193,9 +196,21 @@ cmd_step_all() {
   esac
 }
 
+# Delete the Nth full-archive message (1-based, newest-first). Reuses cmd_resolve_all
+# so only an existing msg_*.wav inside MESSAGES_DIR can ever be removed. Because the
+# helpers re-list the directory on every call, the remaining indices renumber
+# immediately, as if the deleted message had never been stored. Newline-free.
+cmd_delete_all() {
+  local idx="${1:-0}" file
+  file="$(cmd_resolve_all "$idx")"
+  [ -n "$file" ] || { printf ''; return 0; }
+  rm -f "$file"
+  printf ''
+}
+
 # The full-archive index just past the curated playback window: PLAYBACK_LIMIT+1
 # when the archive holds more than the window, else 0 (nothing more to play).
-cmd_ext_start() {
+cmd_drawer_start() {
   local total
   total="$(list_messages | grep -c . || true)"
   if [ "${total:-0}" -gt "$PLAYBACK_LIMIT" ]; then
@@ -224,11 +239,12 @@ main() {
     count-all)      cmd_count_all ;;
     resolve-all)    cmd_resolve_all "${2:-}" ;;
     step-all)       cmd_step_all "${2:-}" "${3:-}" ;;
-    ext-start)      cmd_ext_start ;;
+    delete-all)     cmd_delete_all "${2:-}" ;;
+    drawer-start)   cmd_drawer_start ;;
     invalid-prompt) cmd_invalid_prompt ;;
     short-menu-prompt) cmd_short_menu_prompt ;;
     *)
-      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|ext-start|invalid-prompt|short-menu-prompt}" >&2
+      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|delete-all <index>|drawer-start|invalid-prompt|short-menu-prompt}" >&2
       exit 2
       ;;
   esac

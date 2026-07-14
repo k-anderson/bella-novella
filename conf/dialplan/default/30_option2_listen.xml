@@ -79,15 +79,15 @@
            pressing 1 on the final one), i.e. they heard everything -> play the
            reflective playback-end sign-off. While it plays, 9 = "keep going":
            continue newest-first into the full archive past the curated window
-           (see PLAYBACK_END_KEY / EXT_*). Any other key or none -> menu.
+           (see PLAYBACK_END_KEY / DRAWER_*). Any other key or none -> menu.
          - msg_idx >= 1: resolve found nothing at the very first index, i.e. the
            store was empty -> keep the original "nothing here, come back" prompt. -->
   <extension name="message-end">
     <condition field="destination_number" expression="^MESSAGE_END$"/>
     <condition field="${msg_idx}" expression="^0$">
-      <action application="set" data="ext_key="/>
+      <action application="set" data="drawer_key="/>
       <action application="play_and_get_digits"
-              data="0 1 1 1500 # $${prompts_dir}/playback-end.wav silence_stream://10 ext_key '^9$' 3000"/>
+              data="0 1 1 1500 # $${prompts_dir}/playback-end.wav silence_stream://10 drawer_key '^9$' 3000"/>
       <action application="transfer" data="PLAYBACK_END_KEY XML default"/>
       <anti-action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
       <anti-action application="sleep" data="1500"/>
@@ -96,83 +96,103 @@
   </extension>
 
   <!-- Decide what the key pressed during playback-end means:
-         9 -> extended playback of the whole archive, continuing newest-first
-              from just past the curated window (ext-start = PLAYBACK_LIMIT+1),
-              with no announcements between messages.
+         9 -> open "Bella's drawer of secrets": play the playback-special intro,
+              then browse the whole archive newest-first from just past the
+              curated window (drawer-start = PLAYBACK_LIMIT+1). No lead-in
+              announcements; a tone separates each message. 1 = next, 2 = previous,
+              7 = delete the current message, any other key = replay, no key =
+              auto-advance.
          anything else / nothing -> back to the menu. -->
   <extension name="playback-end-key">
     <condition field="destination_number" expression="^PLAYBACK_END_KEY$"/>
-    <condition field="${ext_key}" expression="^9$">
-      <action application="set" data="ext_idx=${system($${bella_messages} ext-start)}"/>
-      <action application="transfer" data="EXT_PLAY XML default"/>
+    <condition field="${drawer_key}" expression="^9$">
+      <action application="playback" data="$${prompts_dir}/playback-special.wav"/>
+      <action application="set" data="drawer_idx=${system($${bella_messages} drawer-start)}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
       <anti-action application="sleep" data="500"/>
       <anti-action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
 
-  <!-- Extended playback (dial 9): the full archive, newest-first, no lead-in
-       announcements. Mirrors MESSAGE_RESOLVE/PLAY but over resolve-all/step-all so
-       it can reach messages older than the curated window. 1 = next, 2 = prev,
-       any other key = replay, no key = auto-advance. max_forwards is reset each
-       cycle (every transfer decrements it). -->
-  <extension name="ext-play">
-    <condition field="destination_number" expression="^EXT_PLAY$">
+  <!-- Bella's drawer of secrets (dial 9): the full archive, newest-first, no
+       lead-in announcements. Mirrors MESSAGE_RESOLVE/PLAY but over
+       resolve-all/step-all so it can reach messages older than the curated
+       window. The helpers re-list the store on every call, so deleting (7) takes
+       effect at once and every index adapts as if the message had never been
+       stored. max_forwards is reset each cycle (every transfer decrements it). -->
+  <extension name="drawer-resolve">
+    <condition field="destination_number" expression="^DRAWER_RESOLVE$">
       <action application="set" data="max_forwards=70"/>
-      <action application="set" data="ext_file=${system($${bella_messages} resolve-all ${ext_idx})}"/>
-      <action application="set" data="ext_nav="/>
-      <action application="transfer" data="EXT_PLAY2 XML default"/>
+      <action application="set" data="drawer_file=${system($${bella_messages} resolve-all ${drawer_idx})}"/>
+      <action application="set" data="drawer_nav="/>
+      <action application="transfer" data="DRAWER_PLAY XML default"/>
     </condition>
   </extension>
 
-  <!-- Empty ext_file (ext_idx == 0: stepped past the oldest, or 9 pressed with
-       nothing beyond the window) -> sign off and return to the menu. Otherwise
-       flush any leftover digit, play the message, collect one key into ext_nav. -->
-  <extension name="ext-play2">
-    <condition field="destination_number" expression="^EXT_PLAY2$"/>
-    <condition field="${ext_file}" expression="^$">
-      <action application="transfer" data="EXT_END XML default"/>
+  <!-- Empty drawer_file (drawer_idx == 0: stepped past the oldest, or 9 pressed
+       with nothing beyond the window) -> sign off and return to the menu.
+       Otherwise sound a short tone as a separator, flush any leftover digit, play
+       the message, and collect one key into drawer_nav. -->
+  <extension name="drawer-play">
+    <condition field="destination_number" expression="^DRAWER_PLAY$"/>
+    <condition field="${drawer_file}" expression="^$">
+      <action application="transfer" data="DRAWER_END XML default"/>
+      <anti-action application="playback" data="tone_stream://%(200,0,660)"/>
       <anti-action application="flush_dtmf"/>
       <anti-action application="play_and_get_digits"
-                   data="0 1 1 500 * ${ext_file} silence_stream://100 ext_nav '^[0-9*#]$' 3000"/>
-      <anti-action application="transfer" data="EXT_KEY_PREV XML default"/>
+                   data="0 1 1 500 * ${drawer_file} silence_stream://100 drawer_nav '^[0-9*#]$' 3000"/>
+      <anti-action application="transfer" data="DRAWER_KEY_PREV XML default"/>
     </condition>
   </extension>
 
-  <extension name="ext-key-prev">
-    <condition field="destination_number" expression="^EXT_KEY_PREV$"/>
-    <condition field="${ext_nav}" expression="^2$">
+  <extension name="drawer-key-prev">
+    <condition field="destination_number" expression="^DRAWER_KEY_PREV$"/>
+    <condition field="${drawer_nav}" expression="^2$">
       <!-- 2 = previous message in the full archive. -->
-      <action application="set" data="ext_idx=${system($${bella_messages} step-all ${ext_idx} prev)}"/>
-      <action application="transfer" data="EXT_PLAY XML default"/>
-      <anti-action application="transfer" data="EXT_KEY_NEXT XML default"/>
+      <action application="set" data="drawer_idx=${system($${bella_messages} step-all ${drawer_idx} prev)}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
+      <anti-action application="transfer" data="DRAWER_KEY_NEXT XML default"/>
     </condition>
   </extension>
 
-  <extension name="ext-key-next">
-    <condition field="destination_number" expression="^EXT_KEY_NEXT$"/>
-    <condition field="${ext_nav}" expression="^1$">
+  <extension name="drawer-key-next">
+    <condition field="destination_number" expression="^DRAWER_KEY_NEXT$"/>
+    <condition field="${drawer_nav}" expression="^1$">
       <!-- 1 = next message in the full archive. -->
-      <action application="set" data="ext_idx=${system($${bella_messages} step-all ${ext_idx} next)}"/>
-      <action application="transfer" data="EXT_PLAY XML default"/>
-      <anti-action application="transfer" data="EXT_KEY_DEFAULT XML default"/>
+      <action application="set" data="drawer_idx=${system($${bella_messages} step-all ${drawer_idx} next)}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
+      <anti-action application="transfer" data="DRAWER_KEY_DELETE XML default"/>
     </condition>
   </extension>
 
-  <extension name="ext-key-default">
-    <condition field="destination_number" expression="^EXT_KEY_DEFAULT$"/>
-    <condition field="${ext_nav}" expression="^$">
+  <!-- 7 = delete the current message. The store re-lists on every helper call, so
+       after the delete the same drawer_idx now resolves to the message that was
+       next-older (it slides into this slot); if the oldest was deleted, resolve-all
+       returns empty and DRAWER_RESOLVE -> DRAWER_PLAY falls through to DRAWER_END. -->
+  <extension name="drawer-key-delete">
+    <condition field="destination_number" expression="^DRAWER_KEY_DELETE$"/>
+    <condition field="${drawer_nav}" expression="^7$">
+      <action application="set" data="drawer_deleted=${system($${bella_messages} delete-all ${drawer_idx})}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
+      <anti-action application="transfer" data="DRAWER_KEY_DEFAULT XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="drawer-key-default">
+    <condition field="destination_number" expression="^DRAWER_KEY_DEFAULT$"/>
+    <condition field="${drawer_nav}" expression="^$">
       <!-- No key = message finished on its own: auto-advance, no announcement. -->
-      <action application="set" data="ext_idx=${system($${bella_messages} step-all ${ext_idx} next)}"/>
-      <action application="transfer" data="EXT_PLAY XML default"/>
+      <action application="set" data="drawer_idx=${system($${bella_messages} step-all ${drawer_idx} next)}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
       <!-- Any other key: replay the current message. -->
-      <anti-action application="transfer" data="EXT_PLAY XML default"/>
+      <anti-action application="transfer" data="DRAWER_RESOLVE XML default"/>
     </condition>
   </extension>
 
   <!-- Reached the oldest stored message: a plain sign-off (no 9 affordance, so
        it can't loop) and back to the menu. -->
-  <extension name="ext-end">
-    <condition field="destination_number" expression="^EXT_END$">
+  <extension name="drawer-end">
+    <condition field="destination_number" expression="^DRAWER_END$">
       <action application="playback" data="$${prompts_dir}/playback-end.wav"/>
       <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
