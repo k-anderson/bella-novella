@@ -13,9 +13,11 @@ WorkingDirectory=/usr/local/freeswitch
 # -db points FreeSWITCH's db_dir at /run/freeswitch-db (created/owned for the
 # service user by RuntimeDirectory, wiped on stop). FreeSWITCH requires "all or
 # none of -conf, -log, and -db", so -conf/-log are passed at their normal paths
-# alongside -db. This eliminates the "SQLite is BUSY" contention caused by slow
-# flash writes (core.db + sofia_reg_ata.db). /run/bella-novella holds the
-# no-repeat prompt-pick state used by scripts/bella-messages.
+# alongside -db. Once any dir is overridden FreeSWITCH stops deriving the rest
+# from the install prefix, so -run is pinned too or the PID file lands off
+# PIDFile= and Type=forking hangs in 'activating'. This also eliminates the
+# "SQLite is BUSY" contention from slow flash writes (core.db + sofia_reg_ata.db).
+# /run/bella-novella holds the no-repeat prompt-pick state used by bella-messages.
 RuntimeDirectory=freeswitch-db bella-novella
 RuntimeDirectoryMode=0750
 
@@ -23,6 +25,7 @@ ExecStartPre=/usr/local/bin/freeswitch-wait-eth0 eth0 192.168.50.1 30
 ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat \
   -conf /usr/local/freeswitch/conf \
   -log /usr/local/freeswitch/log \
+  -run /usr/local/freeswitch/run \
   -db /run/freeswitch-db
 ExecReload=/usr/local/freeswitch/bin/fs_cli -x "reloadxml"
 ExecStop=/usr/local/freeswitch/bin/fs_cli -x "shutdown elegant"

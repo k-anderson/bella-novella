@@ -810,8 +810,9 @@ sysctl --system
 install -D -m 0755 system/usr/local/bin/freeswitch-wait-eth0 /usr/local/bin/freeswitch-wait-eth0
 
 # systemd unit (NoNewPrivileges=no so the IVR can 'sudo disco-relay') + resource limits.
-# Also keeps the SQLite DBs on tmpfs via RuntimeDirectory + '-conf/-log/-db' (FreeSWITCH
-# requires all three dir flags together) and provides /run/bella-novella for pick state.
+# Also keeps the SQLite DBs on tmpfs via RuntimeDirectory + '-conf/-log/-run/-db' (FreeSWITCH
+# needs the dir flags together, incl. -run so the PID file matches PIDFile=) and provides
+# /run/bella-novella for pick state.
 install -D -m 0644 system/etc/systemd/system/freeswitch.service /etc/systemd/system/freeswitch.service
 install -D -m 0644 system/etc/security/limits.d/99-freeswitch.conf /etc/security/limits.d/99-freeswitch.conf
 
