@@ -503,7 +503,7 @@ You guess — [sing-song] I'll tell you higher, or lower.
 ### `game-intro-2`
 
 ```text
-[low, delighted, surprised] Oh, look at you — [intrigued] wanting to play.
+[low, delighted, surprised] You found one of my secrets! [intrigued] Lets play a game, shall we?
 [velvet, amused] Here's how it goes. I've picked a number, one through nine. [teasing, playful] You guess, and
 I'll tell you whether it's higher or lower.
 [low, purring] You've only got a handful of tries to catch me out. [coaxing, a spark of mischief] Go on, then,
@@ -533,7 +533,7 @@ whisper higher, or lower, till you land on me.
 ### `game-intro-5`
 
 ```text
-[sly, utterly delighted] Ohh, now this is a treat. [intrigued, leaning in] Just the two of us and a little
+[sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just the two of us and a little
 game.
 [velvet, warm] One number, darling, one through nine — I've got it tucked away. [teasing, playful] You guess,
 I steer you: higher, or lower.
