@@ -21,6 +21,12 @@ set -euo pipefail
 #                           or empty when prompts/playback-announcement-<index>.wav
 #                           does not exist
 #   step <index> next|prev  print the next/previous clamped index (0 = past end)
+#   count-all               print the total number of stored messages (unwindowed)
+#   resolve-all <index>     like resolve, but over ALL stored messages, newest-first
+#   step-all <index> next|prev  like step, but clamped to the full archive
+#   ext-start               print the 1-based full-archive index just past the
+#                           playback window (PLAYBACK_LIMIT+1), or 0 when the
+#                           archive does not exceed the window
 #   invalid-prompt          print a random "invalid entry" prompt (relative path)
 #   short-menu-prompt       print a random short main-menu greeting (absolute path)
 
@@ -69,6 +75,13 @@ list_messages() {
 # IVR plays newest to oldest; index 1 == newest).
 playback_list() {
   list_messages | tail -n "$PLAYBACK_LIMIT" | tac
+}
+
+# The full archive, newest-first (index 1 == newest). Unlike playback_list this
+# is NOT capped at PLAYBACK_LIMIT; it backs the "dial 9 to keep going" extended
+# playback that continues past the curated window into every stored message.
+full_list() {
+  list_messages | tac
 }
 
 # True when free space on the messages filesystem is below MIN_FREE_MB.
@@ -143,6 +156,55 @@ cmd_step() {
   esac
 }
 
+# Total number of stored messages (the entire archive, not just the window).
+cmd_count_all() {
+  local n
+  n="$(list_messages | grep -c . || true)"
+  printf '%s' "${n:-0}"
+}
+
+# Like cmd_resolve, but the 1-based index is into the FULL archive newest-first,
+# so extended playback can reach messages older than the curated window.
+cmd_resolve_all() {
+  local idx="${1:-0}"
+  case "$idx" in
+    ''|*[!0-9]*) printf ''; return 0 ;;
+  esac
+  [ "$idx" -ge 1 ] || { printf ''; return 0; }
+
+  local files n
+  mapfile -t files < <(full_list)
+  n="${#files[@]}"
+  if [ "$idx" -gt "$n" ]; then printf ''; return 0; fi
+  printf '%s' "${files[$(( idx - 1 ))]}"
+}
+
+# Like cmd_step, but clamped to the full archive (0 = stepped past the oldest).
+cmd_step_all() {
+  local idx="${1:-0}" dir="${2:-next}" n
+  case "$idx" in
+    ''|*[!0-9]*) idx=0 ;;
+  esac
+  n="$(cmd_count_all)"
+  case "$dir" in
+    next) if [ "$idx" -lt "$n" ]; then printf '%s' "$(( idx + 1 ))"; else printf '0'; fi ;;
+    prev) if [ "$idx" -gt 1 ]; then printf '%s' "$(( idx - 1 ))"; else printf '1'; fi ;;
+    *)    printf '0' ;;
+  esac
+}
+
+# The full-archive index just past the curated playback window: PLAYBACK_LIMIT+1
+# when the archive holds more than the window, else 0 (nothing more to play).
+cmd_ext_start() {
+  local total
+  total="$(list_messages | grep -c . || true)"
+  if [ "${total:-0}" -gt "$PLAYBACK_LIMIT" ]; then
+    printf '%s' "$(( PLAYBACK_LIMIT + 1 ))"
+  else
+    printf '0'
+  fi
+}
+
 cmd_invalid_prompt() {
   printf '%s' "${INVALID_PROMPTS[$(( RANDOM % ${#INVALID_PROMPTS[@]} ))]}"
 }
@@ -159,10 +221,14 @@ main() {
     resolve)        cmd_resolve "${2:-}" ;;
     announcement)   cmd_announcement "${2:-}" ;;
     step)           cmd_step "${2:-}" "${3:-}" ;;
+    count-all)      cmd_count_all ;;
+    resolve-all)    cmd_resolve_all "${2:-}" ;;
+    step-all)       cmd_step_all "${2:-}" "${3:-}" ;;
+    ext-start)      cmd_ext_start ;;
     invalid-prompt) cmd_invalid_prompt ;;
     short-menu-prompt) cmd_short_menu_prompt ;;
     *)
-      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|invalid-prompt|short-menu-prompt}" >&2
+      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|ext-start|invalid-prompt|short-menu-prompt}" >&2
       exit 2
       ;;
   esac

@@ -209,7 +209,7 @@ updated to match this file.
 ### `vm-saved`
 
 ```text
-[low, knowing] Got it, stranger. [low, reassuring] Safe with me now. [low, private, amused] I don't keep photographs, darling. I keep memories. Much longer shelf life. [soft laugh]
+[low, worldly] You know I don't keep photographs. Photographs get you caught. I keep secrets, and now yours is [low, soft laugh] safe with me.
 ```
 
 ### `vm-no_more_messages`
@@ -529,7 +529,7 @@ updated to match this file.
 ### `game-win-5`
 
 ```text
-[delighted, low, intrigued] Well, well, well. [a soft laugh] Aren't you the clever one. [impressed, warm] Nobody's read me that quick in a long while. [beat, sly, low] So here's what winning buys you, darling. [low, worldly] I don't keep photographs. Photographs get you caught. [confiding] I keep the things people hand me thinking I'll forget them by morning. [beat, amused] And I run a quiet little arrangement or two of my own, on the side — [sly, purring] if you want to hear all the secrets, not just the last 10, dial 9 when I tell you "thats all of the messages I care to share right now." and I will keep going. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat] Don't make me regret opening it.
+[delighted, low, intrigued] Well, well, well. [a soft laugh] Aren't you the clever one. [impressed, warm] Nobody's read me that quick in a long while. [beat, sly, low] So here's what winning buys you, darling. [low, private, amused] I don't keep photographs, darling. I keep memories. Much longer shelf life. [soft laugh] [confiding] I keep the things people hand me thinking I'll forget them by morning. [beat, amused] And I run a quiet little arrangement or two of my own, on the side — [sly, purring] if you want to hear all the secrets, not just the last 10, dial 9 when I tell you "thats all of the messages I care to share right now." and I will keep going. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat] Don't make me regret opening it.
 ```
 
 ### `game-lose-1`

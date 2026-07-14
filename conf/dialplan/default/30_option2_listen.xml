@@ -11,7 +11,7 @@
        After the last message it returns to the menu (700). scripts/bella-messages
        maps the index to files (resolve/announcement/step).
 
-       Flow: ANNOUNCE -> ANNOUNCE_PLAY -> PLAY -> PLAY2, then the pressed key is
+       Flow: ANNOUNCE -> ANNOUNCE_PLAY -> RESOLVE -> PLAY, then the pressed key is
        handled by the MESSAGE_KEY_PREV -> _NEXT -> _DEFAULT chain, which loops back. -->
 
   <!-- Entry (from the menu): start at the newest message. -->
@@ -38,23 +38,23 @@
   <extension name="message-announce-play">
     <condition field="destination_number" expression="^MESSAGE_ANNOUNCE_PLAY$"/>
     <condition field="${msg_ann}" expression="^$">
-      <action application="transfer" data="MESSAGE_PLAY XML default"/>
+      <action application="transfer" data="MESSAGE_RESOLVE XML default"/>
       <anti-action application="play_and_get_digits"
                    data="0 1 1 100 * ${msg_ann} silence_stream://10 msg_skip '^[0-9*#]$' 100"/>
-      <anti-action application="transfer" data="MESSAGE_PLAY XML default"/>
+      <anti-action application="transfer" data="MESSAGE_RESOLVE XML default"/>
     </condition>
   </extension>
 
   <!-- Resolve msg_idx to a file, then re-enter so ${msg_file} is set for the
-       branch in message-play2. max_forwards is reset every cycle because each
+       branch in message-play. max_forwards is reset every cycle because each
        transfer decrements it; long browsing would otherwise exhaust the per-call
        budget and drop the call with EXCHANGE_ROUTING_ERROR. -->
-  <extension name="message-play">
-    <condition field="destination_number" expression="^MESSAGE_PLAY$">
+  <extension name="message-resolve">
+    <condition field="destination_number" expression="^MESSAGE_RESOLVE$">
       <action application="set" data="max_forwards=70"/>
       <action application="set" data="msg_file=${system($${bella_messages} resolve ${msg_idx})}"/>
       <action application="set" data="msg_nav="/>
-      <action application="transfer" data="MESSAGE_PLAY2 XML default"/>
+      <action application="transfer" data="MESSAGE_PLAY XML default"/>
     </condition>
   </extension>
 
@@ -63,8 +63,8 @@
        flush any digit left over from skipping the announcement (so it can't
        instantly advance), play the message, and hand the key to the msg_nav
        chain starting at MESSAGE_KEY_PREV. -->
-  <extension name="message-play2">
-    <condition field="destination_number" expression="^MESSAGE_PLAY2$"/>
+  <extension name="message-play">
+    <condition field="destination_number" expression="^MESSAGE_PLAY$"/>
     <condition field="${msg_file}" expression="^$">
       <action application="transfer" data="MESSAGE_END XML default"/>
       <anti-action application="flush_dtmf"/>
@@ -77,19 +77,105 @@
   <!-- End of the listening session. Two ways to arrive here with an empty msg_file:
          - msg_idx == 0: the caller stepped past the last message (auto-advance, or
            pressing 1 on the final one), i.e. they heard everything -> play the
-           reflective playback-end sign-off.
+           reflective playback-end sign-off. While it plays, 9 = "keep going":
+           continue newest-first into the full archive past the curated window
+           (see PLAYBACK_END_KEY / EXT_*). Any other key or none -> menu.
          - msg_idx >= 1: resolve found nothing at the very first index, i.e. the
-           store was empty -> keep the original "nothing here, come back" prompt.
-       Both return to the menu. -->
+           store was empty -> keep the original "nothing here, come back" prompt. -->
   <extension name="message-end">
     <condition field="destination_number" expression="^MESSAGE_END$"/>
     <condition field="${msg_idx}" expression="^0$">
-      <action application="playback" data="$${prompts_dir}/playback-end.wav"/>
-      <action application="sleep" data="1500"/>
-      <action application="transfer" data="700 XML default"/>
+      <action application="set" data="ext_key="/>
+      <action application="play_and_get_digits"
+              data="0 1 1 1500 # $${prompts_dir}/playback-end.wav silence_stream://10 ext_key '^9$' 3000"/>
+      <action application="transfer" data="PLAYBACK_END_KEY XML default"/>
       <anti-action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
       <anti-action application="sleep" data="1500"/>
       <anti-action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Decide what the key pressed during playback-end means:
+         9 -> extended playback of the whole archive, continuing newest-first
+              from just past the curated window (ext-start = PLAYBACK_LIMIT+1),
+              with no announcements between messages.
+         anything else / nothing -> back to the menu. -->
+  <extension name="playback-end-key">
+    <condition field="destination_number" expression="^PLAYBACK_END_KEY$"/>
+    <condition field="${ext_key}" expression="^9$">
+      <action application="set" data="ext_idx=${system($${bella_messages} ext-start)}"/>
+      <action application="transfer" data="EXT_PLAY XML default"/>
+      <anti-action application="sleep" data="500"/>
+      <anti-action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Extended playback (dial 9): the full archive, newest-first, no lead-in
+       announcements. Mirrors MESSAGE_RESOLVE/PLAY but over resolve-all/step-all so
+       it can reach messages older than the curated window. 1 = next, 2 = prev,
+       any other key = replay, no key = auto-advance. max_forwards is reset each
+       cycle (every transfer decrements it). -->
+  <extension name="ext-play">
+    <condition field="destination_number" expression="^EXT_PLAY$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="ext_file=${system($${bella_messages} resolve-all ${ext_idx})}"/>
+      <action application="set" data="ext_nav="/>
+      <action application="transfer" data="EXT_PLAY2 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Empty ext_file (ext_idx == 0: stepped past the oldest, or 9 pressed with
+       nothing beyond the window) -> sign off and return to the menu. Otherwise
+       flush any leftover digit, play the message, collect one key into ext_nav. -->
+  <extension name="ext-play2">
+    <condition field="destination_number" expression="^EXT_PLAY2$"/>
+    <condition field="${ext_file}" expression="^$">
+      <action application="transfer" data="EXT_END XML default"/>
+      <anti-action application="flush_dtmf"/>
+      <anti-action application="play_and_get_digits"
+                   data="0 1 1 500 * ${ext_file} silence_stream://100 ext_nav '^[0-9*#]$' 3000"/>
+      <anti-action application="transfer" data="EXT_KEY_PREV XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="ext-key-prev">
+    <condition field="destination_number" expression="^EXT_KEY_PREV$"/>
+    <condition field="${ext_nav}" expression="^2$">
+      <!-- 2 = previous message in the full archive. -->
+      <action application="set" data="ext_idx=${system($${bella_messages} step-all ${ext_idx} prev)}"/>
+      <action application="transfer" data="EXT_PLAY XML default"/>
+      <anti-action application="transfer" data="EXT_KEY_NEXT XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="ext-key-next">
+    <condition field="destination_number" expression="^EXT_KEY_NEXT$"/>
+    <condition field="${ext_nav}" expression="^1$">
+      <!-- 1 = next message in the full archive. -->
+      <action application="set" data="ext_idx=${system($${bella_messages} step-all ${ext_idx} next)}"/>
+      <action application="transfer" data="EXT_PLAY XML default"/>
+      <anti-action application="transfer" data="EXT_KEY_DEFAULT XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="ext-key-default">
+    <condition field="destination_number" expression="^EXT_KEY_DEFAULT$"/>
+    <condition field="${ext_nav}" expression="^$">
+      <!-- No key = message finished on its own: auto-advance, no announcement. -->
+      <action application="set" data="ext_idx=${system($${bella_messages} step-all ${ext_idx} next)}"/>
+      <action application="transfer" data="EXT_PLAY XML default"/>
+      <!-- Any other key: replay the current message. -->
+      <anti-action application="transfer" data="EXT_PLAY XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Reached the oldest stored message: a plain sign-off (no 9 affordance, so
+       it can't loop) and back to the menu. -->
+  <extension name="ext-end">
+    <condition field="destination_number" expression="^EXT_END$">
+      <action application="playback" data="$${prompts_dir}/playback-end.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
 
@@ -100,7 +186,7 @@
     <condition field="${msg_nav}" expression="^2$">
       <!-- 2 = previous message, played directly (announcement skipped). -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} prev)}"/>
-      <action application="transfer" data="MESSAGE_PLAY XML default"/>
+      <action application="transfer" data="MESSAGE_RESOLVE XML default"/>
       <anti-action application="transfer" data="MESSAGE_KEY_NEXT XML default"/>
     </condition>
   </extension>
@@ -110,7 +196,7 @@
     <condition field="${msg_nav}" expression="^1$">
       <!-- 1 = next message, played directly (announcement skipped). -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} next)}"/>
-      <action application="transfer" data="MESSAGE_PLAY XML default"/>
+      <action application="transfer" data="MESSAGE_RESOLVE XML default"/>
       <anti-action application="transfer" data="MESSAGE_KEY_DEFAULT XML default"/>
     </condition>
   </extension>
@@ -122,7 +208,7 @@
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} next)}"/>
       <action application="transfer" data="MESSAGE_ANNOUNCE XML default"/>
       <!-- Any other key: replay the current message (no announcement). -->
-      <anti-action application="transfer" data="MESSAGE_PLAY XML default"/>
+      <anti-action application="transfer" data="MESSAGE_RESOLVE XML default"/>
     </condition>
   </extension>
 </include>
