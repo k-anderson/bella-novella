@@ -82,7 +82,7 @@
       <action application="transfer" data="MESSAGE_END XML default"/>
       <anti-action application="flush_dtmf"/>
       <anti-action application="play_and_get_digits"
-                   data="0 1 1 500 * ${msg_file} silence_stream://100 msg_nav '^[0-9*#]$' 3000"/>
+                   data="0 1 1 500 * ${msg_file} silence_stream://100 msg_nav '^[0-9*#]$' 100"/>
       <anti-action application="transfer" data="MESSAGE_KEY_PREV XML default"/>
     </condition>
   </extension>
@@ -100,7 +100,7 @@
     <condition field="${msg_idx}" expression="^0$">
       <action application="set" data="drawer_key="/>
       <action application="play_and_get_digits"
-              data="0 1 1 1500 # $${prompts_dir}/playback-end.wav silence_stream://10 drawer_key '^9$' 3000"/>
+              data="0 1 1 1500 # $${prompts_dir}/playback-end.wav silence_stream://10 drawer_key '^9$' 100"/>
       <action application="transfer" data="PLAYBACK_END_KEY XML default"/>
       <anti-action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
       <anti-action application="sleep" data="1500"/>
@@ -136,7 +136,7 @@
       <action application="set" data="drawer_nav="/>
       <action application="flush_dtmf"/>
       <action application="play_and_get_digits"
-              data="0 1 1 3000 # $${prompts_dir}/playback-special.wav silence_stream://10 drawer_nav '^[127]$' 2000"/>
+              data="0 1 1 3000 # $${prompts_dir}/playback-special.wav silence_stream://10 drawer_nav '^[127]$' 100"/>
       <action application="transfer" data="DRAWER_OPEN_PREV XML default"/>
     </condition>
   </extension>
@@ -187,7 +187,7 @@
       <anti-action application="playback" data="tone_stream://%(200,0,660)"/>
       <anti-action application="flush_dtmf"/>
       <anti-action application="play_and_get_digits"
-                   data="0 1 1 500 * ${drawer_file} silence_stream://100 drawer_nav '^[0-9*#]$' 3000"/>
+                   data="0 1 1 500 * ${drawer_file} silence_stream://100 drawer_nav '^[0-9*#]$' 100"/>
       <anti-action application="transfer" data="DRAWER_KEY_PREV XML default"/>
     </condition>
   </extension>

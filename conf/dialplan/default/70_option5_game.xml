@@ -48,7 +48,7 @@
       <!-- args: min max tries timeout terminators FILE INVALID-AUDIO VAR REGEX digit-timeout.
            FILE is the current step's prompt (barge-in-able); INVALID-AUDIO is silence. -->
       <action application="play_and_get_digits"
-              data="1 1 1 7000 # ${game_prompt} silence_stream://100 game_guess '^[1-9]$' 2000"/>
+              data="1 1 1 7000 # ${game_prompt} silence_stream://100 game_guess '^[1-9]$' 100"/>
       <action application="transfer" data="GAME_EVAL XML default"/>
     </condition>
   </extension>
