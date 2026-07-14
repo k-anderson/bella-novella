@@ -72,172 +72,225 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 
 ### 2.1 `conf/` in detail
 
+Every file under `conf/` is listed below. [`conf/freeswitch.xml`](conf/freeswitch.xml) is the root
+document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, everything in
+`autoload_configs/`, the SIP profile(s) in `sip_profiles/`, the `default` dialplan
+(`dialplan/default/*.xml`), and the user directory (`directory/default/*.xml`).
+
 | File | Purpose |
 |---|---|
-| [`conf/freeswitch.xml`](conf/freeswitch.xml) | Root config: includes vars, autoload configs, the `default` dialplan, and the inline user directory. |
-| [`conf/vars.xml`](conf/vars.xml) | Global settings: paths, the `192.168.50.1` bind IP, `PCMU` codec, the actuator commands (`disco_raise`/`disco_lower`/`disco_stop`/`disco_position`), the message-store helper (`bella_messages`), and the hidden number-game helper (`bella_game`, `game_tries_max`). |
-| [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060`, tuned for POTS/ATA use (blind auth, RFC2833 DTMF, ACL-locked). |
-| [`conf/directory/default/`](conf/directory/default/) | The four SIP lines — [`101.xml`](conf/directory/default/101.xml)/[`102.xml`](conf/directory/default/102.xml) (participants), [`103.xml`](conf/directory/default/103.xml) (spare), [`104.xml`](conf/directory/default/104.xml) (concierge). Passwords unused — blind registration. |
-| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR: `00_extensions.xml` (dial 101–104), `10_inbound_and_menu.xml` (menu 700), `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option9_tale.xml`, `70_option5_game.xml` (see [§3](#3-current-dialplan--call-flow)). |
-| [`conf/autoload_configs/`](conf/autoload_configs/) | Per-module config. Notably `modules.conf.xml` (13 modules loaded), `acl.conf.xml` (`bella_ata_only` = `192.168.50.0/24`), `event_socket.conf.xml` (ESL on 127.0.0.1). |
+| [`conf/freeswitch.xml`](conf/freeswitch.xml) | Root config. Includes `vars.xml`; the `configuration` section includes `autoload_configs/*.xml`; the `dialplan` section includes `dialplan/default/*.xml` into the `default` context; the `directory` section includes `directory/default/*.xml` inside the `$${domain}` domain (blind auth). |
+| [`conf/vars.xml`](conf/vars.xml) | Global pre-processor variables: install paths, the `192.168.50.1` bind IP and `192.168.50.0/24` CIDR, the RTP port range (16384–16484), `PCMU` codec prefs, the actuator commands (`disco_raise`/`disco_lower`/`disco_stop`/`disco_position`), the message-store helper (`bella_messages`), and the number-game helper (`bella_game`, `game_tries_max=3`). |
+| [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060/udp`. Blind auth/registration, ACL-locked to `bella_ata_only`, PCMU-only media, RFC2833 DTMF, one registration per extension, no NAT/SRV/NAPTR/presence. |
+| [`conf/directory/default/101.xml`](conf/directory/default/101.xml) | SIP line **101** — participant (password unused; `Line 101` caller ID). |
+| [`conf/directory/default/102.xml`](conf/directory/default/102.xml) | SIP line **102** — participant. |
+| [`conf/directory/default/103.xml`](conf/directory/default/103.xml) | SIP line **103** — spare / future expansion. |
+| [`conf/directory/default/104.xml`](conf/directory/default/104.xml) | SIP line **104** — concierge (driver/passenger). |
+| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option9_tale.xml`, `70_option5_game.xml`. Each is detailed in [§3](#3-current-dialplan--call-flow). |
+| [`conf/autoload_configs/modules.conf.xml`](conf/autoload_configs/modules.conf.xml) | The **13** modules loaded at boot: loggers (`mod_console`/`mod_logfile`/`mod_timerfd`/`mod_posix_timer`), `mod_event_socket`, `mod_sofia`, the dialplan engine (`mod_dialplan_xml`/`mod_commands`/`mod_dptools`), media playback (`mod_native_file`/`mod_sndfile`/`mod_tone_stream`), and `mod_say_en`. |
+| [`conf/autoload_configs/switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core settings: small session caps (`max-sessions=10`, `sessions-per-second=5`), the RTP port range, `info` log level, `core.db` name, and `fs_cli` key-bindings. |
+| [`conf/autoload_configs/sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | Sofia global settings; includes the SIP profiles from `../sip_profiles/*.xml`. |
+| [`conf/autoload_configs/acl.conf.xml`](conf/autoload_configs/acl.conf.xml) | The `bella_ata_only` network list (`default="deny"`, allows only `$${ata_network_cidr}` = `192.168.50.0/24`). |
+| [`conf/autoload_configs/event_socket.conf.xml`](conf/autoload_configs/event_socket.conf.xml) | ESL bound to `127.0.0.1:8021` (used by `fs_cli` and `bella-ring`); `stop-on-bind-error`. |
+| [`conf/autoload_configs/logfile.conf.xml`](conf/autoload_configs/logfile.conf.xml) | File logger → `log/freeswitch.log`, 10 MB rollover, keep 8, `rotate-on-hup`. |
+| [`conf/autoload_configs/console.conf.xml`](conf/autoload_configs/console.conf.xml) | Console logger (colorized, `info` level). |
+| [`conf/autoload_configs/ivr.conf.xml`](conf/autoload_configs/ivr.conf.xml) | `mod_dptools` IVR-menu loader (`../ivr_menus/*.xml`); unused — the IVR is built entirely in the dialplan. |
 
 ---
 
 ## 3. Current dialplan & call flow
 
-Every call from the ATA lands in the IVR, and each menu digit `transfer`s to a virtual
-destination handled by the dialplan.
+The dialplan is a set of XML files under [`conf/dialplan/default/`](conf/dialplan/default/), loaded
+in filename order into the `default` context. Every call from the ATA lands in the IVR at `700`,
+and each option `transfer`s to a virtual destination handled by one of these files. The IVR is a
+**transfer-based state machine**: each hop `transfer`s to a named destination that a `<condition>`
+matches on, so `max_forwards` is reset to `70` at loop entry points (every transfer decrements it,
+and a long browse/loop would otherwise exhaust the per-call budget and drop the call). One
+subsection per file, in load order.
 
-### 3.1 Entry — any call → the menu
-[`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) (`all-calls-to-menu`):
-dialing `700` (the ATA off-hook auto-dial), or **any** number from the ATA, is routed to the main
-menu at `700` — except the explicit line numbers `101`–`104`, which
-[`00_extensions.xml`](conf/dialplan/default/00_extensions.xml) matches first (it sorts before the
-menu file) so they ring the phone directly instead of being swallowed by the catch-all.
+**Dialable numbers** — real `destination_number` values routed at the top level (i.e. a number a
+phone can dial, as opposed to a selection collected inside the menu prompt):
 
-### 3.2 The menu
-[`10_inbound_and_menu.xml`](conf/dialplan/default/10_inbound_and_menu.xml) plays the greeting and
-collects the option with `play_and_get_digits` (1–3 digits, `*` terminator, validated to the set
-`^(0|1|2|3|5|9|911|411|10[1-4]|11)$`). The **full** greeting (`prompts/main-menu.wav`) plays once
-at the start of the call; every return to the menu thereafter plays **one of nine random short
-greetings** (`prompts/main-menu-short-variant-1..9.wav`, via
-[`scripts/bella-messages`](scripts/bella-messages) `short-menu-prompt`) — tracked by the
-`menu_greeted` channel variable. The collected option (`bella_opt`) is dispatched on a second
-routing pass:
+| Number | Handled by | Result |
+|---|---|---|
+| `700` | `10_inbound_and_menu.xml` | Main menu entry (also the ATA off-hook auto-dial). |
+| `101`–`104` | `00_extensions.xml` | Ring that SIP line directly (matched before the menu catch-all). |
+| *any other digits* | `10_inbound_and_menu.xml` (`all-calls-to-menu`) | Numeric-only catch-all → transferred to the menu (`700`). |
+
+Inside the menu, `play_and_get_digits` additionally collects `0`, `1`, `2`, `3`, `5`, `9`, `11`,
+`411`, `911`, and `101`–`104` (see §3.2) — these are menu selections, not standalone extensions.
+
+**Virtual destinations** — internal `transfer` targets. They are lettered/upper-case so they never
+collide with dialable numbers, and are grouped here by the file that handles them:
+
+- **Menu dispatch** (`10_inbound_and_menu.xml`):
+  - `DISPATCH` — second routing pass after the menu collects a digit; each `dispatch-*` extension tests `bella_opt` and transfers to the matching handler.
+  - `DISPATCH_AFTER_INVALID` — re-entry after an "invalid" prompt collects a key: a valid option goes back through `DISPATCH`, silence (empty `bella_opt`) returns to the menu greeting.
+- **Intercom** (`20_option1_intercom.xml`):
+  - `CALL_OTHER` — ring the *other* participant line based on the caller's SIP user (101 → 102, 102 → 101); unknown lines get a `no-answer` fallback.
+- **Listen & drawer** (`30_option2_listen.xml`):
+  - `LISTEN_MESSAGES` — entry point; start curated playback at the newest message.
+  - `MESSAGE_ANNOUNCE` — resolve the lead-in announcement file for the current index.
+  - `MESSAGE_ANNOUNCE_PLAY` — play that announcement (any key skips straight to the message).
+  - `MESSAGE_RESOLVE` — map the current index to a message file (resets `max_forwards`).
+  - `MESSAGE_PLAY` — play the message and collect one navigation key.
+  - `MESSAGE_END` — end of the curated set: reflective sign-off, or the empty-store prompt.
+  - `MESSAGE_KEY_PREV` / `MESSAGE_KEY_NEXT` — handle `2` = previous / `1` = next (announcement skipped).
+  - `MESSAGE_KEY_DEFAULT` — no key = auto-advance *with* announcement; any other key = replay.
+  - `PLAYBACK_END_KEY` — interpret the key pressed during the sign-off (`9` opens the drawer).
+  - `DRAWER_RESOLVE` — map the current full-archive index to a file.
+  - `DRAWER_PLAY` — sound a tone separator, then play the archived message and collect one key.
+  - `DRAWER_KEY_PREV` / `DRAWER_KEY_NEXT` — handle `2` = previous / `1` = next in the full archive.
+  - `DRAWER_KEY_DELETE` — handle `7` = delete the current message, then re-resolve the slot.
+  - `DRAWER_KEY_DEFAULT` — no key = auto-advance; any other key = replay.
+  - `DRAWER_END` — reached the oldest message: sign off and return to the menu.
+- **Leave a message** (`40_option3_leave.xml`):
+  - `LEAVE_MESSAGE` — record up to 60 s, prune only if disk is low, confirm, return to the menu.
+- **Disco controls** (`50_disco_controls.xml`):
+  - `DISCO_RAISE` — read the tracked position, then branch to `DISCO_RAISE_GO`.
+  - `DISCO_RAISE_GO` — raise unless already `up` (else play "already up").
+  - `DISCO_LOWER` — read the tracked position, then branch to `DISCO_LOWER_GO`.
+  - `DISCO_LOWER_GO` — lower unless already `down` (else play "already down").
+  - `DISCO_STOP` — brake any movement and reset the position to `unknown`.
+- **Branching story** (`60_option9_tale.xml`):
+  - `TALE_OPEN` — first fork of the fable; `TALE_OPEN_D` dispatches the chosen digit.
+  - `TALE_SHIELD` — "shield the ember" node; `TALE_SHIELD_D` dispatches its choice.
+  - `TALE_FEED` — "feed the ember" node; `TALE_FEED_D` dispatches its choice.
+  - `TALE_END_SHARE`, `TALE_END_HIDE`, `TALE_END_REVEL`, `TALE_END_ASH`, `TALE_END_STILL` — the five endings; each plays its close and returns to the menu.
+- **Guess-my-number game** (`70_option5_game.xml`):
+  - `GAME_START` — pick the secret (1–9), reset the try counter, queue the intro.
+  - `GAME_ASK` — play the current step's prompt and collect one guess (barge-in-able).
+  - `GAME_EVAL` — nudge on empty/invalid input; otherwise ask `bella-game` for a verdict.
+  - `GAME_VERDICT` — branch on `hit` → win, `lose` → lose, or `high`/`low` → hint and re-ask.
+  - `GAME_WIN` / `GAME_LOSE` — play the closing prompt and return to the menu.
+
+### 3.1 `00_extensions.xml` — dial a SIP line (101–104)
+Explicit extensions for the four lines: dialing **101**–**104** bridges to that phone with a
+ringback tone (`ringback=%(2000,4000,440,480)`, `instant_ringback`) and the caller ID set from the
+originating line. With `hangup_after_bridge`/`continue_on_fail`, a failed bridge (no answer / busy)
+falls through to `no-answer.wav` and a transfer back to the menu (`700`). This file **sorts
+first**, so a dialed 101–104 is matched here and rings the phone instead of being swallowed by the
+numeric `all-calls-to-menu` catch-all in `10_inbound_and_menu.xml`. These extensions are also the
+target of menu option **0** (→ 104, the concierge) and of the intercom in `20_option1_intercom.xml`.
+
+### 3.2 `10_inbound_and_menu.xml` — inbound routing & the main menu (`700`)
+The entry point and menu. `all-calls-to-menu` routes `700` (the ATA off-hook auto-dial) or **any**
+dialed number from the ATA to the menu; it is numeric-only and placed last so it never shadows the
+lettered internal targets (`CALL_OTHER`, `DISCO_RAISE`, …) or the 101–104 extensions in §3.1.
+
+The menu greets and collects one option with `play_and_get_digits` (1–3 digits, `*` terminator,
+validated to `^(0|1|2|3|5|9|911|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves `1` vs `11`
+vs `101`–`104`). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the
+call (`menu-first`); every later return plays **one of nine random short greetings**
+(`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages short-menu-prompt`, §4.2), tracked
+by the `menu_greeted` channel variable (`menu-repeat`). The collected option (`bella_opt`) is
+dispatched on a second routing pass (`DISPATCH`), where one `dispatch-*` extension per option
+transfers away:
 
 | Dial | Transfers to | Action |
 |---|---|---|
-| **1** | `CALL_OTHER` | Intercom the *other* participant line (101 ↔ 102) |
-| **2** | `LISTEN_MESSAGES` | Listen to stored messages |
-| **3** | `LEAVE_MESSAGE` | Leave a message (max 60s) |
-| **101**–**104** | `101`…`104` | Dial that SIP line directly (`00_extensions.xml`) |
-| **0** | `104` | Dial the concierge (line 104) |
-| **911** | `DISCO_RAISE` | Raise the disco ball |
-| **411** | `DISCO_LOWER` | Lower the disco ball |
-| **11** | `DISCO_STOP` | Stop the disco ball |
-| **9** | `TALE_OPEN` | *(hidden, unspoken)* Bella reads a branching story — see §3.7 |
-| **5** | `GAME_START` | *(hidden, unspoken)* Guess-my-number game — see §3.8 |
+| **1** | `CALL_OTHER` | Intercom the *other* participant line (101 ↔ 102) — §3.3 |
+| **2** | `LISTEN_MESSAGES` | Listen to stored messages — §3.4 |
+| **3** | `LEAVE_MESSAGE` | Leave a message (max 60 s) — §3.5 |
+| **101**–**104** | `101`…`104` | Dial that SIP line directly — §3.1 |
+| **0** | `104` | Dial the concierge (line 104) — §3.1 |
+| **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball — §3.6 |
+| **411** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §3.6 |
+| **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §3.6 |
+| **9** | `TALE_OPEN` | *(hidden)* branching story — §3.7 |
+| **5** | `GAME_START` | *(hidden)* guess-my-number game — §3.8 |
 
-Anything else plays **one of ten random "invalid" prompts** (`prompts/invalid-entry-1..10.wav`,
-via [`scripts/bella-messages`](scripts/bella-messages) `invalid-prompt`). A valid option pressed
-over that prompt is acted on immediately; another invalid key plays a fresh scold — Bella keeps
-scolding until a valid option is pressed or the caller stays silent (a timeout), which returns to
-the menu greeting. Completed actions return to the menu.
+Anything else falls through to `dispatch-invalid`, which plays **one of ten random "invalid"
+prompts** (`prompts/invalid-entry-1..10.wav`, via `bella-messages invalid-prompt`) and re-collects
+any keypad entry: a valid option is acted on immediately, another invalid key replays a fresh
+scold, and only silence (a timeout, leaving `bella_opt` empty) returns to the menu greeting.
+Completed actions transfer back to `700`.
 
-> **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else on the
-> menu is *unannounced* and spreads by word of mouth: dialing a line directly (**101**–**104**, or
-> **0** for the concierge), the disco controls (**911** raise, **411** lower, **11** stop), the
-> branching story (**9**, see §3.7), the guess-my-number game (**5**, see §3.8), and the message
-> drawer reached after listening to everything (see §3.9). Bella hints that there's more — *"one of
-> the ones I don't say out loud"* — but never names them.
+> **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else is
+> *unannounced*: dialing a line directly (**101**–**104**, or **0** for the concierge), the disco
+> controls (**911** raise, **411** lower, **11** stop), the branching story (**9**), the
+> guess-my-number game (**5**), and the message drawer reached after listening to everything (§3.4).
+> Bella hints there's more — *"one of the ones I don't say out loud"* — but never names them.
 
-### 3.3 The actions
+### 3.3 `20_option1_intercom.xml` — intercom (option 1)
+Routes `CALL_OTHER` to the *other* participant line based on the caller's SIP user: from **101** it
+transfers to extension **102**, from **102** to **101** (the actual bridge, ringback, and
+no-answer handling live in `00_extensions.xml`, §3.1). A fallback `call-other-unknown-line` covers
+option 1 pressed from any unexpected SIP user — it plays `no-answer.wav` and returns to the menu.
+Intercom is deliberately limited to the two participant lines; 103/104 are not intercom targets.
 
-- **Intercom (`CALL_OTHER`)** — [`20_option1_intercom.xml`](conf/dialplan/default/20_option1_intercom.xml):
-  checks the caller's SIP user: from **101** it bridges to **102**, from **102** it bridges to
-  **101**, with a ringback tone while the far phone rings. If the other line doesn't answer (or
-  the call arrives from an unexpected line) it plays `no-answer.wav`. Either way it returns to the
-  menu when finished.
-- **Dial a line (`101`–`104`, or `0`)** — [`00_extensions.xml`](conf/dialplan/default/00_extensions.xml):
-  each line has an explicit extension that bridges to that phone with ringback; on no-answer/busy
-  it plays `no-answer.wav` and returns to the menu. Menu option **0** transfers to **104** (the
-  concierge).
-- **Listen (`LISTEN_MESSAGES`)** — [`30_option2_listen.xml`](conf/dialplan/default/30_option2_listen.xml):
-  plays the **newest 10** messages **newest-first**, each preceded by its numbered announcement
-  (`prompts/playback-announcement-<idx>.wav`) as a lead-in prompt. During a message, **1 = next**
-  and **2 = previous**; navigating by key (or pressing a key during an announcement) **skips the
-  announcement** and plays the message directly. When a message finishes with no key it
-  **auto-advances** to the next message *with* its announcement, and after the last one it returns
-  to the menu. The browse loop (`MESSAGE_ANN` → `MESSAGE_PLAY` → `MESSAGE_NAV`) uses `bella-messages`
-  `announcement`/`resolve`/`step` to map the index to files.
-- **Leave (`LEAVE_MESSAGE`)** — [`40_option3_leave.xml`](conf/dialplan/default/40_option3_leave.xml):
-  plays a prompt and a beep, then records up to **60 s** to
-  `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech
-  recordings. Messages are **kept on disk**; `bella-messages rotate` only prunes the oldest when
-  free space runs low.
-- **Disco ball (`DISCO_RAISE` / `DISCO_LOWER` / `DISCO_STOP`)** —
-  [`50_disco_controls.xml`](conf/dialplan/default/50_disco_controls.xml): each reads the ball's
-  tracked position via `${system($${disco_position})}` (`up` / `down` / `unknown`). **911** raises
-  unless already `up` (plays `disco-already-up.wav`); **411** lowers unless already `down` (plays
-  `disco-already-down.wav`); **11** runs `disco-relay brake`, which cancels any movement **and
-  resets the position to `unknown`** so either 911 or 411 will run next. Every path returns to the
-  menu. Position is `unknown` at boot and after `11` (state lives on `/run`, tmpfs).
+### 3.4 `30_option2_listen.xml` — listen to messages (option 2) & the hidden drawer
+Two playback experiences over the message store (`bella-messages`, §4.2):
 
-### 3.4 The relay controller
-[`scripts/disco-relay`](scripts/disco-relay) translates `raise`/`lower`/`brake`/`status`/`position`
-into timed GPIO relay states on the Waveshare HAT:
+**Curated playback (`LISTEN_MESSAGES`).** Plays the **newest 10** messages **newest-first**, each
+preceded by its numbered lead-in announcement (`prompts/playback-announcement-<idx>.wav`). During a
+message, **1 = next**, **2 = previous**; navigating by key (or pressing a key during an
+announcement) **skips the announcement** and plays the message directly. When a message finishes
+with no key it **auto-advances** to the next *with* its announcement. The browse loop
+(`MESSAGE_ANNOUNCE → MESSAGE_ANNOUNCE_PLAY → MESSAGE_RESOLVE → MESSAGE_PLAY →` the
+`MESSAGE_KEY_PREV`/`_NEXT`/`_DEFAULT` chain) uses `bella-messages announcement`/`resolve`/`step` to
+map the index to files, and resets `max_forwards` each cycle.
 
-- **K1/K2** drive the actuator motor: `raise` = `motor_up` (K1 on), `lower` = `motor_down`
-  (K2 on), `brake` = `motor_stop` (both off).
-- **K3** is the **spot lights**: on a `raise` they turn **on** after a configurable percentage of
-  the travel time and stay on; on a `lower` they start on and turn **off** after that percentage.
-- `raise`/`lower` take a **non-blocking** `flock` and run the movement in the **background**: if
-  the lock is already held they print `busy` and change nothing, otherwise they print `started`.
-  A completed raise records `up`, a completed lower records `down`.
-- `brake` **preempts** — it signals the in-progress movement (tracked via
-  `/run/disco-relay.pid`) to stop, forces the motor off, and resets the position to `unknown`.
-- `status` reports the relay states, tracked position, and whether a movement is running;
-  `position` prints `up`/`down`/`unknown` (stored in `/run/disco-relay.state`, so `unknown` at
-  boot).
+**End sign-off & the hidden drawer.** After the last curated message, `MESSAGE_END` plays a
+reflective sign-off (`prompts/playback-end.wav`); if the store was empty it instead plays
+`vm-no_more_messages.wav` and returns to the menu. Pressing **9** during the sign-off opens
+**"Bella's drawer of secrets"** (`PLAYBACK_END_KEY` → `DRAWER_*`): the **full** archive,
+newest-first, continuing past the curated window (`drawer-start` = `PLAYBACK_LIMIT+1`) into every
+stored recording — no lead-in announcements, a short tone separating each message. In the drawer,
+**1** = next, **2** = previous, **7** = **delete** the current message, any other key replays it,
+and no key auto-advances. Because `bella-messages` re-lists the store on every call, a `delete-all`
+takes effect at once and every index renumbers as if the message never existed; reaching the oldest
+signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
 
-The commands in [`conf/vars.xml`](conf/vars.xml) set the timing: `disco_raise` runs
-`disco-relay raise 120 75` (drive **120 s**; spot lights **on** after **75%** of that time) and
-`disco_lower` runs `disco-relay lower 120 5` (drive **120 s**; spot lights **off** after **5%**).
-Tune the seconds and percentages there.
+### 3.5 `40_option3_leave.xml` — leave a message (option 3)
+`LEAVE_MESSAGE` answers, plays `vm-record_message.wav` and a beep, then `record`s up to **60 s** to
+`recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech recordings;
+any DTMF digit stops the recording (`playback_terminators=any`). It then runs `bella-messages
+rotate` (prunes the oldest **only** when disk space is low — everything is kept otherwise), plays
+`vm-saved.wav`, and returns to the menu.
 
-### 3.5 The message store
-[`scripts/bella-messages`](scripts/bella-messages) manages `recordings/messages/` for the IVR
-(runs as the `freeswitch` user — no sudo). It exposes the **newest 10** recordings for playback
-newest-first, resolves an index to a file, maps an index to its lead-in announcement, steps the
-next/previous index, and returns random invalid / short-menu prompts. It also backs the hidden
-message **drawer** (§3.9) with commands over the **full** archive — `count-all`, `resolve-all`,
-`step-all`, `drawer-start`, and `delete-all` (which removes a recording, after which every index
-re-lists as if it had never been stored). Older messages are **kept on disk** and pruned
-oldest-first only when free space is low. All output is newline-free for use in `${system(...)}`.
-See [§4.2](#42-bella-messages) for the full command list.
+### 3.6 `50_disco_controls.xml` — hidden disco-ball controls (911 / 411 / 11)
+The only "disco" component: three hidden destinations that drive the relay HAT through the `disco_*`
+commands in `vars.xml` (which shell out to `scripts/disco-relay`, §4.1). Each reads the tracked
+position first via `${system($${disco_position})}` (`up` / `down` / `unknown`):
 
-### 3.6 The periodic ring
-At a random interval between **15 and 45 minutes** a systemd timer runs
-[`scripts/bella-ring`](scripts/bella-ring), which picks
-one of the two lines (101/102) at random and, if it is registered, `originate`s a call to it via
-the local event socket. When the handset is answered it is routed to extension `700` — the main
-menu. If the line isn't registered (ATA unplugged, off-hook, FreeSWITCH down) it logs and exits
-quietly. The schedule lives in
-[`system/etc/systemd/system/bella-ring.timer`](system/etc/systemd/system/bella-ring.timer) /
-[`bella-ring.service`](system/etc/systemd/system/bella-ring.service); `install.sh` enables the
-timer.
+- **911** (`DISCO_RAISE`) raises unless already `up` (then it plays `disco-already-up.wav` and does
+  nothing); otherwise it starts `disco_raise` = `disco-relay raise 120 75` and plays
+  `disco-raise.wav` over the movement.
+- **411** (`DISCO_LOWER`) lowers unless already `down` (`disco-already-down.wav`); otherwise it
+  starts `disco_lower` = `disco-relay lower 120 5` and plays `disco-lower.wav`.
+- **11** (`DISCO_STOP`) runs `disco_stop` = `disco-relay brake`, cancelling any movement **and
+  resetting the position to `unknown`** so 911 or 411 will run next; plays `disco-stop.wav`.
 
-### 3.7 Hidden — the branching story (`9`)
-Dialing **`9`** (never announced) opens **"The Ember"**, a short branching fable Bella reads aloud
-from her lounge. Each node narrates and collects one digit; the choices lead to one of **five
-endings**, each a small moral that reflects the path taken. An invalid key plays a story-specific
-prompt and re-offers the node, so the caller stays inside the story; endings return to the menu.
-The nodes live in [`60_option9_tale.xml`](conf/dialplan/default/60_option9_tale.xml); the tree,
-choice table, and full prompt scripts are in [`STORY.md`](STORY.md). Prompts: `prompts/tale-*.wav`.
+Every path returns to the menu. Position is `unknown` at boot and after **11** (it lives on `/run`,
+tmpfs). Tune the drive seconds and spot-light percentages in [`conf/vars.xml`](conf/vars.xml).
 
-### 3.8 Hidden — "guess my number" (`5`)
-Dialing **`5`** (never announced) starts a keypad guessing game. Bella picks a secret number
-**1–9**; each single keypress is a guess, and she answers with a random *higher* / *lower* until
-the caller wins or runs out of tries (default **3**, tunable via `game_tries_max` in
-[`conf/vars.xml`](conf/vars.xml)). She never reveals the number on a loss. The intro, win, lose,
-and higher/lower prompts each have several interchangeable variants, chosen at random per call.
-The comparison, randomness, and variant selection live in
-[`scripts/bella-game`](scripts/bella-game) (`secret` / `verdict` / `incr` / `hint` / `pick`),
-driven by [`70_option5_game.xml`](conf/dialplan/default/70_option5_game.xml); see
-[`GAME.md`](GAME.md). Prompts: `prompts/game-*.wav`.
+### 3.7 `60_option9_tale.xml` — hidden branching story "The Ember" (option 9)
+Dialing **9** (never announced) opens **"The Ember"**, a branching fable Bella reads aloud. Each
+node narrates and collects one digit, then transfers to a per-node dispatch pass that tests the
+digit in a `<condition>`. The tree:
 
-### 3.9 Hidden — the message drawer & delete (`9`, then `7`)
-When the curated listen session (§3.3) reaches the end — after the newest ten messages — Bella
-plays a reflective sign-off (`prompts/playback-end.wav`). Pressing **`9`** while it plays opens
-**"Bella's drawer of secrets"**: the **full** message archive, newest-first, continuing past the
-curated window into every stored recording (no lead-in announcements; a short tone separates each
-message). Inside the drawer, **1** = next, **2** = previous, **7** = **delete** the current
-message, any other key replays it, and no key auto-advances. Because
-[`scripts/bella-messages`](scripts/bella-messages) re-lists the store on every call, a delete
-takes effect immediately and the indices renumber as if the message had never existed. Reaching
-the oldest message signs off and returns to the menu. Lives in
-[`30_option2_listen.xml`](conf/dialplan/default/30_option2_listen.xml) (`PLAYBACK_END_KEY`,
-`DRAWER_*`), backed by `bella-messages` `resolve-all` / `step-all` / `delete-all` / `drawer-start`.
+- `TALE_OPEN` — 1 = shield → `TALE_SHIELD`, 2 = feed → `TALE_FEED`, 3 = set it down → ending "still"
+- `TALE_SHIELD` — 1 = share → ending "share", 2 = keep → ending "hide"
+- `TALE_FEED` — 1 = burn → ending "revel", 2 = press on → ending "ash"
+
+That yields **five endings** (`tale-end-{share,hide,revel,ash,still}.wav`), each a small moral;
+endings play their close and return to the menu. An invalid key at any node plays `tale-invalid.wav`
+and re-offers the same node, keeping the caller inside the story. Every node resets `max_forwards`.
+The tree, choice table, and full prompt scripts are in [`STORY.md`](STORY.md); prompts:
+`prompts/tale-*.wav`.
+
+### 3.8 `70_option5_game.xml` — hidden guess-my-number game (option 5)
+Dialing **5** (never announced) starts a keypad guessing game. `GAME_START` picks a secret **1–9**
+(`bella-game secret 1 9`), resets the try counter, and queues a random intro; `GAME_ASK` plays the
+current step's prompt as a barge-in-able `play_and_get_digits` (so a returning caller can guess
+over the prompt) and collects one digit. `GAME_EVAL`/`GAME_VERDICT` ask `bella-game verdict …`,
+which returns `hit` (→ win), `lose` (out of tries → lose; default **3**, via `game_tries_max` in
+`vars.xml`), or `high`/`low` (bump the counter, queue a random *higher*/*lower* hint, re-ask). The
+intro, win, lose, and higher/lower prompts each have several interchangeable variants chosen at
+random per call (`bella-game pick`/`hint`, §4.3). The secret is never spoken and never revealed on
+a loss. Win/lose play their close and return to the menu; see [`GAME.md`](GAME.md). Prompts:
+`prompts/game-*.wav`.
 
 ---
 
@@ -277,7 +330,7 @@ The IVR message store over `recordings/messages/` (recorded as `msg_<timestamp>_
 lexical sort is chronological). Runs as the `freeswitch` user — no sudo. The IVR plays back the
 newest `PLAYBACK_LIMIT` (**10**) messages; older ones are kept on disk and pruned oldest-first
 only when free space drops below `MIN_FREE_MB` (**200**). The `*-all` commands back the hidden
-message drawer (§3.9) over the full archive.
+message drawer (§3.4) over the full archive.
 
 | Command | Arguments | What it does |
 |---|---|---|
