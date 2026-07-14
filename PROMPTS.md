@@ -61,7 +61,7 @@ updated to match this file.
 **Lesson:** Patience is a virtue.
 
 ```text
-[low, velvet] I'm still here. Still listening. [dry, amused] I learned patience dialing a line thats never answered by who I hope. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, soft laugh] Who answers is anyone's guess, if you let it ring long enough. [smoky, slow] Dial 2, and I'll pour you what's been whispered to me — [hushed] the kind of thing that only gets better with age, [strong Italian accent] like a bottle of wine left long enough to breathe. [cool, unhurried] Dial 3, if there's something you're finally ready to say out loud. [warm, dry] No time like the present, darling. [low, patient] I'm waiting for your answer.
+[low, velvet] I'm still here. Still listening. [dry, amused] I learned patience dialing a line thats never answered by who I hope. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, soft laugh] Who answers is anyone's guess, if you let it ring long enough. [smoky, slow] Dial 2, and I'll pour you what's been whispered to me — [hushed] the kind of thing that only gets better with age, like a bottle of wine left long enough to breathe. [cool, unhurried] Dial 3, if there's something you're finally ready to say out loud. [warm, dry] No time like the present, darling. [low, patient] I'm waiting for your answer.
 ```
 
 ### `main-menu-short-variant-3`
@@ -101,7 +101,7 @@ updated to match this file.
 **Lesson:** It is ok to be wild, every now and again.
 
 ```text
-[low, sly] Back so soon? [dry, amused] Or maybe you never really left. Hard to read you sugar. [velvet, low] Dial 1, and I'll deal you into whatever's happening on the other end of this line. [wry, soft laugh] Same gamble it's always been, hoping the other end finally answers back. [smoky, hushed] Dial 2, and I'll turn over what the others already laid on the table. [low, private] Everyone shows their cards to me eventually. [cool, deliberate] Dial 3, if you'd like to add a card of your own to the deck. [low, trailing off] I never fold, sugar. I just collect. [warm, dry, strong French accent] Go on, then — place your bet, play it wild if you like. Somebody at this table ought to. [low, amused] I've been known to sweeten the pot, for the ones who know how to play the game.
+[low, sly] Back so soon? [dry, amused] Or maybe you never really left. Hard to read you sugar. [velvet, low] Dial 1, and I'll deal you into whatever's happening on the other end of this line. [wry, soft laugh] Same gamble it's always been, hoping the other end finally answers back. [smoky, hushed] Dial 2, and I'll turn over what the others already laid on the table. [low, private] Everyone shows their cards to me eventually. [cool, deliberate] Dial 3, if you'd like to add a card of your own to the deck. [low, trailing off] I never fold, sugar. I just collect. [warm, dry] Go on, then — place your bet, play it wild if you like. Somebody at this table ought to. [low, amused] I've been known to sweeten the pot, for the ones who know how to play the game.
 ```
 
 ### `main-menu-short-variant-7`
@@ -277,7 +277,7 @@ updated to match this file.
 ### `playback-announcement-1`
 
 ```text
-[low, private] These are the traces they left in the wire. [low, trailing off] Dial 1 anytime you'd like to move on to the next one — no need to sit with a stranger's secret longer than you want to. [warm] Here is the first.
+[low, private] These are the traces they left in the wire. [teasing, trailing off] Dial 1 anytime you'd like to move on to the next one — [sly] no need to sit with a stranger's secret longer than you want to. [warm] Here is the first.
 ```
 
 ### `playback-announcement-2`
@@ -337,5 +337,5 @@ updated to match this file.
 ### `playback-end`
 
 ```text
-[low, warm, private] Thats all of them that I care to share right now. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, tender] every voice that ever trusted this line with something. [low, private] Mine included, once, though that's a story for a night when the drinks are stronger. [beat] And now you care those too.
+[low, warm, private] Thats all of them that I care to share right now. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, tender] every voice that ever trusted this line with something. [low, private] Mine included, once, though that's a story for a night when the drinks are stronger.
 ```
