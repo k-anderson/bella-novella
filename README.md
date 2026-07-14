@@ -156,7 +156,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | [`conf/autoload_configs/sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | Sofia global settings; includes the SIP profiles from `../sip_profiles/*.xml`. |
 | [`conf/autoload_configs/acl.conf.xml`](conf/autoload_configs/acl.conf.xml) | The `bella_ata_only` network list (`default="deny"`, allows only `$${ata_network_cidr}` = `192.168.50.0/24`). |
 | [`conf/autoload_configs/event_socket.conf.xml`](conf/autoload_configs/event_socket.conf.xml) | ESL bound to `127.0.0.1:8021` (used by `fs_cli` and `bella-ring`); `stop-on-bind-error`. |
-| [`conf/autoload_configs/logfile.conf.xml`](conf/autoload_configs/logfile.conf.xml) | File logger → `log/freeswitch.log`, 10 MB rollover, keep 8, `rotate-on-hup`. |
+| [`conf/autoload_configs/logfile.conf.xml`](conf/autoload_configs/logfile.conf.xml) | File logger → `log/freeswitch.log`, **warnings and above only** (to minimize SD-card wear; live `info`/`debug` stays available over `fs_cli`/ESL), 10 MB rollover, keep 2, `rotate-on-hup`. |
 | [`conf/autoload_configs/console.conf.xml`](conf/autoload_configs/console.conf.xml) | Console logger (colorized, `info` level). |
 
 ---
@@ -407,7 +407,7 @@ message drawer (§4.4) over the full archive.
 | `step-all` | `<index> next\|prev` | Like `step`, but clamped to the full archive. |
 | `delete-all` | `<index>` | Delete the Nth full-archive message; remaining indices renumber at once. |
 | `drawer-start` | — | Full-archive index just past the playback window (`PLAYBACK_LIMIT+1`), or `0`. |
-| `pick` | `<prefix>` | Random `<prefix>-*.wav` (e.g. `invalid-entry`, `main-menu-short-variant`, `game-win`), or empty if none. |
+| `pick` | `<prefix>` | Next `<prefix>-*.wav` from a per-prefix **shuffle-bag** — every variant plays once, in random order, before repeating (no back-to-back duplicates); empty if none. State on tmpfs (`BELLA_PICK_STATE_DIR`, default `/run/bella-novella/pick`); falls back to a plain random draw if unavailable. |
 
 ### 5.3 `bella-game`
 Stateless helper for the hidden guess-my-number game (menu option 5). The dialplan holds the
@@ -810,7 +810,8 @@ sysctl --system
 install -D -m 0755 system/usr/local/bin/freeswitch-wait-eth0 /usr/local/bin/freeswitch-wait-eth0
 
 # systemd unit (NoNewPrivileges=no so the IVR can 'sudo disco-relay') + resource limits.
-# Also keeps the SQLite DBs on tmpfs via RuntimeDirectory=freeswitch-db + '-db /run/freeswitch-db'.
+# Also keeps the SQLite DBs on tmpfs via RuntimeDirectory + '-conf/-log/-db' (FreeSWITCH
+# requires all three dir flags together) and provides /run/bella-novella for pick state.
 install -D -m 0644 system/etc/systemd/system/freeswitch.service /etc/systemd/system/freeswitch.service
 install -D -m 0644 system/etc/security/limits.d/99-freeswitch.conf /etc/security/limits.d/99-freeswitch.conf
 

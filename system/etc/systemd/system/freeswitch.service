@@ -9,15 +9,21 @@ User=freeswitch
 Group=freeswitch
 WorkingDirectory=/usr/local/freeswitch
 
-# Keep the SQLite core/registration DBs on tmpfs (RAM) instead of the SD card.
-# systemd creates/owns /run/freeswitch-db for the service user and wipes it on
-# stop; -db points FreeSWITCH's db_dir at it. This eliminates the "SQLite is
-# BUSY" contention caused by slow flash writes (core.db + sofia_reg_ata.db).
-RuntimeDirectory=freeswitch-db
+# Keep the SQLite core/registration DBs on tmpfs (RAM) instead of the SD card:
+# -db points FreeSWITCH's db_dir at /run/freeswitch-db (created/owned for the
+# service user by RuntimeDirectory, wiped on stop). FreeSWITCH requires "all or
+# none of -conf, -log, and -db", so -conf/-log are passed at their normal paths
+# alongside -db. This eliminates the "SQLite is BUSY" contention caused by slow
+# flash writes (core.db + sofia_reg_ata.db). /run/bella-novella holds the
+# no-repeat prompt-pick state used by scripts/bella-messages.
+RuntimeDirectory=freeswitch-db bella-novella
 RuntimeDirectoryMode=0750
 
 ExecStartPre=/usr/local/bin/freeswitch-wait-eth0 eth0 192.168.50.1 30
-ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat -db /run/freeswitch-db
+ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat \
+  -conf /usr/local/freeswitch/conf \
+  -log /usr/local/freeswitch/log \
+  -db /run/freeswitch-db
 ExecReload=/usr/local/freeswitch/bin/fs_cli -x "reloadxml"
 ExecStop=/usr/local/freeswitch/bin/fs_cli -x "shutdown elegant"
 

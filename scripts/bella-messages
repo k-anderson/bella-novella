@@ -30,9 +30,14 @@ set -euo pipefail
 #   drawer-start            print the 1-based full-archive index just past the
 #                           playback window (PLAYBACK_LIMIT+1), or 0 when the
 #                           archive does not exceed the window
-#   pick <prefix>           print the absolute path of a random
+#   pick <prefix>           print the absolute path of the next
 #                           prompts/<prefix>-N.wav (e.g. invalid-entry,
-#                           main-menu-short-variant, game-win), or empty if none exist
+#                           main-menu-short-variant, game-win) from a per-prefix
+#                           shuffle-bag: every variant plays once, in random
+#                           order, before any repeats. State lives on tmpfs
+#                           (BELLA_PICK_STATE_DIR, default /run/bella-novella/
+#                           pick); falls back to a plain random draw if that dir
+#                           is unusable. Empty when no such files exist.
 
 MESSAGES_DIR="${BELLA_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
 PLAYBACK_LIMIT="${BELLA_PLAYBACK_LIMIT:-10}"
@@ -42,6 +47,12 @@ MIN_FREE_MB="${BELLA_MIN_FREE_MB:-200}"
 
 # Custom prompts directory (absolute path, played directly by FreeSWITCH).
 PROMPTS_DIR="${BELLA_PROMPTS_DIR:-/usr/local/freeswitch/prompts}"
+
+# State directory for the no-repeat "pick" shuffle-bags. On tmpfs so it adds no
+# SD-card wear and resets on boot; created (owned by the freeswitch user) via
+# RuntimeDirectory=bella-novella in the systemd unit. If it can't be used, pick
+# falls back to an independent random draw so the IVR never breaks.
+PICK_STATE_DIR="${BELLA_PICK_STATE_DIR:-/run/bella-novella/pick}"
 
 # Sorted oldest-first (lexical == chronological because of the name prefix).
 list_messages() {
@@ -194,10 +205,15 @@ cmd_drawer_start() {
   fi
 }
 
-# Print the absolute path of a random $PROMPTS_DIR/<prefix>-N.wav, or empty if
-# none exist. Backs every interchangeable prompt family the IVR chooses at
-# random: the invalid-entry scolds, the short main-menu greetings, and the game
-# intro/win/lose and higher/lower variants.
+# Print the absolute path of a $PROMPTS_DIR/<prefix>-N.wav. Instead of an
+# independent random draw each call (which can repeat the same variant back to
+# back), this deals from a per-prefix "shuffle bag": every variant is played
+# once, in a random order, before any repeats. State persists between
+# invocations in PICK_STATE_DIR (tmpfs) and is guarded by flock so concurrent
+# calls get distinct entries. Backs every interchangeable prompt family the IVR
+# chooses at random: the invalid-entry scolds, the short main-menu greetings,
+# and the game intro/win/lose and higher/lower variants. Falls back to a single
+# random draw if the state dir is unusable, so the IVR never breaks.
 cmd_pick() {
   local prefix="${1:-}"
   [ -n "$prefix" ] || { printf ''; return 0; }
@@ -205,7 +221,71 @@ cmd_pick() {
   local files=( "$PROMPTS_DIR/$prefix"-*.wav )
   local n="${#files[@]}"
   [ "$n" -gt 0 ] || { printf ''; return 0; }
-  printf '%s' "${files[$(( RANDOM % n ))]}"
+  if [ "$n" -eq 1 ]; then printf '%s' "${files[0]}"; return 0; fi
+
+  local pick
+  if pick="$(pick_from_bag "$prefix" "${files[@]}")" && [ -n "$pick" ]; then
+    printf '%s' "$pick"
+  else
+    printf '%s' "${files[$(( RANDOM % n ))]}"
+  fi
+}
+
+# Deal the next entry from the per-prefix shuffle bag under an flock. Reshuffles
+# the current variant set whenever the bag is empty or stale (variants added or
+# removed), and avoids repeating the last-played entry across a refill. Prints
+# the chosen path, or returns non-zero if the state dir can't be used (the
+# caller then falls back to a random draw).
+pick_from_bag() {
+  local prefix="$1"; shift
+  local files=( "$@" )
+
+  mkdir -p "$PICK_STATE_DIR" 2>/dev/null || return 1
+  [ -w "$PICK_STATE_DIR" ] || return 1
+
+  local bag="$PICK_STATE_DIR/$prefix.bag"
+  local lock="$PICK_STATE_DIR/$prefix.lock"
+  local lastf="$PICK_STATE_DIR/$prefix.last"
+
+  local lockfd
+  exec {lockfd}>"$lock" 2>/dev/null || return 1
+  if ! flock "$lockfd" 2>/dev/null; then
+    exec {lockfd}>&- 2>/dev/null || true
+    return 1
+  fi
+
+  # Keep only bag entries that still exist in the current variant set (drops any
+  # variants removed since the bag was built); preserves the shuffled order.
+  local remaining=""
+  if [ -s "$bag" ]; then
+    remaining="$(grep -Fxf <(printf '%s\n' "${files[@]}") "$bag" 2>/dev/null || true)"
+  fi
+
+  # Empty or fully stale -> reshuffle the whole current set, then nudge the
+  # first entry back if it would immediately repeat the last-played one.
+  if [ -z "$remaining" ]; then
+    if ! remaining="$(printf '%s\n' "${files[@]}" | shuf 2>/dev/null)"; then
+      exec {lockfd}>&- 2>/dev/null || true
+      return 1
+    fi
+    local last=""
+    [ -s "$lastf" ] && last="$(cat "$lastf" 2>/dev/null || true)"
+    local first="${remaining%%$'\n'*}"
+    if [ -n "$last" ] && [ "$first" = "$last" ] && [ "$first" != "$remaining" ]; then
+      remaining="${remaining#*$'\n'}"$'\n'"$first"
+    fi
+  fi
+
+  # Pop the first line; persist the rest of the bag and the last-played entry.
+  local choice="${remaining%%$'\n'*}"
+  local rest="${remaining#*$'\n'}"
+  [ "$rest" != "$remaining" ] || rest=""
+  printf '%s\n' "$rest" > "$bag" 2>/dev/null || true
+  printf '%s' "$choice" > "$lastf" 2>/dev/null || true
+
+  exec {lockfd}>&- 2>/dev/null || true
+  [ -n "$choice" ] || return 1
+  printf '%s' "$choice"
 }
 
 main() {
