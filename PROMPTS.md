@@ -506,7 +506,7 @@ sugar. [inviting] Give me your first.
 ### `game-intro-3`
 
 ```text
-[sly, low, amused] Well now. A challenger.
+[sly, low, amused] A challenger.
 [velvet] Simple little thing, stranger — one number, somewhere between one and nine, [teasing] living in my
 head. [playful] Guess it. Every time you miss, I'll nudge you higher or lower.
 [low, purring] A handful of tries, that's all — spend them wisely. [warm, coaxing] Now.
