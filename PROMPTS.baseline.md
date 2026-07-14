@@ -88,19 +88,15 @@ like the present, sugar. [low, patient] [sighs] I'm waiting for your answer.
 
 ```text
 [low, smoky] You're still with me. [sly, amused] Not everyone stays this long. Like the night this whole place
-went and caught fire, sometimes people leave in a hurry.
-[low, remembering] I called for emergency services in quite a state. [low, distant] But what I remember
-clearest from that night isn't the smoke — it's the broken mirror with one lantern left burning, scattering
-that little bit of light clean across the room.
-[hushed, reverent] People found the door by it. Every one of them got out.
-[velvet, unhurried] Dial 1, and I'll cast your voice across the wire — [wry] could be nothing at all, but it
-might be the start of something too.
-[hushed, smoky] Dial 2, and I'll share what the others left curled in my ear — [low, tender] kept warm, the
-way I keep everything I was never meant to hold onto.
-[cool, low] Dial 3, if there's a thought you'd trust me with. [low, trailing off] Everyone's carrying
-something out here, stranger.
-[sly, low] Funny thing, though — those aren't the only numbers that still call up a little light in here.
-[dry, knowing] So — what'll it be?
+went and caught fire. [low, remembering] I called for emergency services in quite a state. [low, distant] But
+what I remember clearest from that night isn't the smoke — it's the broken mirror with flames licking at the bottom, 
+scattering that little bit of light clean across the room. [hushed, reverent] Like a beacon, people found the door by it. 
+Every one of them got out. [velvet, unhurried] Dial 1, and I'll cast your voice across the wire — [wry] could
+be nothing at all, but it might be the start of something too. [hushed, smoky] Dial 2, and I'll share what 
+the others left curled in my ear — [low, tender] kept warm, the way I keep everything I was never meant to
+hold onto. [cool, low] Dial 3, if there's a thought you'd trust me with. [low, trailing off] Everyone's carrying
+something out here, stranger. [sly, low] Funny thing, though — those aren't the only numbers that still
+call up a little light in here. [dry, knowing] So — what'll it be?
 ```
 
 ### `main-menu-short-variant-4`
