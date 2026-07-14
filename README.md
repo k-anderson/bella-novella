@@ -94,7 +94,6 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | [`conf/autoload_configs/event_socket.conf.xml`](conf/autoload_configs/event_socket.conf.xml) | ESL bound to `127.0.0.1:8021` (used by `fs_cli` and `bella-ring`); `stop-on-bind-error`. |
 | [`conf/autoload_configs/logfile.conf.xml`](conf/autoload_configs/logfile.conf.xml) | File logger → `log/freeswitch.log`, 10 MB rollover, keep 8, `rotate-on-hup`. |
 | [`conf/autoload_configs/console.conf.xml`](conf/autoload_configs/console.conf.xml) | Console logger (colorized, `info` level). |
-| [`conf/autoload_configs/ivr.conf.xml`](conf/autoload_configs/ivr.conf.xml) | `mod_dptools` IVR-menu loader (`../ivr_menus/*.xml`); unused — the IVR is built entirely in the dialplan. |
 
 ---
 
