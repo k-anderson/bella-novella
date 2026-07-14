@@ -198,7 +198,7 @@ updated to match this file.
 [amused, private] Some parties need an invitation. [dry, low] Sometimes you just need to know where to go. [sly, low] One, two, three. That's what's on offer tonight.
 ```
 
-## Voicemail
+## Messages
 
 ### `vm-record_message`
 
@@ -209,7 +209,7 @@ updated to match this file.
 ### `vm-saved`
 
 ```text
-[low, worldly] You know I don't keep photographs. Photographs get you caught. I keep secrets, and now yours is [low, soft laugh] safe with me.
+[gentle] Got it. [low, worldly] Do you know why I don't keep photographs? [flat, dry] Photographs get you caught. [wry, private] Secrets like yours, on the otherhand, [sly] are always safe with me. [loving] I'll carry this one for you.
 ```
 
 ### `vm-no_more_messages`
@@ -517,7 +517,7 @@ updated to match this file.
 ### `game-win-3`
 
 ```text
-[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me already, and we've barely met. [beat, low, private] A winner deserves a secret, so — [soft, confiding] that old phone I keep sending you down the line to? [low, quiet] It was somebody's. [very sad] Somebody called Tobi. We had a wild few weeks before they were forced to leave. [wistful] I still dial it, some nights, when the room goes quiet enough to hear myself think. [beat, low] It's never them. [dry, tender] Never going to be them. [soft laugh, sad] There. Now you're holding a piece of me most people never get. [soft laugh] I bet the bar tender would like to know that name, been talking about them for years. [low] Mind it, darling.
+[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me already, and we've barely met. [beat, low, private] A winner deserves a secret, so — [soft, confiding] that old phone I keep sending you down the line to? [low, quiet] It was somebody's. [very sad] Somebody called Tobi. We had a wild few weeks and long nights connecting over the phone... before I was forced to leave. [wistful] I still dial them, some nights, when the room goes quiet enough to hear myself think. [beat, low] It's never them. [dry, tender] Never going to be them. [soft laugh, sad] There. Now you're holding a piece of me most people never get. [soft laugh] I bet the bar tender would like to know that name, been talking about them for years. [low] Mind it, darling.
 ```
 
 ### `game-win-4`
