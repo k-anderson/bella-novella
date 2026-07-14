@@ -32,7 +32,7 @@
     <condition field="destination_number" expression="^GAME_START$">
       <action application="set" data="game_secret=${system($${bella_game} secret 1 9)}"/>
       <action application="set" data="game_tries=0"/>
-      <action application="set" data="game_prompt=${system($${bella_game} pick game-intro)}"/>
+      <action application="set" data="game_prompt=${system($${bella_messages} pick game-intro)}"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -89,7 +89,7 @@
     <condition field="destination_number" expression="^GAME_VERDICT$"/>
     <condition field="${game_verdict}" expression="^high$">
       <action application="set" data="game_tries=${system($${bella_game} incr ${game_tries})}"/>
-      <action application="set" data="game_prompt=${system($${bella_game} hint high)}"/>
+      <action application="set" data="game_prompt=${system($${bella_messages} pick game-higher)}"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -98,7 +98,7 @@
     <condition field="destination_number" expression="^GAME_VERDICT$"/>
     <condition field="${game_verdict}" expression="^low$">
       <action application="set" data="game_tries=${system($${bella_game} incr ${game_tries})}"/>
-      <action application="set" data="game_prompt=${system($${bella_game} hint low)}"/>
+      <action application="set" data="game_prompt=${system($${bella_messages} pick game-lower)}"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -113,7 +113,7 @@
 
   <extension name="game-win">
     <condition field="destination_number" expression="^GAME_WIN$">
-      <action application="set" data="game_close=${system($${bella_game} pick game-win)}"/>
+      <action application="set" data="game_close=${system($${bella_messages} pick game-win)}"/>
       <action application="playback" data="${game_close}"/>
       <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
@@ -122,7 +122,7 @@
 
   <extension name="game-lose">
     <condition field="destination_number" expression="^GAME_LOSE$">
-      <action application="set" data="game_close=${system($${bella_game} pick game-lose)}"/>
+      <action application="set" data="game_close=${system($${bella_messages} pick game-lose)}"/>
       <action application="playback" data="${game_close}"/>
       <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>

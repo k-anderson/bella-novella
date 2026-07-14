@@ -78,7 +78,7 @@ network with just the Pi, the ATA, and the phones.
 The plain menu only ever offers **1**, **2**, and **3**; everything else is earned. Bella's hidden
 features (§4) don't just *do* things — they hand the persistent caller fragments of her backstory,
 and quiet tips toward the phone system's own hidden controls, one secret at a time. Every reveal
-ends the same way: she tells you to *"tell the bartender,"* an out-of-band wink that turns a
+ends the same way: she tells you to *"tell the concierge,"* an out-of-band wink that turns a
 discovered secret into a real-world passphrase.
 
 **Backstory a caller can uncover:**
@@ -88,7 +88,7 @@ discovered secret into a real-world passphrase.
 | **Her real name — Ilaria Kalergis** | The name she went by before "Bella", traded away "before this city, this room, all of it" — and never worn since. | Win the guess-my-number game (dial **5**, §4.8) — `game-win-1`. |
 | **Her grandmother — Despina Novella** | The grandmother who raised her and taught her that the safest place for a secret is a trusted person; the reason she runs the room the way she does. | Win the game (dial **5**, §4.8) — `game-win-2`. |
 | **Her lost love — Tobi** | The owner of "that old phone" she keeps connecting callers to (the intercom line, option 1): a brief, intense romance cut short when she was forced to leave. She still dials it some nights — it's never them. | Win the game (dial **5**, §4.8) — `game-win-3`. |
-| **A city she once visited — Salzburg** | Where she once "burned a book or two"; offered explicitly as a passphrase — *"tell the bartender you once met me in Salzburg, there might be something in it for you."* | Reach the **"revel"** ending of the branching story (dial **9**, §4.7): choose **2** (feed the ember) → **1** (burn the whole book) → `tale-end-revel`. |
+| **A city she once visited — Salzburg** | Where she once "burned a book or two"; offered explicitly as a passphrase — *"tell the concierge you once met me in Salzburg, there might be something in it for you."* | Reach the **"revel"** ending of the branching story (dial **9**, §4.7): choose **2** (feed the ember) → **1** (burn the whole book) → `tale-end-revel`. |
 
 **Hidden phone features a caller can be tipped off to:** two of the winning prompts don't hand over
 backstory — they point the caller toward controls the spoken menu never mentions:
@@ -101,10 +101,10 @@ backstory — they point the caller toward controls the spoken menu never mentio
 A few things worth knowing:
 
 - **The reveals are spread across the five winning prompts** (`game-win-1..5`), and Bella plays
-  **one at random** each time you win (`bella-game pick game-win`, §5.3). Winning repeatedly is how
+  **one at random** each time you win (`bella-messages pick game-win`, §5.2). Winning repeatedly is how
   you surface all of them — a single win only ever reveals one.
-- **The bartender is the recurring thread.** Nearly every secret closes by pointing back to the
-  same off-line bartender; sharing what you found is the real prize.
+- **The concierge is the recurring thread.** Nearly every secret closes by pointing back to the
+  same concierge; sharing what you found with the team gives them the real prize (a drink, 3D printed bella car, 1 hr with Taylor, ect).
 - **The discoverable lore and tips live entirely in the prompt scripts** in
   [`PROMPTS.md`](PROMPTS.md). Editing or regenerating those prompts (`bella-regen-prompts`, §5.6)
   changes what — and how much — a caller can find, so keep this list in sync with the `game-win-*`
@@ -245,7 +245,7 @@ The menu greets and collects one option with `play_and_get_digits` (1–3 digits
 validated to `^(0|1|2|3|5|9|911|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves `1` vs `11`
 vs `101`–`104`). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the
 call (`menu-first`); every later return plays **one of nine random short greetings**
-(`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages short-menu-prompt`, §5.2), tracked
+(`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages pick main-menu-short-variant`, §5.2), tracked
 by the `menu_greeted` channel variable (`menu-repeat`). The collected option (`bella_opt`) is
 dispatched on a second routing pass (`DISPATCH`), where one `dispatch-*` extension per option
 transfers away:
@@ -264,7 +264,7 @@ transfers away:
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
 
 Anything else falls through to `dispatch-invalid`, which plays **one of ten random "invalid"
-prompts** (`prompts/invalid-entry-1..10.wav`, via `bella-messages invalid-prompt`) and re-collects
+prompts** (`prompts/invalid-entry-1..10.wav`, via `bella-messages pick invalid-entry`) and re-collects
 any keypad entry: a valid option is acted on immediately, another invalid key replays a fresh
 scold, and only silence (a timeout, leaving `bella_opt` empty) returns to the menu greeting.
 Completed actions transfer back to `700`.
@@ -351,7 +351,7 @@ over the prompt) and collects one digit. `GAME_EVAL`/`GAME_VERDICT` ask `bella-g
 which returns `hit` (→ win), `lose` (out of tries → lose; default **3**, via `game_tries_max` in
 `vars.xml`), or `high`/`low` (bump the counter, queue a random *higher*/*lower* hint, re-ask). The
 intro, win, lose, and higher/lower prompts each have several interchangeable variants chosen at
-random per call (`bella-game pick`/`hint`, §5.3). The secret is never spoken and never revealed on
+random per call (`bella-messages pick`, §5.2). The secret is never spoken and never revealed on
 a loss. Win/lose play their close and return to the menu; see [`GAME.md`](GAME.md). Prompts:
 `prompts/game-*.wav`.
 
@@ -407,21 +407,19 @@ message drawer (§4.4) over the full archive.
 | `step-all` | `<index> next\|prev` | Like `step`, but clamped to the full archive. |
 | `delete-all` | `<index>` | Delete the Nth full-archive message; remaining indices renumber at once. |
 | `drawer-start` | — | Full-archive index just past the playback window (`PLAYBACK_LIMIT+1`), or `0`. |
-| `invalid-prompt` | — | Random `invalid-entry-*.wav` (one of ten). |
-| `short-menu-prompt` | — | Random `main-menu-short-variant-*.wav` (one of nine). |
+| `pick` | `<prefix>` | Random `<prefix>-*.wav` (e.g. `invalid-entry`, `main-menu-short-variant`, `game-win`), or empty if none. |
 
 ### 5.3 `bella-game`
 Stateless helper for the hidden guess-my-number game (menu option 5). The dialplan holds the
 per-call state (secret, tries) in channel variables and calls this for the secret, the verdict,
-the counter bump, and the random prompt variants. Runs as the `freeswitch` user.
+and the counter bump. Runs as the `freeswitch` user. The game's random prompt variants
+(intro/win/lose and higher/lower) are chosen with `bella-messages pick` (§5.2), not here.
 
 | Command | Arguments | What it does |
 |---|---|---|
 | `secret` | `<min> <max>` | Random integer in `[min,max]` (empty on bad args). |
 | `verdict` | `<min> <max> <secret> <guess> <tries> <maxtries>` | One of `bad` / `hit` / `high` / `low` / `lose`. |
 | `incr` | `<n>` | Print `n+1` (missing/invalid `n` treated as 0). |
-| `hint` | `high\|low` | Path of a random `game-higher-*.wav` / `game-lower-*.wav`. |
-| `pick` | `<prefix>` | Path of a random `<prefix>-*.wav` (e.g. `game-intro`, `game-win`, `game-lose`). |
 
 ### 5.4 `bella-ring`
 The periodic-ring helper (no arguments). Invoked by the `bella-ring.timer` systemd timer at a

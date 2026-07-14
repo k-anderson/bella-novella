@@ -30,8 +30,8 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 [low, sultry, unhurried] Well now. You picked up my phone.
 [smiling, knowing, brisk] That either makes you lost... [beat] ...or exactly where you're meant to be.
 [hushed, low, quickly] If you already know my numbers... [sly] ...you know what to do with them.
-[velvet, quickly] But if this is your first time on my line, [low, dry] let me introduce myself, I am — [proudly] Bella Novella. [dry] Here's how it works.
-[low, smoky] Dial 1, and I'll send you down the wire to whoever's still answering that old phone. [darker, low] Half of me still expects a certain someone to pick up [wry, soft laugh] but it could be anyone, darling.
+[velvet, quickly] But if this is your first time on my line, [low, dry] you can call me [proudly] Bella Novella. [low, private] Most things I keep to myself stranger. [amuzed] But these three, I'll tell you outright. Here's what's on offer.
+[low, smoky] Dial 1, and I'll send you down the wire to whoever's still answering that old phone. [darker, low] Half of me still expects a certain someone to pick up [wry, soft laugh] but it could be anyone sugar.
 [low, amused] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [wry, unhurried] Funny how the echoes of the ones who came before you linger.
 [low, intimate] And dial 3, if you've got something you want to add to the collection. [low, private] Everybody leaves something with me eventually. [beat]
 [velvet, knowing] Those are just the options I give to strangers. [sly] Not everything's meant for an audience.
@@ -45,7 +45,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 **Lesson:** We all need help.
 
 ```text
-[dry, arch] Let me help you find your way, darling. [wry, low, exhales] Nobody held the light for me — I found my own way, stumbling, once, in the dark. [low, amused] Dial 1, for the other line. Could be anyone. [wry, low] Could be fun. [soft laugh] [flat, sultry] Dial 2, for what the ones before you left behind — [hushed] their secrets never leave me. [cool, knowing] Dial 3, if you've got something worth me holding on to. [sly] Or don't. Maybe there's something else out there for you. [low, dry] I have laid three paths out for you sugar. [low, unhurried] We could all use a hand, now and again, so take your pick.
+[dry, arch] Let me help you find your way, stranger. [wry, low, exhales] Nobody held the light for me — I found my own way, stumbling, once, in the dark. [low, amused] Dial 1, for the other line. Could be anyone. [wry, low] Could be fun. [soft laugh] [flat, sultry] Dial 2, for what the ones before you left behind — [hushed] their secrets never leave me. [cool, knowing] Dial 3, if you've got something worth me holding on to. [sly] Or don't. Maybe there's something else out there for you. [low, dry] I have laid three paths out for you sugar. [low, unhurried] We could all use a hand, now and again, so take your pick.
 ```
 
 ### `main-menu-short-variant-2`
@@ -55,7 +55,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 **Lesson:** Patience is a virtue.
 
 ```text
-[low, velvet] I'm still here. Still listening. [dry, amused] I learned patience dialing a line thats never answered by who I hope. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, soft laugh] Who answers is anyone's guess, if you let it ring long enough. [smoky, slow] Dial 2, and I'll pour you what's been whispered to me — [hushed] the kind of thing that only gets better with age, like a bottle of wine left long enough to breathe. [cool, unhurried] Dial 3, if there's something you're finally ready to say out loud. [dry, knowing] No time like the present, darling. [low, patient] [sighs] I'm waiting for your answer.
+[low, velvet] I'm still here. Still listening. [dry, amused] I learned patience dialing a line thats never answered by who I hope. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, soft laugh] Who answers is anyone's guess, if you let it ring long enough. [smoky, slow] Dial 2, and I'll pour you what's been whispered to me — [hushed] the kind of thing that only gets better with age, like a bottle of wine left long enough to breathe. [cool, unhurried] Dial 3, if there's something you're finally ready to say out loud. [dry, knowing] No time like the present, sugar. [low, patient] [sighs] I'm waiting for your answer.
 ```
 
 ### `main-menu-short-variant-3`
@@ -65,7 +65,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 **Lesson:** Tells a story to hint that 911 (emergency) will raise the disco ball (broken mirror bouncing light).
 
 ```text
-[low, smoky] You're still with me. [sly, amused] Not everyone stays this long. Like the night this whole place went and caught fire, sometimes people leave in a hurry. [low, remembering] I called for emergency services in quite a state. [low, distant] But what I remember clearest from that night isn't the smoke — it's the broken mirror with one lantern left burning, scattering that little bit of light clean across the room. [hushed, reverent] People found the door by it. Every one of them got out. [velvet, unhurried] Dial 1, and I'll cast your voice across the wire — [wry] could be nothing at all, but it might be the start of something too. [hushed, smoky] Dial 2, and I'll share what the others left curled in my ear — [low, tender] kept warm, the way I keep everything I was never meant to hold onto. [cool, low] Dial 3, if there's a thought you'd trust me with. [low, trailing off] Everyone's carrying something out here, darling. [sly, low] Funny thing, though — those aren't the only numbers that still call up a little light in here. [dry, knowing] So — what'll it be?
+[low, smoky] You're still with me. [sly, amused] Not everyone stays this long. Like the night this whole place went and caught fire, sometimes people leave in a hurry. [low, remembering] I called for emergency services in quite a state. [low, distant] But what I remember clearest from that night isn't the smoke — it's the broken mirror with one lantern left burning, scattering that little bit of light clean across the room. [hushed, reverent] People found the door by it. Every one of them got out. [velvet, unhurried] Dial 1, and I'll cast your voice across the wire — [wry] could be nothing at all, but it might be the start of something too. [hushed, smoky] Dial 2, and I'll share what the others left curled in my ear — [low, tender] kept warm, the way I keep everything I was never meant to hold onto. [cool, low] Dial 3, if there's a thought you'd trust me with. [low, trailing off] Everyone's carrying something out here, stranger. [sly, low] Funny thing, though — those aren't the only numbers that still call up a little light in here. [dry, knowing] So — what'll it be?
 ```
 
 ### `main-menu-short-variant-4`
@@ -105,7 +105,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 **Lesson:** Never give up hope.
 
 ```text
-[low, velvet] Still chasing someone to talk to? [dry, amused] Aren't we all, one way or another? [low, quiet] I know mine's not picking up. Hasn't in years. [sighs] [low, wistful] Doesn't stop me dialing. [velvet, unhurried] Dial 1, and I'll send your voice out to whoever's rolling by that old line tonight. [wry, soft laugh] There's no telling who picks up. There never has been. [hushed, smoky] Dial 2, for the hellos that came before yours — every voice reaching for someone who wasn't there then. [low, private] Some of them stuck with me longer than they should have. [cool, deliberate] Dial 3, if there's someone out there you're still hoping picks up and you want to leave something so they can find you. [low, trailing off] I keep every voice that comes through, darling. Always have. [dry, low] Go on now, before I change my mind.
+[low, velvet] Still chasing someone to talk to? [dry, amused] Aren't we all, one way or another? [low, quiet] I know mine's not picking up. Hasn't in years. [sighs] [low, wistful] Doesn't stop me dialing. [velvet, unhurried] Dial 1, and I'll send your voice out to whoever's rolling by that old line tonight. [wry, soft laugh] There's no telling who picks up. There never has been. [hushed, smoky] Dial 2, for the hellos that came before yours — every voice reaching for someone who wasn't there then. [low, private] Some of them stuck with me longer than they should have. [cool, deliberate] Dial 3, if there's someone out there you're still hoping picks up and you want to leave something so they can find you. [low, trailing off] I keep every voice that comes through, sugar. Always have. [dry, low] Go on now, before I change my mind.
 ```
 
 ### `main-menu-short-variant-8`
@@ -125,7 +125,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 **Lesson:** Sometimes life is best when your not in control
 
 ```text
-[low, amused] I am starting to think you'd wandered off into the dark without me. [velvet, unhurried] Dial 1, and I'll wire you through to whoever's picking up out there — I don't choose for you, I just connect. [wry, soft laugh] Not knowing is half the charm, darling. [hushed, low] Dial 2, for the messages that never quite made it anywhere else. [low, private] I don't sort them, I just keep them — in case somebody ever comes looking for theirs. [cool, deliberate] Dial 3, if you've got a message of your own. [low, trailing off] I deliver everything eventually — just maybe not to who you meant. [low, quiet] The night I stopped trying to aim where things landed was the night this whole line finally got good. [dry, low] Go on, then. [sly, low] The line's still open — whether or not anybody's steering it.
+[low, amused] I am starting to think you'd wandered off into the dark without me. [velvet, unhurried] Dial 1, and I'll wire you through to whoever's picking up out there — I don't choose for you, I just connect. [wry, soft laugh] Not knowing is half the charm, stranger. [hushed, low] Dial 2, for the messages that never quite made it anywhere else. [low, private] I don't sort them, I just keep them — in case somebody ever comes looking for theirs. [cool, deliberate] Dial 3, if you've got a message of your own. [low, trailing off] I deliver everything eventually — just maybe not to who you meant. [low, quiet] The night I stopped trying to aim where things landed was the night this whole line finally got good. [dry, low] Go on, then. [sly, low] The line's still open — whether or not anybody's steering it.
 ```
 
 ---
@@ -135,7 +135,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `invalid-entry-1`
 
 ```text
-[dry, low] Darling, that's not one of the numbers I mentioned. [low, sly] Nor one of the ones I don't say out loud. [beat] Try again.
+[dry, low] Stranger, that's not one of the numbers I mentioned. [low, sly] Nor one of the ones I don't say out loud. [beat] Try again.
 ```
 
 ### `invalid-entry-2`
@@ -153,19 +153,19 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `invalid-entry-4`
 
 ```text
-[low, dry] Not it, darling. [low, unhurried] One, two, three, that's what I hand out. [low, teasing] The rest is just for me, and for whoever it is I keep expecting to answer that old phone. [sly, low] But that wasn't one of those, was it.
+[low, dry] Not it, stranger. [low, unhurried] One, two, three, that's what I hand out. [low, teasing] The rest is just for me, and for whoever it is I keep expecting to answer that old phone. [sly, low] But that wasn't one of those, was it.
 ```
 
 ### `invalid-entry-5`
 
 ```text
-[sly, low] Wrong number, stranger. [low, teasing] There's more than three, if you're clever enough to find them. [low, distant] The desert keeps its own accounts, darling. Maybe you'll find those too, eventually. [dry, amused] Give it another shot.
+[sly, low] Wrong number, stranger. [low, teasing] There's more than three, if you're clever enough to find them. [low, distant] The desert keeps its own accounts, sugar. Maybe you'll find those too, eventually. [dry, amused] Give it another shot.
 ```
 
 ### `invalid-entry-6`
 
 ```text
-[flat, cool] That's not a choice. [dry, pointed] One, two, three. [low, sly] There might be a few I've never mentioned, burned up long before you ever picked up this phone. [wry, low] But that wasn't one of them. [low, dry] Once more darling.
+[flat, cool] That's not a choice. [dry, pointed] One, two, three. [low, sly] There might be a few I've never mentioned, burned up long before you ever picked up this phone. [wry, low] But that wasn't one of them. [low, dry] Once more, stranger.
 ```
 
 ### `invalid-entry-7`
@@ -177,13 +177,13 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `invalid-entry-8`
 
 ```text
-[wry, private] Mm-mm. Wrong key, darling. [sly, low] A girl keeps a few things just for herself — a name from before this one, for instance. [dry, low] Have another go, sugar.
+[wry, private] Mm-mm. Wrong key, sugar. [sly, low] A girl keeps a few things just for herself — a name from before this one, for instance. [dry, low] Have another go, sugar.
 ```
 
 ### `invalid-entry-9`
 
 ```text
-[flat, dry] That's not on tonight's menu. [sly, low] One, two, three, the rest is just for me to know. Same as a promise I made once, and never broke. [low, unhurried] Go on, darling. Try again.
+[flat, dry] That's not on tonight's menu. [sly, low] One, two, three, the rest is just for me to know. Same as a promise I made once, and never broke. [low, unhurried] Go on, stranger. Try again.
 ```
 
 ### `invalid-entry-10`
@@ -209,7 +209,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `vm-no_more_messages`
 
 ```text
-[low, wistful] That's all of them, darling [beat, sly] that I wish to share for now.
+[low, wistful] That's all of them, sugar [beat, sly] that I wish to share for now.
 [dry, low] Come back later. Somebody's always got something they need to settle. [sly, low] Or... you could leave one now yourself. [low, unhurried] Just a thought, sugar.
 ```
 
@@ -219,7 +219,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 
 ```text
 [low, sly, building energy] Oh-ho. Now that's a number I didn't expect would come up again.
-[playful, a little breathless] Go on... [beat] look up, darling.
+[playful, a little breathless] Go on... [beat] look up, stranger.
 [warm, building excitement] The desert's about to get a little brighter. [beat, delighted] Don't say I never gave you anything.
 ```
 
@@ -235,7 +235,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `disco-lower`
 
 ```text
-[low, wistful, sly] Mmm. All good things end, darling. [beat] Even the brightest ones — I've made peace with that. [sighs]
+[low, wistful, sly] Mmm. All good things end, stranger. [beat] Even the brightest ones — I've made peace with that. [sighs]
 [soft, low] Watch — [slow] she's coming back down to earth.
 [dry, low] Don't look so heartbroken. [teasing] She'll rise again. Everything worth having does, eventually.
 ```
@@ -251,7 +251,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 
 ```text
 [low, amused, sly] Ohhh. Look at you. [amused] Found something.
-[dry, teasing] Shame it doesn't do a thing, hm? [low, wry] Not every secret's got a prize behind it, darling. Believe me, I've looked. [soft laugh]
+[dry, teasing] Shame it doesn't do a thing, hm? [low, wry] Not every secret's got a prize behind it, stranger. Believe me, I've looked. [soft laugh]
 [low, sultry, dismissive] Some things I just keep... because I can, and because somebody once taught me to. [beat] Try another.
 ```
 
@@ -260,7 +260,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `no-answer`
 
 ```text
-[low, wry, amused] Mmm. Rang and rang, darling. [beat] Out there in the dark, somewhere — nobody's picking up.
+[low, wry, amused] Mmm. Rang and rang, stranger. [beat] Out there in the dark, somewhere — nobody's picking up.
 [low, wistful] Could be they're dancing. [dry, low] Could be they wandered off with someone more interesting than a ringing phone. [dry, soft laugh] Out here, that happens more than you'd think — wouldn't be the first time somebody did that to me either.
 [low, unhurried] Either way — [beat] that line's gone quiet on me tonight. [sighs]
 [low, dry] Try again later, sugar. [teasing] Or leave a little something behind for whoever it is. [low, private] The desert keeps its own accounts, darling. Everybody answers eventually. [low, soft] I know I would.
@@ -313,13 +313,13 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `playback-announcement-8`
 
 ```text
-[low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead. [low, sly] Shall we listen to number eight, darling?
+[low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead. [low, sly] Shall we listen to number eight, stranger?
 ```
 
 ### `playback-announcement-9`
 
 ```text
-[low, teasing] Careful with that one, darling. [hushed, private, trailing off] Some of these I keep closer than others — [whispers] closer than I keep most people.
+[low, teasing] Careful with that one, sugar. [hushed, private, trailing off] Some of these I keep closer than others — [whispers] closer than I keep most people.
 ```
 
 ### `playback-announcement-10`
@@ -338,7 +338,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 
 ```text
 [low, sly, delighted] Well now — you went and opened the drawer.
-[velvet, intimate] Bella's drawer of secrets, darling. Nobody sees the bottom of it but me... and now you.
+[velvet, intimate] Bella's drawer of secrets, sugar. Nobody sees the bottom of it but me... and now you.
 [low, purring] Everything I've ever been handed and never quite let go of — it all lives in here.
 [warm, coaxing] Take your time. Dial 1 to skip ahead to the next, [teasing] dial 2 to slip back to the one before.
 [sly, low] Go on, then. Have a good look. [hushed] Just... don't tell a soul what you find.
@@ -352,7 +352,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 
 ```text
 [low, sly, utterly delighted] Ohh. [intrigued, leaning in] A little game with me?
-[velvet, amused] Its simple, darling. [warm] I'm thinking of a number, one through nine. [teasing, playful] You guess — [sing-song] I'll tell you higher, or lower.
+[velvet, amused] Its simple, stranger. [warm] I'm thinking of a number, one through nine. [teasing, playful] You guess — [sing-song] I'll tell you higher, or lower.
 [low, purring] You'll have a handful of tries to find me out. [warm, coaxing, a spark of mischief] Go on then. [inviting] First guess?
 ```
 
@@ -368,7 +368,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 
 ```text
 [sly, low, amused] Well now. A challenger.
-[velvet] Simple little thing, darling — one number, somewhere between one and nine, [teasing] living in my head. [playful] Guess it. Every time you miss, I'll nudge you higher or lower.
+[velvet] Simple little thing, stranger — one number, somewhere between one and nine, [teasing] living in my head. [playful] Guess it. Every time you miss, I'll nudge you higher or lower.
 [low, purring] A handful of tries, that's all — spend them wisely. [warm, coaxing] Now. [inviting, a spark of mischief] whats your first guess?
 ```
 
@@ -391,7 +391,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `game-higher-1`
 
 ```text
-[amused, leaning in] Higher, darling. [sly, coaxing] Don't be shy.
+[amused, leaning in] Higher, stranger. [sly, coaxing] Don't be shy.
 ```
 
 ### `game-higher-2`
@@ -439,7 +439,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `game-higher-9`
 
 ```text
-[warm, delighted] Higher, darling. [teasing, low] Reach like you actually want to catch me.
+[warm, delighted] Higher, stranger. [teasing, low] Reach like you actually want to catch me.
 ```
 
 ### `game-higher-10`
@@ -451,7 +451,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `game-lower-1`
 
 ```text
-[dry, amused] Lower, darling. [teasing] You overshot me.
+[dry, amused] Lower, stranger. [teasing] You overshot me.
 ```
 
 ### `game-lower-2`
@@ -469,7 +469,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `game-lower-4`
 
 ```text
-[low, playful] Down, darling. [sly] You've reached clean over my head.
+[low, playful] Down, stranger. [sly] You've reached clean over my head.
 ```
 
 ### `game-lower-5`
@@ -487,7 +487,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `game-lower-7`
 
 ```text
-[low, wry] Lower still, darling. [amused] Not quite so bold.
+[low, wry] Lower still, stranger. [amused] Not quite so bold.
 ```
 
 ### `game-lower-8`
@@ -511,19 +511,19 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ### `game-win-1`
 
 ```text
-[delighted, low, genuinely surprised] Well, well. [a soft laugh] You found me. [impressed, warm] Not many do that, darling — [low, amazed] and not so quick. [sly, purring, intrigued] Beginner's luck... [teasing] or are you trouble? [low, private] Tell you what — a prize, for the winner. [soft, confiding] There was another name, before Bella. Before this city, this room, all of it. [wry, low] I traded it in the way you'd trade one ring for a better one. [beat, sly] I've never once worn it since but lets try it out again, [whispering] they used to call me Ilaria Kalergis. [serious] Don't tell anybody, except maybe the bar tender.  We have become good friends over the years. [low, amused] That's more than I've told anyone on this line in quite a while. Consider it yours.
+[delighted, low, genuinely surprised] Well, well. [a soft laugh] You found me. [impressed, warm] Not many do that, darling — [low, amazed] and not so quick. [sly, purring, intrigued] Beginner's luck... [teasing] or are you trouble? [low, private] Tell you what — a prize, for the winner. [soft, confiding] There was another name, before Bella. Before this city, this room, all of it. [wry, low] I traded it in the way you'd trade one ring for a better one. [beat, sly] I've never once worn it since but lets try it out again, [whispering] they used to call me Ilaria Kalergis. [serious] Don't tell anybody, except maybe the concierge. We've become good friends over the years. [low, amused] That's more than I've told anyone on this line in quite a while. Consider it yours.
 ```
 
 ### `game-win-2`
 
 ```text
-[low, delighted, warm] There it is. You caught me out, sugar. [impressed] Quick too! [beat, low, confiding] So here's your winnings, darling, and they're better than money. [soft, tender] My grandmother, Despina Novella, taught me, a long time ago, the safest place for a secret isn't a locked drawer — [low] it's a person who'll hold it for you and never once let it slip. [wry, private] Everything I run in this room, I run her way. She raised me. [warm, sly] But you played my little game, and you won, so — now you know where I learned it. [low, amused] Don't go spending that too fast, maybe just tell the bar tender if you feel the need to share.
+[low, delighted, warm] There it is. You caught me out, sugar. [impressed] Quick too! [beat, low, confiding] So here's your winnings, darling, and they're better than money. [soft, tender] My grandmother, Despina Novella, taught me, a long time ago, the safest place for a secret isn't a locked drawer — [low] it's a person who'll hold it for you and never once let it slip. [wry, private] Everything I run in this room, I run her way. She raised me. [warm, sly] But you played my little game, and you won, so — now you know where I learned it. [low, amused] Don't go spending that too fast, maybe just tell the concierge if you feel the need to share.
 ```
 
 ### `game-win-3`
 
 ```text
-[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me already, and we've barely met. [beat, low, private] A winner deserves a secret, so — [soft, confiding] that old phone I keep sending you down the line to? [low, quiet] It was somebody's. [very sad] Somebody called Tobi. We had a wild few weeks and long nights connecting over the phone... before I was forced to leave. [wistful] I still dial them, some nights, when the room goes quiet enough to hear myself think. [beat, low] It's never them. [dry, tender] Never going to be them. [soft laugh, sad] There. Now you're holding a piece of me most people never get. [soft laugh] I bet the bar tender would like to know that name, been talking about them for years. [low] Mind it, darling.
+[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me already, and we've barely met. [beat, low, private] A winner deserves a secret, so — [soft, confiding] that old phone I keep sending you down the line to? [low, quiet] It was somebody's. [very sad] Somebody called Tobi. We had a wild few weeks and long nights connecting over the phone... before I was forced to leave. [wistful] I still dial them, some nights, when the room goes quiet enough to hear myself think. [beat, low] It's never them. [dry, tender] Never going to be them. [soft laugh, sad] There. Now you're holding a piece of me most people never get. [soft laugh] I bet the concierge would like to know that name, been talking about them for years. [low] Mind it, darling.
 ```
 
 ### `game-win-4`
@@ -620,7 +620,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 
 ```text
 [delighted, letting loose, alight] ...So you burned it all — every page of that map, every reason — [breathless] and the desert lit up like a second sunrise, and you both danced. [low] No road home. [sly] No wish for one.
-[smoky, closing the book slow] Some souls aren't built to find their way back, darling. [low, knowing] They give the whole thing to the fire and call it living. [a private laugh, wistful] ...I've burned a book or two myself, once. [sultry, savouring] Glorious. [beat, softer, cautioning] Just — mind the ones still holding a candle at the window for you. [warm, inviting] You and I should have a drink. [low] The strong kind. [sly, conspiratorial] Tell the bar tender you once met me in Salzburg, there might be something in it for you.
+[smoky, closing the book slow] Some souls aren't built to find their way back, stranger. [low, knowing] They give the whole thing to the fire and call it living. [a private laugh, wistful] ...I've burned a book or two myself, once. [sultry, savouring] Glorious. [beat, softer, cautioning] Just — mind the ones still holding a candle at the window for you. [warm, inviting] You and I should have a drink. [low] The strong kind. [sly, conspiratorial] Tell the concierge you once met me in Salzburg, there might be something in it for you.
 ```
 
 ### `tale-end-ash`

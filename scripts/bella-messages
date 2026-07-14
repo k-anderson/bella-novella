@@ -30,8 +30,9 @@ set -euo pipefail
 #   drawer-start            print the 1-based full-archive index just past the
 #                           playback window (PLAYBACK_LIMIT+1), or 0 when the
 #                           archive does not exceed the window
-#   invalid-prompt          print a random "invalid entry" prompt (relative path)
-#   short-menu-prompt       print a random short main-menu greeting (absolute path)
+#   pick <prefix>           print the absolute path of a random
+#                           prompts/<prefix>-N.wav (e.g. invalid-entry,
+#                           main-menu-short-variant, game-win), or empty if none exist
 
 MESSAGES_DIR="${BELLA_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
 PLAYBACK_LIMIT="${BELLA_PLAYBACK_LIMIT:-10}"
@@ -41,33 +42,6 @@ MIN_FREE_MB="${BELLA_MIN_FREE_MB:-200}"
 
 # Custom prompts directory (absolute path, played directly by FreeSWITCH).
 PROMPTS_DIR="${BELLA_PROMPTS_DIR:-/usr/local/freeswitch/prompts}"
-
-INVALID_PROMPTS=(
-  "$PROMPTS_DIR/invalid-entry-1.wav"
-  "$PROMPTS_DIR/invalid-entry-2.wav"
-  "$PROMPTS_DIR/invalid-entry-3.wav"
-  "$PROMPTS_DIR/invalid-entry-4.wav"
-  "$PROMPTS_DIR/invalid-entry-5.wav"
-  "$PROMPTS_DIR/invalid-entry-6.wav"
-  "$PROMPTS_DIR/invalid-entry-7.wav"
-  "$PROMPTS_DIR/invalid-entry-8.wav"
-  "$PROMPTS_DIR/invalid-entry-9.wav"
-  "$PROMPTS_DIR/invalid-entry-10.wav"
-)
-
-# Variants of the short main-menu greeting; one is picked at random each time the
-# caller returns to the menu.
-SHORT_MENU_PROMPTS=(
-  "$PROMPTS_DIR/main-menu-short-variant-1.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-2.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-3.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-4.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-5.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-6.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-7.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-8.wav"
-  "$PROMPTS_DIR/main-menu-short-variant-9.wav"
-)
 
 # Sorted oldest-first (lexical == chronological because of the name prefix).
 list_messages() {
@@ -220,12 +194,18 @@ cmd_drawer_start() {
   fi
 }
 
-cmd_invalid_prompt() {
-  printf '%s' "${INVALID_PROMPTS[$(( RANDOM % ${#INVALID_PROMPTS[@]} ))]}"
-}
-
-cmd_short_menu_prompt() {
-  printf '%s' "${SHORT_MENU_PROMPTS[$(( RANDOM % ${#SHORT_MENU_PROMPTS[@]} ))]}"
+# Print the absolute path of a random $PROMPTS_DIR/<prefix>-N.wav, or empty if
+# none exist. Backs every interchangeable prompt family the IVR chooses at
+# random: the invalid-entry scolds, the short main-menu greetings, and the game
+# intro/win/lose and higher/lower variants.
+cmd_pick() {
+  local prefix="${1:-}"
+  [ -n "$prefix" ] || { printf ''; return 0; }
+  shopt -s nullglob
+  local files=( "$PROMPTS_DIR/$prefix"-*.wav )
+  local n="${#files[@]}"
+  [ "$n" -gt 0 ] || { printf ''; return 0; }
+  printf '%s' "${files[$(( RANDOM % n ))]}"
 }
 
 main() {
@@ -241,10 +221,9 @@ main() {
     step-all)       cmd_step_all "${2:-}" "${3:-}" ;;
     delete-all)     cmd_delete_all "${2:-}" ;;
     drawer-start)   cmd_drawer_start ;;
-    invalid-prompt) cmd_invalid_prompt ;;
-    short-menu-prompt) cmd_short_menu_prompt ;;
+    pick)           cmd_pick "${2:-}" ;;
     *)
-      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|delete-all <index>|drawer-start|invalid-prompt|short-menu-prompt}" >&2
+      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|delete-all <index>|drawer-start|pick <prefix>}" >&2
       exit 2
       ;;
   esac

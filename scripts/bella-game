@@ -5,9 +5,10 @@ set -euo pipefail
 #
 # Stateless: the dialplan holds the per-call state in channel variables
 # (game_secret, game_tries) and calls this helper for the random secret, the
-# guess verdict, the tries counter, and a random higher/lower prompt. All output
-# is newline-free so it can be used directly in the dialplan via ${system(...)}.
-# It runs as the freeswitch user (no sudo needed).
+# guess verdict, and the tries counter. All output is newline-free so it can be
+# used directly in the dialplan via ${system(...)}. It runs as the freeswitch
+# user (no sudo needed). Random prompt-variant selection (intro/win/lose and the
+# higher/lower hints) is handled by `bella-messages pick <prefix>`.
 #
 # Commands:
 #   secret <min> <max>
@@ -21,14 +22,6 @@ set -euo pipefail
 #         lose = wrong guess, and this guess reaches maxtries
 #   incr <n>
 #       print n+1 (treats missing/invalid n as 0). Newline-free counter bump.
-#   hint high|low
-#       print the absolute path of a random game-higher-N.wav / game-lower-N.wav,
-#       or empty if none exist.
-#   pick <prefix>
-#       print the absolute path of a random $PROMPTS_DIR/<prefix>-N.wav (e.g.
-#       game-intro, game-win, game-lose), or empty if none exist.
-
-PROMPTS_DIR="${BELLA_PROMPTS_DIR:-/usr/local/freeswitch/prompts}"
 
 is_uint() { case "${1:-}" in ''|*[!0-9]*) return 1 ;; *) return 0 ;; esac; }
 
@@ -64,38 +57,14 @@ cmd_incr() {
   printf '%s' "$(( n + 1 ))"
 }
 
-cmd_hint() {
-  local dir="${1:-}"
-  case "$dir" in
-    high) cmd_pick "game-higher" ;;
-    low)  cmd_pick "game-lower" ;;
-    *)    printf '' ;;
-  esac
-}
-
-# Print the absolute path of a random $PROMPTS_DIR/<prefix>-N.wav, or empty if
-# none exist. Used for interchangeable prompt families (game intro/win/lose and
-# the higher/lower hints), so the dialplan can vary which variant plays.
-cmd_pick() {
-  local prefix="${1:-}"
-  [ -n "$prefix" ] || { printf ''; return 0; }
-  shopt -s nullglob
-  local files=( "$PROMPTS_DIR/$prefix"-*.wav )
-  local n="${#files[@]}"
-  [ "$n" -gt 0 ] || { printf ''; return 0; }
-  printf '%s' "${files[$(( RANDOM % n ))]}"
-}
-
 main() {
   local cmd="${1:-}"
   case "$cmd" in
     secret)  cmd_secret "${2:-}" "${3:-}" ;;
     verdict) cmd_verdict "${2:-}" "${3:-}" "${4:-}" "${5:-}" "${6:-}" "${7:-}" ;;
     incr)    cmd_incr "${2:-}" ;;
-    hint)    cmd_hint "${2:-}" ;;
-    pick)    cmd_pick "${2:-}" ;;
     *)
-      echo "usage: bella-game {secret <min> <max>|verdict <min> <max> <secret> <guess> <tries> <maxtries>|incr <n>|hint high|low|pick <prefix>}" >&2
+      echo "usage: bella-game {secret <min> <max>|verdict <min> <max> <secret> <guess> <tries> <maxtries>|incr <n>}" >&2
       exit 2
       ;;
   esac
