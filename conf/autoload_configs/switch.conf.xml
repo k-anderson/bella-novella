@@ -18,6 +18,12 @@
     <param name="core-db-name" value="core.db"/>
     <param name="core-db-dsn" value=""/>
 
+    <!-- Give DB handles a small pool and a brief wait so contenders block
+         instead of immediately logging "SQLite is BUSY" (see also the tmpfs
+         db_dir set via -db in the freeswitch systemd unit). -->
+    <param name="max-db-handles" value="50"/>
+    <param name="db-handle-timeout" value="10"/>
+
     <param name="crash-protection" value="false"/>
     <param name="dump-cores" value="false"/>
     <param name="verbose-events" value="false"/>

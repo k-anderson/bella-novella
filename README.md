@@ -130,7 +130,7 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | [`include/`](include/) | FreeSWITCH C headers. | stock |
 | [`fonts/`](fonts/), [`htdocs/`](htdocs/), [`images/`](images/) | Assets shipped with FreeSWITCH (unused by this appliance). | stock |
 | [`certs/`](certs/) | TLS/DTLS certificates. | stock |
-| `db/`, `log/`, `run/` | Runtime state (SQLite DBs, logs, PID). **Regenerated on boot; git-ignored.** | generated |
+| `db/`, `log/`, `run/` | Runtime state (logs, PID). The SQLite core/registration DBs live on **tmpfs** at `/run/freeswitch-db` (set via `-db` in the systemd unit) to avoid SD-card write contention. **Regenerated on boot; git-ignored.** | generated |
 | [`recordings/`](recordings/) | Caller messages recorded by the IVR (`recordings/messages/`). **Git-ignored** (the folder is kept via `.gitkeep`). | generated |
 | [`.devcontainer/`](.devcontainer/), [`CODESPACES.md`](CODESPACES.md) | GitHub Codespaces setup (see below). | tooling |
 
@@ -152,7 +152,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | [`conf/directory/default/104.xml`](conf/directory/default/104.xml) | SIP line **104** — concierge (driver/passenger). |
 | [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option9_tale.xml`, `70_option5_game.xml`. Each is detailed in [§4](#4-current-dialplan--call-flow). |
 | [`conf/autoload_configs/modules.conf.xml`](conf/autoload_configs/modules.conf.xml) | The **13** modules loaded at boot: loggers (`mod_console`/`mod_logfile`/`mod_timerfd`/`mod_posix_timer`), `mod_event_socket`, `mod_sofia`, the dialplan engine (`mod_dialplan_xml`/`mod_commands`/`mod_dptools`), media playback (`mod_native_file`/`mod_sndfile`/`mod_tone_stream`), and `mod_say_en`. |
-| [`conf/autoload_configs/switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core settings: small session caps (`max-sessions=10`, `sessions-per-second=5`), the RTP port range, `info` log level, `core.db` name, and `fs_cli` key-bindings. |
+| [`conf/autoload_configs/switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core settings: small session caps (`max-sessions=10`, `sessions-per-second=5`), the RTP port range, `info` log level, the `core.db` name plus DB-handle pool (`max-db-handles`/`db-handle-timeout`), and `fs_cli` key-bindings. |
 | [`conf/autoload_configs/sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | Sofia global settings; includes the SIP profiles from `../sip_profiles/*.xml`. |
 | [`conf/autoload_configs/acl.conf.xml`](conf/autoload_configs/acl.conf.xml) | The `bella_ata_only` network list (`default="deny"`, allows only `$${ata_network_cidr}` = `192.168.50.0/24`). |
 | [`conf/autoload_configs/event_socket.conf.xml`](conf/autoload_configs/event_socket.conf.xml) | ESL bound to `127.0.0.1:8021` (used by `fs_cli` and `bella-ring`); `stop-on-bind-error`. |
@@ -810,6 +810,7 @@ sysctl --system
 install -D -m 0755 system/usr/local/bin/freeswitch-wait-eth0 /usr/local/bin/freeswitch-wait-eth0
 
 # systemd unit (NoNewPrivileges=no so the IVR can 'sudo disco-relay') + resource limits.
+# Also keeps the SQLite DBs on tmpfs via RuntimeDirectory=freeswitch-db + '-db /run/freeswitch-db'.
 install -D -m 0644 system/etc/systemd/system/freeswitch.service /etc/systemd/system/freeswitch.service
 install -D -m 0644 system/etc/security/limits.d/99-freeswitch.conf /etc/security/limits.d/99-freeswitch.conf
 

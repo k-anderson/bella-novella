@@ -9,8 +9,15 @@ User=freeswitch
 Group=freeswitch
 WorkingDirectory=/usr/local/freeswitch
 
+# Keep the SQLite core/registration DBs on tmpfs (RAM) instead of the SD card.
+# systemd creates/owns /run/freeswitch-db for the service user and wipes it on
+# stop; -db points FreeSWITCH's db_dir at it. This eliminates the "SQLite is
+# BUSY" contention caused by slow flash writes (core.db + sofia_reg_ata.db).
+RuntimeDirectory=freeswitch-db
+RuntimeDirectoryMode=0750
+
 ExecStartPre=/usr/local/bin/freeswitch-wait-eth0 eth0 192.168.50.1 30
-ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat
+ExecStart=/usr/local/freeswitch/bin/freeswitch -ncwait -nonat -db /run/freeswitch-db
 ExecReload=/usr/local/freeswitch/bin/fs_cli -x "reloadxml"
 ExecStop=/usr/local/freeswitch/bin/fs_cli -x "shutdown elegant"
 
