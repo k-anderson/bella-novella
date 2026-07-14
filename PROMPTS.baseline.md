@@ -215,8 +215,8 @@ updated to match this file.
 ### `vm-no_more_messages`
 
 ```text
-[sighs] [low, wistful] That's all of them, darling [beat] for now.
-[dry, low] Come back later. The desert keeps its own accounts, and somebody's always got something they need to settle. [sly, low] Or... you could leave one now yourself. [low, unhurried] Just a thought, sugar.
+[low, wistful] That's all of them, darling [beat, sly] that I wish to share for now.
+[dry, low] Come back later. Somebody's always got something they need to settle. [sly, low] Or... you could leave one now yourself. [low, unhurried] Just a thought, sugar.
 ```
 
 ## Disco Ball
@@ -224,9 +224,9 @@ updated to match this file.
 ### `disco-raise`
 
 ```text
-[low, sly, amused] Oh-ho. Now that's a number I didn't expect tonight.
-[low, teasing] Go on... [beat] look up, darling.
-[low, distant] Somebody hung that thing up for me once, and never came back to take it down. [soft laugh] [wry, low] Their loss. [sly, low] Lucky for you.
+[low, sly, building energy] Oh-ho. Now that's a number I didn't expect would come up again.
+[playful, a little breathless] Go on... [beat] look up, darling.
+[warm, building excitement] The desert's about to get a little brighter. [beat, delighted] Don't say I never gave you anything.
 ```
 
 ### `disco-already-up`
@@ -505,55 +505,55 @@ updated to match this file.
 ### `game-win-1`
 
 ```text
-[delighted, low, genuinely surprised] Well, well. [a soft laugh] You found me. [impressed, warm] Not many do that, darling — [low, amazed] and not so quick. [sly, purring, intrigued] Beginner's luck... [teasing] or are you trouble? [beat, warm] Either way — [candid] colour me impressed. And I don't impress easy. [low, private] Tell you what — a prize, for the winner. [soft, confiding] There was another name, before Bella. Before this city, this room, all of it. [wry, low] I traded it in the way you'd trade one ring for a better one. [beat, sly] I've never once worn it since. Never quite threw it out, either. [whispering] They used to call me Ariadne Solari. [low, amused] That's more than I've told anyone on this line in years. Consider it yours.
+[delighted, low, genuinely surprised] Well, well. [a soft laugh] You found me. [impressed, warm] Not many do that, darling — [low, amazed] and not so quick. [sly, purring, intrigued] Beginner's luck... [teasing] or are you trouble? [low, private] Tell you what — a prize, for the winner. [soft, confiding] There was another name, before Bella. Before this city, this room, all of it. [wry, low] I traded it in the way you'd trade one ring for a better one. [beat, sly] I've never once worn it since but lets try it out again, [whispering] they used to call me Ilaria Kalergis. [serious] Don't tell anybody, except maybe the bar tender.  We have become good friends over the years. [low, amused] That's more than I've told anyone on this line in quite a while. Consider it yours.
 ```
 
 ### `game-win-2`
 
 ```text
-[low, delighted, warm] There it is. You caught me out, sugar. [impressed] Quick too! [beat, low, confiding] So here's your winnings, darling, and they're better than money. [soft, tender] Somebody taught me, a long time ago, the safest place for a secret isn't a locked drawer — [low] it's a person who'll hold it for you and never once let it slip. [wry, private] Everything I run in this room, I run their way. [beat, a little wistful] They're not around to see it anymore. [warm, sly] But you played my little game, and you won, so — now you know where I learned it. [low, amused] Don't go spending that too fast.
+[low, delighted, warm] There it is. You caught me out, sugar. [impressed] Quick too! [beat, low, confiding] So here's your winnings, darling, and they're better than money. [soft, tender] My grandmother, Despina Novella, taught me, a long time ago, the safest place for a secret isn't a locked drawer — [low] it's a person who'll hold it for you and never once let it slip. [wry, private] Everything I run in this room, I run her way. She raised me. [warm, sly] But you played my little game, and you won, so — now you know where I learned it. [low, amused] Don't go spending that too fast, maybe just tell the bar tender if you feel the need to share.
 ```
 
 ### `game-win-3`
 
 ```text
-[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me already, and we've barely met. [beat, low, private] A winner deserves a secret, so — [soft, confiding] that old phone I keep sending you down the line to? [low, quiet] It was somebody's. Somebody who mattered. We had a wild few weeks before they had to leave. [wistful] I still dial it, some nights, when the room goes quiet enough to hear myself think. [beat, low] It's never them. [dry, tender] Never going to be them. [soft laugh, sad] I knew that when we met but I still hope they may return anyway. [warm, sly] There. Now you're holding a piece of me most people never get. [low] Mind it, darling.
+[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me already, and we've barely met. [beat, low, private] A winner deserves a secret, so — [soft, confiding] that old phone I keep sending you down the line to? [low, quiet] It was somebody's. [very sad] Somebody called Tobi. We had a wild few weeks before they were forced to leave. [wistful] I still dial it, some nights, when the room goes quiet enough to hear myself think. [beat, low] It's never them. [dry, tender] Never going to be them. [soft laugh, sad] There. Now you're holding a piece of me most people never get. [soft laugh] I bet the bar tender would like to know that name, been talking about them for years. [low] Mind it, darling.
 ```
 
 ### `game-win-4`
 
 ```text
-[low, delighted, amazed] Found me. [impressed] And so fast — colour me thoroughly charmed, sugar. [beat, low, confiding] Since you won, let me give you the good one. [smoky, remembering] That mirror ball, up over the room? [low] It wasn't decoration once. It was a lifeline. [hushed] The night this place caught fire and every light went out, somebody pulled a broken bar mirror down off the wall and strung it over the one lantern still burning — [reverent] scattered that little light clean across the smoke. [low, tender] People found the door by it. Everyone got out. [beat, distant] Whoever rigged it didn't stay to see the morning. [wry, low] Ask me if that fire followed me here from my old life, darling, [sly] and I'll tell you a different answer every week. [warm] But you — you get the true version tonight. Lucky you.
+[low, delighted, amazed] Found me. [impressed] And so fast — colour me thoroughly charmed, sugar. [beat, low, confiding] Since you won, let me give you the good one. [smoky, remembering] That old mirror that I mentioned, the one that broke into so many pieces during the fire? [low] I kept it and still have it — [reverent] It's just hidden. [beat, distant] But you can draw the curtan back if you know how, and it will scatter light in the darkness once more. [warm] You just have to listen carefully and you'll eventually figure out how to do it.
 ```
 
 ### `game-win-5`
 
 ```text
-[delighted, low, intrigued] Well, well, well. [a soft laugh] Aren't you the clever one. [impressed, warm] Nobody's read me that quick in a long while. [beat, sly, low] So here's what winning buys you, darling. [confiding] I keep a drawer — memories, debts, and secrets, all filed in the same place, for the same reasons. [low, worldly] I don't keep photographs. Photographs get you caught. [wry] I keep the things people hand me thinking I'll forget them by morning. [beat, amused] And I run a quiet little arrangement or two of my own, on the side — [sly, purring] the way everything of consequence in my life gets run. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat] Don't make me regret opening it.
+[delighted, low, intrigued] Well, well, well. [a soft laugh] Aren't you the clever one. [impressed, warm] Nobody's read me that quick in a long while. [beat, sly, low] So here's what winning buys you, darling. [low, worldly] I don't keep photographs. Photographs get you caught. [confiding] I keep the things people hand me thinking I'll forget them by morning. [beat, amused] And I run a quiet little arrangement or two of my own, on the side — [sly, purring] if you want to hear all the secrets, not just the last 10, dial 9 when I tell you "thats all of the messages I care to share right now." and I will keep going. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat] Don't make me regret opening it.
 ```
 
 ### `game-lose-1`
 
 ```text
-[low, amused, still enjoying herself] And that's the last of your guesses, sugar. [teasing, a soft laugh] No — I'm not going to tell you what it was. [sly, warm] A lady keeps a few secrets, doesn't she. [beat, low, confiding] I learned that at a card table, a lifetime ago. [dry] Never be the one who shows their hand first — that's the whole game, darling, cards or otherwise. [low, private] In all my years at this table, I've never once turned mine over. [wry] Not for anyone. Not even the ones I trust with everything else. [beat, inviting, fond] So don't take it personal. [warm] Come try me again sometime. [low, purring] Perhaps I'll be in a giving mood.
+[low, amused, still enjoying herself] And that's the last of your guesses, stranger. [teasing, a soft laugh] No — I'm not going to tell you what it was. [sly, warm] A lady keeps a few secrets, doesn't she. [beat, low, confiding] I learned that at a card table, a lifetime ago. [dry] Never be the one who shows their hand first — that's the whole game, darling, cards or otherwise. [low, private] In all my years at this table, I've never once turned mine over. [wry] Not for anyone. Not even the ones I trust with everything else. [beat, inviting, fond] So don't take it personal. [warm] Come try me again sometime. [low, purring] Perhaps I'll be in a giving mood.
 ```
 
 ### `game-lose-2`
 
 ```text
-[low, amused] And there go the last of your guesses, darling. [teasing] The number stays with me — [sly] you didn't really think I'd just hand it over? [beat, low, confiding] Patience, sugar. I know something about that. [wistful] I spent years waiting on a line that never answered by the one I hoped for. [low, soft] Still do, if I'm honest. [dry, wry] Taught me how to wait for a thing without needing it to come. [beat, warm] You'll get another go at me — [inviting] the good ones always come back. [low, purring] And I'm still here. Still listening. I always am.
+[low, amused] And there go the last of your guesses, darling. [teasing] The number stays with me — [sly] you didn't really think I'd just hand it over? [beat, low, confiding] Patience, darling. I know something about that. [wistful] I spent years waiting on a line that never answered by the one I hoped for. [low, soft] Still do, if I'm honest. [dry, wry] Taught me how to wait for a thing without needing it to come. [beat, warm] You'll get another go at me — [inviting] the good ones always come back. [low, purring] And I'm still here. Still listening. I always am.
 ```
 
 ### `game-lose-3`
 
 ```text
-[low, amused, fond] That's your last one, sugar. [teasing, soft laugh] And no — the number's mine to keep. [beat, low] But don't go slinking off just yet. [confiding, warm] I lost a few hands myself, once — big ones. [dry] Lost a whole city, a whole name, the night I decided to trade them for this life. [low, sly] Took more nerve than any guess you made tonight. [beat, worldly] Losing isn't the thing that finishes you, darling. [low, tender] It's refusing to sit back down at the table. [warm, inviting] So sit back down. [purring] Try me again — the bold ones always find more than they came for.
+[low, amused, fond] That's your last one, stranger. [teasing, soft laugh] And no — the number's mine to keep. [beat, low] But don't go slinking off just yet. [confiding, warm] I lost a few hands myself, once — big ones. [dry] Lost a whole city, a whole name, the night I decided to trade them for this life. [low, sly] Took more nerve than any guess you made tonight. [beat, worldly] Losing isn't the thing that finishes you, darling. [low, tender] It's refusing to sit back down at the table. [warm, inviting] So sit back down. [purring] Try me again — the bold ones always find more than they came for.
 ```
 
 ### `game-lose-4`
 
 ```text
-[low, amused] And that's all the guesses you get, darling. [teasing] The answer walks out of here with me — [sly, warm] a girl's got to keep something. [beat, low, confiding] Don't look so glum, sugar. [soft] I've come up short more times than I'd ever admit at this table. [low, tender] Somebody carried me once, when I couldn't carry myself — [wry] and I've been quietly paying that back ever since, to nobody who ever asked me to. [beat, warm] That's the thing about a loss. [low] It's only a loss if you leave. [inviting, purring] So come back. Try me again. [dry, fond] I'll still be here, holding what everyone else set down.
+[low, amused] And that's all the guesses you get, darling. [teasing] The answer walks out of here with me — [sly, warm] a girl's got to keep something. [beat, low, confiding] Don't look so glum, darling. [soft] I've come up short more times than I'd ever admit at this table. [low, tender] Somebody carried me once, when I couldn't carry myself — [wry] and I've been quietly paying that back ever since, to nobody who ever asked me to. [beat, warm] That's the thing about a loss. [low] It's only a loss if you leave. [inviting, purring] So come back. Try me again. [dry, fond] I'll still be here, holding what everyone else set down.
 ```
 
 ### `game-lose-5`
@@ -614,7 +614,7 @@ updated to match this file.
 
 ```text
 [delighted, letting loose, alight] ...So you burned it all — every page of that map, every reason — [breathless] and the desert lit up like a second sunrise, and you both danced. [low] No road home. [sly] No wish for one.
-[smoky, closing the book slow] Some souls aren't built to find their way back, darling. [low, knowing] They give the whole thing to the fire and call it living. [a private laugh, wistful] ...I've burned a book or two myself, once. [sultry, savouring] Glorious. [beat, softer, cautioning] Just — mind the ones still holding a candle at the window for you. [warm, inviting] You and I should have a drink. [low] The strong kind. [sly, conspiratorial] Tell the driver you once met me in Salzburg, there might be something in it for you.
+[smoky, closing the book slow] Some souls aren't built to find their way back, darling. [low, knowing] They give the whole thing to the fire and call it living. [a private laugh, wistful] ...I've burned a book or two myself, once. [sultry, savouring] Glorious. [beat, softer, cautioning] Just — mind the ones still holding a candle at the window for you. [warm, inviting] You and I should have a drink. [low] The strong kind. [sly, conspiratorial] Tell the bar tender you once met me in Salzburg, there might be something in it for you.
 ```
 
 ### `tale-end-ash`
