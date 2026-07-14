@@ -6,7 +6,9 @@
          - No key while a message plays: auto-advance to the next message, WITH
            its announcement.
          - 1 = next, 2 = previous: play that message directly, announcement skipped.
-         - Any key while an announcement plays: skip straight to the message.
+         - 9 (any time): open Bella's drawer at the current message (DRAWER_OPEN).
+         - Any key while an announcement plays: skip straight to the message
+           (9 opens the drawer instead).
          - Any other key while a message plays: replay the current message.
        After the last message it returns to the menu (700). scripts/bella-messages
        maps the index to files (resolve/announcement/step).
@@ -41,6 +43,17 @@
       <action application="transfer" data="MESSAGE_RESOLVE XML default"/>
       <anti-action application="play_and_get_digits"
                    data="0 1 1 100 * ${msg_ann} silence_stream://10 msg_skip '^[0-9*#]$' 100"/>
+      <anti-action application="transfer" data="MESSAGE_ANNOUNCE_KEY XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Key pressed during the lead-in announcement: 9 opens Bella's drawer at the
+       current message; anything else (or none) skips straight to the message. -->
+  <extension name="message-announce-key">
+    <condition field="destination_number" expression="^MESSAGE_ANNOUNCE_KEY$"/>
+    <condition field="${msg_skip}" expression="^9$">
+      <action application="set" data="drawer_idx=${msg_idx}"/>
+      <action application="transfer" data="DRAWER_OPEN XML default"/>
       <anti-action application="transfer" data="MESSAGE_RESOLVE XML default"/>
     </condition>
   </extension>
@@ -96,21 +109,55 @@
   </extension>
 
   <!-- Decide what the key pressed during playback-end means:
-         9 -> open "Bella's drawer of secrets": play the playback-special intro,
-              then browse the whole archive newest-first from just past the
-              curated window (drawer-start = PLAYBACK_LIMIT+1). No lead-in
-              announcements; a tone separates each message. 1 = next, 2 = previous,
-              7 = delete the current message, any other key = replay, no key =
-              auto-advance.
+         9 -> open "Bella's drawer of secrets" (DRAWER_OPEN) starting just past
+              the curated window (drawer-start = PLAYBACK_LIMIT+1), continuing
+              newest-first into the full archive.
          anything else / nothing -> back to the menu. -->
   <extension name="playback-end-key">
     <condition field="destination_number" expression="^PLAYBACK_END_KEY$"/>
     <condition field="${drawer_key}" expression="^9$">
-      <action application="playback" data="$${prompts_dir}/playback-special.wav"/>
       <action application="set" data="drawer_idx=${system($${bella_messages} drawer-start)}"/>
-      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
+      <action application="transfer" data="DRAWER_OPEN XML default"/>
       <anti-action application="sleep" data="500"/>
       <anti-action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Open Bella's drawer of secrets. Entered with drawer_idx already set: from a
+       message (or its announcement) via 9 -> drawer_idx = the current msg_idx, so
+       the drawer opens on the same message; from the playback-end sign-off ->
+       drawer_idx = drawer-start, continuing past the curated window. The
+       playback-special intro is barge-in-able: 1 = skip it and play the current
+       message, 2 = previous, 7 = delete the current message. Any other key or
+       none plays the current message once the intro finishes. -->
+  <extension name="drawer-open">
+    <condition field="destination_number" expression="^DRAWER_OPEN$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="drawer_nav="/>
+      <action application="flush_dtmf"/>
+      <action application="play_and_get_digits"
+              data="0 1 1 3000 # $${prompts_dir}/playback-special.wav silence_stream://10 drawer_nav '^[127]$' 2000"/>
+      <action application="transfer" data="DRAWER_OPEN_PREV XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Intro key dispatch: 2 = previous, then 7 = delete; else (1 / other / none)
+       falls through to DRAWER_RESOLVE, which plays the current message. -->
+  <extension name="drawer-open-prev">
+    <condition field="destination_number" expression="^DRAWER_OPEN_PREV$"/>
+    <condition field="${drawer_nav}" expression="^2$">
+      <action application="set" data="drawer_idx=${system($${bella_messages} step-all ${drawer_idx} prev)}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
+      <anti-action application="transfer" data="DRAWER_OPEN_DELETE XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="drawer-open-delete">
+    <condition field="destination_number" expression="^DRAWER_OPEN_DELETE$"/>
+    <condition field="${drawer_nav}" expression="^7$">
+      <action application="set" data="drawer_deleted=${system($${bella_messages} delete-all ${drawer_idx})}"/>
+      <action application="transfer" data="DRAWER_RESOLVE XML default"/>
+      <anti-action application="transfer" data="DRAWER_RESOLVE XML default"/>
     </condition>
   </extension>
 
@@ -217,6 +264,16 @@
       <!-- 1 = next message, played directly (announcement skipped). -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} next)}"/>
       <action application="transfer" data="MESSAGE_RESOLVE XML default"/>
+      <anti-action application="transfer" data="MESSAGE_KEY_DRAWER XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="message-key-drawer">
+    <condition field="destination_number" expression="^MESSAGE_KEY_DRAWER$"/>
+    <condition field="${msg_nav}" expression="^9$">
+      <!-- 9 = open Bella's drawer at the current message (keeps the index). -->
+      <action application="set" data="drawer_idx=${msg_idx}"/>
+      <action application="transfer" data="DRAWER_OPEN XML default"/>
       <anti-action application="transfer" data="MESSAGE_KEY_DEFAULT XML default"/>
     </condition>
   </extension>

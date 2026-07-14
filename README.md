@@ -65,8 +65,8 @@ screen, or internet dependency:
    the "disco ball" (the motorized mirror), via the relay HAT.
 8. **Hidden — branching story** — dial `9` (never announced) for Bella's branching fable.
 9. **Hidden — guess-my-number game** — dial `5` (never announced) to play.
-10. **Hidden — the message drawer** — after listening to every message, dial `9` to browse the
-    full archive, where `7` deletes the current message.
+10. **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
+    last one) to open the full archive at the current message, where `7` deletes the current message.
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -194,13 +194,16 @@ collide with dialable numbers, and are grouped here by the file that handles the
 - **Listen & drawer** (`30_option2_listen.xml`):
   - `LISTEN_MESSAGES` — entry point; start curated playback at the newest message.
   - `MESSAGE_ANNOUNCE` — resolve the lead-in announcement file for the current index.
-  - `MESSAGE_ANNOUNCE_PLAY` — play that announcement (any key skips straight to the message).
+  - `MESSAGE_ANNOUNCE_PLAY` — play that announcement (any key skips straight to the message; `9` opens the drawer).
+  - `MESSAGE_ANNOUNCE_KEY` — route a key pressed during the announcement: `9` → open the drawer at the current message, else skip to the message.
   - `MESSAGE_RESOLVE` — map the current index to a message file (resets `max_forwards`).
   - `MESSAGE_PLAY` — play the message and collect one navigation key.
   - `MESSAGE_END` — end of the curated set: reflective sign-off, or the empty-store prompt.
   - `MESSAGE_KEY_PREV` / `MESSAGE_KEY_NEXT` — handle `2` = previous / `1` = next (announcement skipped).
+  - `MESSAGE_KEY_DRAWER` — handle `9` = open the drawer at the current message (keeps the index).
   - `MESSAGE_KEY_DEFAULT` — no key = auto-advance *with* announcement; any other key = replay.
-  - `PLAYBACK_END_KEY` — interpret the key pressed during the sign-off (`9` opens the drawer).
+  - `PLAYBACK_END_KEY` — interpret the key pressed during the sign-off (`9` → `DRAWER_OPEN` at `drawer-start`).
+  - `DRAWER_OPEN` — play the interruptible `playback-special` intro, then `DRAWER_OPEN_PREV`/`_DELETE` dispatch its key (`2` = previous, `7` = delete, `1`/other/none = play the current message).
   - `DRAWER_RESOLVE` — map the current full-archive index to a file.
   - `DRAWER_PLAY` — sound a tone separator, then play the archived message and collect one key.
   - `DRAWER_KEY_PREV` / `DRAWER_KEY_NEXT` — handle `2` = previous / `1` = next in the full archive.
@@ -289,21 +292,25 @@ Two playback experiences over the message store (`bella-messages`, §5.2):
 preceded by its numbered lead-in announcement (`prompts/playback-announcement-<idx>.wav`). During a
 message, **1 = next**, **2 = previous**; navigating by key (or pressing a key during an
 announcement) **skips the announcement** and plays the message directly. When a message finishes
-with no key it **auto-advances** to the next *with* its announcement. The browse loop
+with no key it **auto-advances** to the next *with* its announcement. Pressing **9** at any time —
+during a message or its announcement — opens the drawer (below) at the **current** message. The browse loop
 (`MESSAGE_ANNOUNCE → MESSAGE_ANNOUNCE_PLAY → MESSAGE_RESOLVE → MESSAGE_PLAY →` the
-`MESSAGE_KEY_PREV`/`_NEXT`/`_DEFAULT` chain) uses `bella-messages announcement`/`resolve`/`step` to
+`MESSAGE_KEY_PREV`/`_NEXT`/`_DRAWER`/`_DEFAULT` chain) uses `bella-messages announcement`/`resolve`/`step` to
 map the index to files, and resets `max_forwards` each cycle.
 
 **End sign-off & the hidden drawer.** After the last curated message, `MESSAGE_END` plays a
 reflective sign-off (`prompts/playback-end.wav`); if the store was empty it instead plays
-`vm-no_more_messages.wav` and returns to the menu. Pressing **9** during the sign-off opens
-**"Bella's drawer of secrets"** (`PLAYBACK_END_KEY` → `DRAWER_*`): the **full** archive,
-newest-first, continuing past the curated window (`drawer-start` = `PLAYBACK_LIMIT+1`) into every
-stored recording — no lead-in announcements, a short tone separating each message. In the drawer,
-**1** = next, **2** = previous, **7** = **delete** the current message (never announced), any other key replays it,
-and no key auto-advances. Because `bella-messages` re-lists the store on every call, a `delete-all`
-takes effect at once and every index renumbers as if the message never existed; reaching the oldest
-signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
+`vm-no_more_messages.wav` and returns to the menu. The drawer — **"Bella's drawer of secrets"** —
+is opened either by pressing **9** during the sign-off (`PLAYBACK_END_KEY` → `DRAWER_OPEN`, starting
+at `drawer-start` = `PLAYBACK_LIMIT+1`, i.e. just past the curated window) **or** by pressing **9**
+any time during playback (`MESSAGE_KEY_DRAWER`/`MESSAGE_ANNOUNCE_KEY` → `DRAWER_OPEN`, starting at the
+**current** message). `DRAWER_OPEN` plays the `playback-special` intro **interruptibly**: **1** skips it
+and plays the current message, **2** = previous, **7** = delete the current message. It then browses the
+**full** archive, newest-first — no lead-in announcements, a short tone separating each message —
+where **1** = next, **2** = previous, **7** = **delete** the current message (never announced), any other
+key replays it, and no key auto-advances. Because `bella-messages` re-lists the store on every call, a
+`delete-all` takes effect at once and every index renumbers as if the message never existed; reaching the
+oldest signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
 
 ### 4.5 `40_option3_leave.xml` — leave a message (option 3)
 `LEAVE_MESSAGE` answers, plays `vm-record_message.wav` and a beep, then `record`s up to **60 s** to

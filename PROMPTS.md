@@ -29,7 +29,7 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ```text
 [low, sultry, unhurried] Well now. You picked up my phone.
 [smiling, knowing, brisk] That either makes you lost... [beat] ...or exactly where you're meant to be.
-[hushed, low, quickly] If you already know my numbers... [sly] ...you know what to do with them.
+[hushed, low, quickly] If you already know my numbers [sly] you know what to do with them.
 [velvet, quickly] But if this is your first time on my line, [low, dry] you can call me [proudly] Bella
 Novella. [low, private] Most things I keep to myself darling. [amuzed] But these three, I'll tell you
 outright.
@@ -486,8 +486,6 @@ before.
 [sly, low] Go on, then. Have a good look. [hushed] Just... don't tell a soul what you find.
 ```
 
-
-
 ## Game
 
 ### `game-intro-1`
@@ -720,13 +718,11 @@ once more. [warm] You just have to listen carefully and you'll eventually figure
 [delighted, low, intrigued] Well, well, well. [a soft laugh] Aren't you the clever one. [impressed, warm]
 Nobody's read me that quick in a long while.
 [beat, sly, low] So here's what winning buys you. [low, private, amused] I don't keep photographs,
-darling. I keep memories. Much longer shelf life. [soft laugh]
-[confiding] I keep the things people hand me thinking I'll forget them by morning. [beat, amused] And I run a
+darling. I keep memories. Much longer shelf life. [soft laugh] [beat, amused] And I run a
 quiet little arrangement or two of my own, on the side — [sly, purring] if you want to hear all the secrets,
-not just the last 10, dial 9 when I tell you "thats all of the messages I care to share right now." and I will
-keep going.
-[low, warm] You just earned a look inside the drawer most folks don't know exists. [beat] Don't make me regret
-opening it.
+not just the last 10, dial 9 while you are listening to the messages I have kept and I will give you access
+to every one of them. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat]
+Don't make me regret opening it for you.
 ```
 
 ### `game-lose-1`
