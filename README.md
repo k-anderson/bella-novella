@@ -75,7 +75,7 @@ network with just the Pi, the ATA, and the phones.
 
 ## 2. Discoveries
 
-The plain menu only ever offers **1**, **2**, and **3**; everything else is earned. Bella's hidden
+The plain menu only ever offers **1**, **2**, and **3**; everything else is earned through interaction. Bella's hidden
 features (§4) don't just *do* things — they hand the persistent caller fragments of her backstory,
 and quiet tips toward the phone system's own hidden controls, one secret at a time. Every reveal
 ends the same way: she tells you to *"tell the concierge,"* an out-of-band wink that turns a
