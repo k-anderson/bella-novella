@@ -36,7 +36,7 @@ updated to match this file.
 [low, sultry, unhurried] Well now. You picked up my phone.
 [smiling, knowing, brisk] That either makes you lost... [beat] ...or exactly where you're meant to be.
 [hushed, low, quickly] If you already know my numbers... [sly] ...you know what to do with them.
-[velvet, quickly] But if this is your first time on my line, [low, dry] here's how it works.
+[velvet, quickly] But if this is your first time on my line, [low, dry] you'll want a name to go with the voice — [proudly] Bella Novella. [dry] Here's how it works.
 [low, smoky] Dial 1, and I'll send you down the wire to whoever's still answering that old phone. [darker, low] Half of me still expects a certain someone to pick up [wry, soft laugh] but it could be anyone, darling.
 [low, amused] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [wry, unhurried] Funny how the echoes of the ones who came before you linger.
 [low, intimate] And dial 3, if you've got something you want to add to the collection. [low, private] Everybody leaves something with me eventually. [beat]
