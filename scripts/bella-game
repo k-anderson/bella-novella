@@ -24,6 +24,9 @@ set -euo pipefail
 #   hint high|low
 #       print the absolute path of a random game-higher-N.wav / game-lower-N.wav,
 #       or empty if none exist.
+#   pick <prefix>
+#       print the absolute path of a random $PROMPTS_DIR/<prefix>-N.wav (e.g.
+#       game-intro, game-win, game-lose), or empty if none exist.
 
 PROMPTS_DIR="${BELLA_PROMPTS_DIR:-/usr/local/freeswitch/prompts}"
 
@@ -62,12 +65,20 @@ cmd_incr() {
 }
 
 cmd_hint() {
-  local dir="${1:-}" prefix
+  local dir="${1:-}"
   case "$dir" in
-    high) prefix="game-higher" ;;
-    low)  prefix="game-lower" ;;
-    *)    printf ''; return 0 ;;
+    high) cmd_pick "game-higher" ;;
+    low)  cmd_pick "game-lower" ;;
+    *)    printf '' ;;
   esac
+}
+
+# Print the absolute path of a random $PROMPTS_DIR/<prefix>-N.wav, or empty if
+# none exist. Used for interchangeable prompt families (game intro/win/lose and
+# the higher/lower hints), so the dialplan can vary which variant plays.
+cmd_pick() {
+  local prefix="${1:-}"
+  [ -n "$prefix" ] || { printf ''; return 0; }
   shopt -s nullglob
   local files=( "$PROMPTS_DIR/$prefix"-*.wav )
   local n="${#files[@]}"
@@ -82,8 +93,9 @@ main() {
     verdict) cmd_verdict "${2:-}" "${3:-}" "${4:-}" "${5:-}" "${6:-}" "${7:-}" ;;
     incr)    cmd_incr "${2:-}" ;;
     hint)    cmd_hint "${2:-}" ;;
+    pick)    cmd_pick "${2:-}" ;;
     *)
-      echo "usage: bella-game {secret <min> <max>|verdict <min> <max> <secret> <guess> <tries> <maxtries>|incr <n>|hint high|low}" >&2
+      echo "usage: bella-game {secret <min> <max>|verdict <min> <max> <secret> <guess> <tries> <maxtries>|incr <n>|hint high|low|pick <prefix>}" >&2
       exit 2
       ;;
   esac

@@ -32,7 +32,7 @@
     <condition field="destination_number" expression="^GAME_START$">
       <action application="set" data="game_secret=${system($${bella_game} secret 1 9)}"/>
       <action application="set" data="game_tries=0"/>
-      <action application="set" data="game_prompt=$${prompts_dir}/game-intro.wav"/>
+      <action application="set" data="game_prompt=${system($${bella_game} pick game-intro)}"/>
       <action application="transfer" data="GAME_ASK XML default"/>
     </condition>
   </extension>
@@ -113,7 +113,8 @@
 
   <extension name="game-win">
     <condition field="destination_number" expression="^GAME_WIN$">
-      <action application="playback" data="$${prompts_dir}/game-win.wav"/>
+      <action application="set" data="game_close=${system($${bella_game} pick game-win)}"/>
+      <action application="playback" data="${game_close}"/>
       <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
@@ -121,7 +122,8 @@
 
   <extension name="game-lose">
     <condition field="destination_number" expression="^GAME_LOSE$">
-      <action application="playback" data="$${prompts_dir}/game-lose.wav"/>
+      <action application="set" data="game_close=${system($${bella_game} pick game-lose)}"/>
+      <action application="playback" data="${game_close}"/>
       <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
