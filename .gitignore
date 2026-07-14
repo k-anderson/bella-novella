@@ -12,6 +12,7 @@
 
 # --- Python venv for bella-regen-prompts (dev-only, recreated by install.sh) --
 /.venv/
+/.venv-regen/
 
 # --- Recorded IVR greetings (regenerated from the handset) -------------------
 # The recordings/ directory itself is tracked (via .gitkeep) so FreeSWITCH has
