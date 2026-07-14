@@ -1,7 +1,6 @@
 # Prompts
 
-Source text used to generate the voice prompts. The bracketed cues and spoken
-lines below are reproduced verbatim and must not be altered.  They are generated
+Source text used to generate the voice prompts. They are generated
 by a custom voice on https://elevenlabs.io.
 
 ## Regenerating prompts
@@ -23,11 +22,6 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ./scripts/bella-regen-prompts --all  # regenerate everything
 ```
 
-The heading id in backticks (e.g. `main-menu`) is the prompt's filename stem in
-[`prompts/`](prompts/). The `Invalid` heading is special: its six blocks map to
-`invalid-entry-1`..`invalid-entry-6`. After a successful run the baseline is
-updated to match this file.
-
 ## Main Menu
 
 ### `main-menu`
@@ -46,7 +40,7 @@ updated to match this file.
 
 ### `main-menu-short-variant-1`
 
-**Theme:** Finding her own way. Hints that Bella once had no one to show her the way and had to learn the hard way, on her own, in the dark. End reveals that's exactly why she never lets a stranger walk away with less than three doors to try.
+**Theme:** Finding her own way. Hints that Bella once had no one to show her the way and had to learn the hard way, on her own, in the dark. End reveals that's she is trying to help by laying out 3 paths.
 
 **Lesson:** We all need help.
 
@@ -76,7 +70,7 @@ updated to match this file.
 
 ### `main-menu-short-variant-4`
 
-**Theme:** Carrying weight. Hints that Bella carries what other people can't, because once, somebody carried what she couldn't. End reveals she's still paying off a debt nobody's ever actually asked her to repay.
+**Theme:** Carrying weight. Hints that Bella carries what other people can't, because once, somebody carried what she couldn't. End reveals she's still trades in favors.
 
 **Lesson:** Sharing is a form of release.
 
@@ -86,7 +80,7 @@ updated to match this file.
 
 ### `main-menu-short-variant-5`
 
-**Theme:** Reinvention. Hints that Bella traded an old name and an old city for this life, the way you'd trade one piece of jewelry for another. End reveals she still keeps the old name tucked away somewhere — never worn again, never thrown out either. Hint at what that name was.
+**Theme:** Reinvention. Hints that Bella traded an old name and an old city for this life, the way you'd trade one piece of jewelry for another. End reveals she still keeps the old name tucked away somewhere — never worn again, never thrown out either.
 
 **Lesson:** Sometimes the journey requires boldness.
 
@@ -116,7 +110,7 @@ updated to match this file.
 
 ### `main-menu-short-variant-8`
 
-**Theme:** Hindsight. Hints that some things only make sense once the urgency of them has burned all the way down to embers. End reveals she's only now, all these years later, starting to understand why she had to leave in the first place.
+**Theme:** Hindsight. Hints that some things only make sense once the urgency of them has burned all the way down to embers. End reveals she's only now, all these years later, starting to understand why she had to leave in the first place.  Another hint at the disco ball and emergency number.
 
 **Lesson:** Time can heal.
 
