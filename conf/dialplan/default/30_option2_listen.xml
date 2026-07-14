@@ -1,56 +1,56 @@
 <include>
-  <!-- Option 2: listen to messages, oldest first (newest 10 only).
+  <!-- Option 2: listen to messages, newest first (newest 10 only).
 
-       Each message is announced by playback-announcement-<idx>, played as a
-       SEPARATE lead-in prompt before the message:
-         - Passive listening: when a message finishes with no key it auto-advances
-           to the next message, WITH its announcement.
-         - Active navigation: 1 = next, 2 = previous. Navigating by key skips the
-           destination announcement and plays that message directly.
-         - Pressing any key while an announcement is playing skips the rest of the
-           announcement and plays that message.
-         - Any other key while a message plays replays the current message.
-       After the last message it returns to the menu. Uses scripts/bella-messages
-       resolve/announcement/step to map the index to files. -->
+       Each message has a lead-in announcement (playback-announcement-<idx>)
+       played as a SEPARATE prompt before the message itself:
+         - No key while a message plays: auto-advance to the next message, WITH
+           its announcement.
+         - 1 = next, 2 = previous: play that message directly, announcement skipped.
+         - Any key while an announcement plays: skip straight to the message.
+         - Any other key while a message plays: replay the current message.
+       After the last message it returns to the menu (700). scripts/bella-messages
+       maps the index to files (resolve/announcement/step).
 
+       Flow: ANNOUNCE -> ANNOUNCE_PLAY -> PLAY -> PLAY2, then the pressed key is
+       handled by the MESSAGE_KEY_PREV -> _NEXT -> _DEFAULT chain, which loops back. -->
+
+  <!-- Entry (from the menu): start at the newest message. -->
   <extension name="listen-messages">
     <condition field="destination_number" expression="^LISTEN_MESSAGES$">
       <action application="answer"/>
       <action application="set" data="msg_idx=1"/>
-      <action application="transfer" data="MESSAGE_ANN XML default"/>
+      <action application="transfer" data="MESSAGE_ANNOUNCE XML default"/>
     </condition>
   </extension>
 
-  <!-- Announcement phase: resolve the lead-in prompt for msg_idx, then re-enter so
-       ${msg_ann} is populated for the branch below. -->
-  <extension name="message-ann">
-    <condition field="destination_number" expression="^MESSAGE_ANN$">
+  <!-- Resolve the announcement prompt for msg_idx, then re-enter so ${msg_ann}
+       is set for the branch in message-announce-play. -->
+  <extension name="message-announce">
+    <condition field="destination_number" expression="^MESSAGE_ANNOUNCE$">
       <action application="set" data="msg_ann=${system($${bella_messages} announcement ${msg_idx})}"/>
-      <action application="transfer" data="MESSAGE_ANN2 XML default"/>
+      <action application="transfer" data="MESSAGE_ANNOUNCE_PLAY XML default"/>
     </condition>
   </extension>
 
-  <extension name="message-ann2">
-    <condition field="destination_number" expression="^MESSAGE_ANN2$"/>
+  <!-- Play the announcement as a lead-in (any key skips the rest), then the
+       message. No announcement file (missing, or past the end) goes straight
+       to the message. -->
+  <extension name="message-announce-play">
+    <condition field="destination_number" expression="^MESSAGE_ANNOUNCE_PLAY$"/>
     <condition field="${msg_ann}" expression="^$">
-      <!-- No announcement (missing file, or past the end): straight to the message. -->
       <action application="transfer" data="MESSAGE_PLAY XML default"/>
-      <!-- Announcement exists: play it as a lead-in. Any single key skips the rest
-           of the prompt; the message then plays regardless. -->
       <anti-action application="play_and_get_digits"
                    data="0 1 1 100 * ${msg_ann} silence_stream://10 msg_skip '^[0-9*#]$' 100"/>
       <anti-action application="transfer" data="MESSAGE_PLAY XML default"/>
     </condition>
   </extension>
 
-  <!-- Message phase: resolve the current index to a file, then re-enter so
-       ${msg_file} is populated for the branch below. -->
+  <!-- Resolve msg_idx to a file, then re-enter so ${msg_file} is set for the
+       branch in message-play2. max_forwards is reset every cycle because each
+       transfer decrements it; long browsing would otherwise exhaust the per-call
+       budget and drop the call with EXCHANGE_ROUTING_ERROR. -->
   <extension name="message-play">
     <condition field="destination_number" expression="^MESSAGE_PLAY$">
-      <!-- Every message cycle passes through here. Each dialplan transfer
-           decrements max_forwards; without resetting it, long browsing sessions
-           exhaust the per-call budget and FreeSWITCH drops the call with
-           EXCHANGE_ROUTING_ERROR. Reset it so navigation is unbounded. -->
       <action application="set" data="max_forwards=70"/>
       <action application="set" data="msg_file=${system($${bella_messages} resolve ${msg_idx})}"/>
       <action application="set" data="msg_nav="/>
@@ -58,20 +58,19 @@
     </condition>
   </extension>
 
+  <!-- Play the message and collect one key into msg_nav. Empty msg_file (empty
+       store, or stepped past the last message) goes to MESSAGE_END. Otherwise
+       flush any digit left over from skipping the announcement (so it can't
+       instantly advance), play the message, and hand the key to the msg_nav
+       chain starting at MESSAGE_KEY_PREV. -->
   <extension name="message-play2">
     <condition field="destination_number" expression="^MESSAGE_PLAY2$"/>
     <condition field="${msg_file}" expression="^$">
-      <!-- Empty path => no messages, or advanced past the last one. MESSAGE_END
-           picks the right sign-off (playback-end vs vm-no_more_messages). -->
       <action application="transfer" data="MESSAGE_END XML default"/>
-      <!-- Non-empty: flush any digit left over from skipping the announcement so it
-           can't instantly advance the index, then play the message and collect one
-           key. 1 = next, 2 = previous, anything else replays this message; no input
-           leaves msg_nav empty and auto-advances (with the next announcement). -->
       <anti-action application="flush_dtmf"/>
       <anti-action application="play_and_get_digits"
                    data="0 1 1 500 * ${msg_file} silence_stream://100 msg_nav '^[0-9*#]$' 3000"/>
-      <anti-action application="transfer" data="MESSAGE_NAV XML default"/>
+      <anti-action application="transfer" data="MESSAGE_KEY_PREV XML default"/>
     </condition>
   </extension>
 
@@ -94,32 +93,34 @@
     </condition>
   </extension>
 
-  <extension name="message-nav">
-    <condition field="destination_number" expression="^MESSAGE_NAV$"/>
+  <!-- Key handling after a message: a chain of single-value checks on msg_nav
+       (2 = previous here, then 1 = next, then empty/other = default). -->
+  <extension name="message-key-prev">
+    <condition field="destination_number" expression="^MESSAGE_KEY_PREV$"/>
     <condition field="${msg_nav}" expression="^2$">
-      <!-- 2 = previous, skip the destination announcement -->
+      <!-- 2 = previous message, played directly (announcement skipped). -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} prev)}"/>
       <action application="transfer" data="MESSAGE_PLAY XML default"/>
-      <anti-action application="transfer" data="MESSAGE_NAV2 XML default"/>
+      <anti-action application="transfer" data="MESSAGE_KEY_NEXT XML default"/>
     </condition>
   </extension>
 
-  <extension name="message-nav2">
-    <condition field="destination_number" expression="^MESSAGE_NAV2$"/>
+  <extension name="message-key-next">
+    <condition field="destination_number" expression="^MESSAGE_KEY_NEXT$"/>
     <condition field="${msg_nav}" expression="^1$">
-      <!-- 1 = next, skip the destination announcement -->
+      <!-- 1 = next message, played directly (announcement skipped). -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} next)}"/>
       <action application="transfer" data="MESSAGE_PLAY XML default"/>
-      <anti-action application="transfer" data="MESSAGE_NAV3 XML default"/>
+      <anti-action application="transfer" data="MESSAGE_KEY_DEFAULT XML default"/>
     </condition>
   </extension>
 
-  <extension name="message-nav3">
-    <condition field="destination_number" expression="^MESSAGE_NAV3$"/>
+  <extension name="message-key-default">
+    <condition field="destination_number" expression="^MESSAGE_KEY_DEFAULT$"/>
     <condition field="${msg_nav}" expression="^$">
-      <!-- Empty = message finished on its own: advance and play the next announcement. -->
+      <!-- No key = message finished on its own: advance to the next WITH its announcement. -->
       <action application="set" data="msg_idx=${system($${bella_messages} step ${msg_idx} next)}"/>
-      <action application="transfer" data="MESSAGE_ANN XML default"/>
+      <action application="transfer" data="MESSAGE_ANNOUNCE XML default"/>
       <!-- Any other key: replay the current message (no announcement). -->
       <anti-action application="transfer" data="MESSAGE_PLAY XML default"/>
     </condition>
