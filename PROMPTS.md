@@ -481,9 +481,8 @@ how much of them I've kept, [low, tender] every voice that ever trusted this lin
 [low, sly, delighted] Well now — you went and opened the drawer.
 [velvet, intimate] Bella's drawer of secrets, sugar. Nobody sees the bottom of it but me... and now you.
 [low, purring] Everything I've ever been handed and never quite let go of — it all lives in here.
-[warm, coaxing] Take your time. Dial 1 to skip ahead to the next, [teasing] dial 2 to slip back to the one
-before.
-[sly, low] Go on, then. Have a good look. [hushed] Just... don't tell a soul what you find.
+[wry, low] Remeber you can dial 1 or 2, as you listen — onward, or back. [warm, coaxing] Go on, then.
+Take your time, have a good look. I'm not going to guide you. [hushed] Just... don't tell a soul what you find.
 ```
 
 ## Game
