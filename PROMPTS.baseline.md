@@ -339,3 +339,220 @@ updated to match this file.
 ```text
 [low, private] Thats all of them that I care to share right now. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, tender] every voice that ever trusted this line with something. [low, private] Mine included, once, though that's a story for a night when the drinks are stronger.
 ```
+
+## Game
+
+### `game-intro`
+
+```text
+[low, sly, utterly delighted] Ohh. [intrigued, leaning in] A little game with me?
+[velvet, amused] Its simple, darling. [warm] I'm thinking of a number, one through nine. [teasing, playful] You guess — [sing-song] I'll tell you higher, or lower.
+[low, purring] You'll have a handful of tries to find me out. [warm, coaxing, a spark of mischief] Go on then. [inviting] First guess.
+```
+
+### `game-higher-1`
+
+```text
+[amused, leaning in] Higher, darling. [sly, coaxing] Don't be shy.
+```
+
+### `game-higher-2`
+
+```text
+[warm, delighted, teasing] Mmm — [coaxing] reach a little higher than that.
+```
+
+### `game-higher-3`
+
+```text
+[sly, purring] Up you go, sugar. [amused, low] My number's bigger than yours.
+```
+
+### `game-higher-4`
+
+```text
+[low, playful] Higher still, sugar. [dry, amused] You're being far too polite with me.
+```
+
+### `game-higher-5`
+
+```text
+[intrigued, soft] Oh, aim higher than that, darling. [sly, low] I'm not so easily found.
+```
+
+### `game-higher-6`
+
+```text
+[teasing, warm] Climb, sugar. [low, purring] My number's living somewhere above yours.
+```
+
+### `game-higher-7`
+
+```text
+[amused, coaxing] Higher, love. [dry, teasing] You're warm, but you're underselling me.
+```
+
+### `game-higher-8`
+
+```text
+[playful, low] Up. [sly, delighted] A little more nerve — my number's got some height to it.
+```
+
+### `game-higher-9`
+
+```text
+[warm, delighted] Higher, darling. [teasing, low] Reach like you actually want to catch me.
+```
+
+### `game-higher-10`
+
+```text
+[amused, purring] Mmm, no — go up. [sly, private] I'm hiding a little further than that.
+```
+
+### `game-lower-1`
+
+```text
+[dry, amused] Lower, darling. [teasing] You overshot me.
+```
+
+### `game-lower-2`
+
+```text
+[teasing, low] Come down, sugar — [amused] that's too high.
+```
+
+### `game-lower-3`
+
+```text
+[velvet, wry] Lower. [dry, amused] A touch less ambition.
+```
+
+### `game-lower-4`
+
+```text
+[low, playful] Down, darling. [sly] You've reached clean over my head.
+```
+
+### `game-lower-5`
+
+```text
+[amused, coaxing] Lower, sugar — [low] you're aiming above where I'm hiding.
+```
+
+### `game-lower-6`
+
+```text
+[warm, teasing] Come down a little, love. [dry] That's more than I am.
+```
+
+### `game-lower-7`
+
+```text
+[low, wry] Lower still, darling. [amused] Not quite so bold.
+```
+
+### `game-lower-8`
+
+```text
+[teasing, purring] Down you come, sugar. [sly] My number's the modest sort.
+```
+
+### `game-lower-9`
+
+```text
+[amused, low] Ease it down, love. [dry, playful] You've gone and passed me.
+```
+
+### `game-lower-10`
+
+```text
+[velvet, teasing] Lower, darling. [low, amused] I'm smaller than that guess gives me credit for.
+```
+
+### `game-win`
+
+```text
+[delighted, low, genuinely surprised] Well, well. [a soft laugh] You found me. [impressed, warm] Not many do that, darling — [low, amazed] and not so quick. [sly, purring, intrigued] Beginner's luck... [teasing] or are you trouble? [beat, warm] Either way — [candid] colour me impressed. [low, dry] And I don't impress easy.
+```
+
+### `game-lose`
+
+```text
+[low, amused, still enjoying herself] And that's the last of your guesses, sugar. [teasing, a soft laugh] No — I'm not going to tell you what it was. [sly, warm] A lady keeps a few secrets, doesn't she. [beat, inviting, fond] Come try me again sometime. [low, purring] Perhaps I'll be in a giving mood.
+```
+
+### `game-invalid`
+
+```text
+[dry, arch, amused] That's not a number between one and nine, darling. [beat, teasing, patient] One little digit — [warm] that's all I ask of you. [low, coaxing] Go on, try me again.
+```
+
+## Story
+
+### `tale-open`
+
+```text
+[low, delighted, intrigued] Not everyone finds their way to this one. [beat, warm] Sit — take the good chair. [amused, dry, coaxing] Don't be shy, darling.
+[velvet, a spark of pleasure] Let me pick you a book... [happy, brightening] Ah. This one. [fond] It always finds the right pair of hands.
+[settling in, intimate, savouring it] A short fable, then. A traveler stands at the edge of the desert at dusk, and an older woman — [sly, private, amused] someone not unlike me — lights a candle, and folds the traveler's hands around it. [soft, storyteller's hush] "Carry it till dawn," she says, "and it will carry you."
+[slower, smoky] So they walk. The night comes down cold, and the wind comes looking for that little flame. [beat, hushed] It trembles in their hands.
+[low, deliberate, leaning in] First choice, sugar. Dial 1 to cup it close — shield it with your own body, and walk slower. [beat, teasing, delighted] Or dial 2 to feed it — tear a page from the book you carry, and let it flare up bright and bold.
+```
+
+### `tale-shield`
+
+```text
+[soft, approving, intrigued] You bow your body around it like a secret. [low, warm] The wind claws, and doesn't win. [low, tender] The little flame steadies, warm in your hands, and you walk on slow through the dark.
+[beat, hushed, leaning in] Before long you're not alone. [low, a little wonder] Shapes at the edges of the night — cold ones, lost ones — drawn to the only glow for miles. [soft] They look at your hands. [beat, quiet] They don't ask but they need something.
+[velvet, coaxing] Dial 1 to stop, and touch your flame to theirs — light every lantern in the dark. [beat, lower, sly] Or dial 2 to keep it close, keep walking, and leave the night to sort itself.
+```
+
+### `tale-feed`
+
+```text
+[amused, a spark of delight, thrilled] Oh — you're one of mine. [low, warm, relishing it] You tear a page, then another, and the flame catches the page, climbs, and throws real light. [brighter] Gold on the sand, your shadow ten feet tall. [beat, awed] For a moment the whole desert is yours.
+[slower, a flicker of consequence] But that was the book, darling. [low, pointed] The pages. [low, quiet] Somewhere in them was the way you came. Your map.
+[deliberate, sultry, tempting] Dial 1 to throw the rest on — burn the whole book, call the dark in close, and dance. [beat, softer, cautioning] Or dial 2 to stop your hand, breathe, and press on by what light remains.
+```
+
+### `tale-end-share`
+
+```text
+[warm, the book closing slow, tender] ...And every lantern took the flame, and not one burned dimmer for the giving. [soft, glowing] They walked the traveler to dawn on a road paved with their own borrowed light.
+[intimate, setting the book down] That's the end of the story. [low, knowing, fond] But not the end of you, darling. [warm] You're the kind that gives the fire away — [beat, soft] and never once notices you're the warmest thing in the room. [sly, soft, a private smile] I noticed. [low, certain] I always do.
+```
+
+### `tale-end-hide`
+
+```text
+[low, quiet, thoughtful] ...So they walked on alone, the candle hidden, the cold ones left to the cold. [slower] And the traveler reached the dawn — safe, untouched, [slower, softer] and entirely unremembered.
+[closing the book, gentle but pointed] A light kept only for yourself, sugar... [low] is just a secret that burns. [worldly, knowing] I know the type — careful, guarded, arrives with everything they left with. [beat, a little sad] Nothing lost. [quiet] Nothing given, either. [soft, kind] There's still time to change that. [low] There always is — [beat] till there isn't.
+```
+
+### `tale-end-revel`
+
+```text
+[delighted, letting loose, alight] ...So you burned it all — every page of that map, every reason — [breathless] and the desert lit up like a second sunrise, and you both danced. [low] No road home. [sly] No wish for one.
+[smoky, closing the book slow] Some souls aren't built to find their way back, darling. [low, knowing] They give the whole thing to the fire and call it living. [a private laugh, wistful] ...I've burned a book or two myself, once. [sultry, savouring] Glorious. [beat, softer, cautioning] Just — mind the ones still holding a candle at the window for you. [warm, inviting] You and I should have a drink. [low] The strong kind. [sly, conspiratorial] Tell the driver you once met me in Salzburg, there might be something in it for you.
+```
+
+### `tale-end-ash`
+
+```text
+[low, steadying, quietly impressed] ...The map was ash. [low] But the traveler knelt and let the desert teach them its bones — [slower] the lean of the dunes, the cold that means north, the stars that never lie. [warm] They walked on by heart, and reached the dawn changed.
+[respect in it, intrigued] You lost the way, sugar... [low] and learned the country. That's the trade the desert offers the bold ones — it takes your map, [warm] and hands you an instinct you'll never lose. [sly, amused] Something tells me you never much liked directions anyway.
+```
+
+### `tale-end-still`
+
+```text
+[a slow smile in the voice, intrigued] ...Well. [amused] The traveler did neither. [low] They knelt, set the little candle down in the sand, [hushed] and simply... watched it burn. [soft] Not going anywhere. [low] Never were.
+[very low, the book forgotten, delighted] You found the door I didn't point to, didn't you. [fond, warm] Some people aren't traveling, darling. [soft] They just wanted to sit in the warm a while and watch something beautiful end on its own time. [beat, warm, inviting] ...Stay. [low, tender] The fire's good tonight, and I'm in no hurry. [sly, a soft laugh] Neither, it seems, are you.
+```
+
+### `tale-invalid`
+
+```text
+[low, amused, unbothered, playful] Mmm. That's not a turn this story takes, darling. [beat, teasing] Listen again — [warm, coaxing] and choose one of the paths I've laid before you.
+```
