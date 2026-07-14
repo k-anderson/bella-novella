@@ -61,10 +61,9 @@
   <extension name="message-play2">
     <condition field="destination_number" expression="^MESSAGE_PLAY2$"/>
     <condition field="${msg_file}" expression="^$">
-      <!-- Empty path => no messages, or advanced past the last one. -->
-      <action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
-      <action application="sleep" data="1500"/>
-      <action application="transfer" data="700 XML default"/>
+      <!-- Empty path => no messages, or advanced past the last one. MESSAGE_END
+           picks the right sign-off (playback-end vs vm-no_more_messages). -->
+      <action application="transfer" data="MESSAGE_END XML default"/>
       <!-- Non-empty: flush any digit left over from skipping the announcement so it
            can't instantly advance the index, then play the message and collect one
            key. 1 = next, 2 = previous, anything else replays this message; no input
@@ -73,6 +72,25 @@
       <anti-action application="play_and_get_digits"
                    data="0 1 1 500 * ${msg_file} silence_stream://100 msg_nav '^[0-9*#]$' 3000"/>
       <anti-action application="transfer" data="MESSAGE_NAV XML default"/>
+    </condition>
+  </extension>
+
+  <!-- End of the listening session. Two ways to arrive here with an empty msg_file:
+         - msg_idx == 0: the caller stepped past the last message (auto-advance, or
+           pressing 1 on the final one), i.e. they heard everything -> play the
+           reflective playback-end sign-off.
+         - msg_idx >= 1: resolve found nothing at the very first index, i.e. the
+           store was empty -> keep the original "nothing here, come back" prompt.
+       Both return to the menu. -->
+  <extension name="message-end">
+    <condition field="destination_number" expression="^MESSAGE_END$"/>
+    <condition field="${msg_idx}" expression="^0$">
+      <action application="playback" data="$${prompts_dir}/playback-end.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
+      <anti-action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
+      <anti-action application="sleep" data="1500"/>
+      <anti-action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
 

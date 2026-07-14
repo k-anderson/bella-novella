@@ -62,7 +62,7 @@ DEFAULT_MODEL = "eleven_v3"
 
 # Headings in PROMPTS.md whose (multiple) code blocks map onto a numbered family
 # of prompt files rather than a single file named after the heading. The
-# "Invalid" heading holds six blocks that become invalid-entry-1..6.mp3.
+# "Invalid" heading holds one block per entry, becoming invalid-entry-1..N.mp3.
 SPECIAL_HEADINGS = {
     "invalid": "invalid-entry",
 }

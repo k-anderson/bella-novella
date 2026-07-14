@@ -131,7 +131,7 @@
     </condition>
   </extension>
 
-  <!-- Catch-all: invalid or no selection -> one of six random prompts. Collect
+  <!-- Catch-all: invalid or no selection -> one of ten random prompts. Collect
        ANY keypad entry (not just valid options): a valid option is dispatched, any
        other entry loops back here for a fresh scold, and only silence (a timeout,
        leaving bella_opt empty) falls back to the menu greeting. A valid option can

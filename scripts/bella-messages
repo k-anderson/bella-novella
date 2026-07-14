@@ -40,6 +40,10 @@ INVALID_PROMPTS=(
   "$PROMPTS_DIR/invalid-entry-4.wav"
   "$PROMPTS_DIR/invalid-entry-5.wav"
   "$PROMPTS_DIR/invalid-entry-6.wav"
+  "$PROMPTS_DIR/invalid-entry-7.wav"
+  "$PROMPTS_DIR/invalid-entry-8.wav"
+  "$PROMPTS_DIR/invalid-entry-9.wav"
+  "$PROMPTS_DIR/invalid-entry-10.wav"
 )
 
 # Variants of the short main-menu greeting; one is picked at random each time the
@@ -50,6 +54,10 @@ SHORT_MENU_PROMPTS=(
   "$PROMPTS_DIR/main-menu-short-variant-3.wav"
   "$PROMPTS_DIR/main-menu-short-variant-4.wav"
   "$PROMPTS_DIR/main-menu-short-variant-5.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-6.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-7.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-8.wav"
+  "$PROMPTS_DIR/main-menu-short-variant-9.wav"
 )
 
 # Sorted oldest-first (lexical == chronological because of the name prefix).
