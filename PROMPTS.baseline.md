@@ -33,73 +33,169 @@ updated to match this file.
 ### `main-menu`
 
 ```text
-[low, sultry, smoke-curling] Well now. You picked up my phone.
-[half-smile, knowing] That either makes you lost... [long beat, unhurried] ...or exactly where you're meant to be.
-[hushed, almost a whisper] If you already know my numbers... [sly, lips-curled] ...you know what to do with them.
-[velvet, commanding but unhurried] But if this is your first time on my line, [slow, sultry] here's how it works.
-[low, deliberate] Dial 1, and I'll send you down the wire to whoever's still answering that old phone.  [darker, low] Half of me still expects a certain someone to pick up [wry, half-laughing] but it could be anyone, darling.
-[low, amused, private] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [sad, quiet] Funny how they linger. Echoes of the ones who came before you.
-[intimate, leaning in, almost touching the mic] And dial 3, if you've got something you want to add to the collection. [low, private, trailing off] Everybody leaves something with me eventually. [beat]
-[low, velvet, quiet] Those are just the options I give to strangers. [sly] Not everything's meant for an audience.
-[warm, low, half-dismissive] So go on now, darling. Make your selection. [low, sly] The obvious choice isn't always the most interesting one.
+[low, sultry, quick] Well now. You picked up my phone.
+[smiling, knowing, brisk] That either makes you lost... [beat] ...or exactly where you're meant to be.
+[hushed, quick] If you already know my numbers... [sly] ...you know what to do with them.
+[velvet, breezy] But if this is your first time on my line, [warm, quick] here's how it works.
+[low, quick] Dial 1, and I'll send you down the wire to whoever's still answering that old phone. [darker, low] Half of me still expects a certain someone to pick up [wry, soft laugh] but it could be anyone, darling.
+[amused, quick] Dial 2, and I'll play you what's been left behind, secrets people have handed me thinking I'd forget it by morning. [wistful, brisk] Funny how the echoes of the ones who came before you linger.
+[intimate, quick] And dial 3, if you've got something you want to add to the collection. [low, private] Everybody leaves something with me eventually. [beat]
+[velvet, brisk] Those are just the options I give to strangers. [sly] Not everything's meant for an audience.
+[warm, breezy] So go on now, darling. Make your selection. [strong French accent, low] The obvious choice isn't always the most interesting one.
 ```
 
 ### `main-menu-short-variant-1`
 
+**Theme:** Finding her own way. Hints that Bella once had no one to show her the way and had to learn the hard way, on her own, in the dark. End reveals that's exactly why she never lets a stranger walk away with less than three doors to try.
+
+**Lesson:** We all need help.
+
 ```text
-[dry, arch] Let me help you find your way. [low, a little amused] Dial 1 for the other line — [wry] could be anyone, darling. [playful] Could be fun. [flat, sultry] Dial 2 for what the ones before you left behind — [low, almost a whisper] their secrets never leave me. [cool, half-smiling] Dial 3, if you've got something worth me keeping. [sly, half-smile] Or don't. Maybe there's something else. [warm, dry] Tick tock, sugar... [beat] I'm not getting any younger.
+[dry, arch] Let me help you find your way, darling. [wry, low, exhales] Nobody held the light for me — I found my own way, stumbling, once, in the dark. [low, amused] Dial 1, for the other line. Could be anyone. [playful] Could be fun. [flat, sultry] Dial 2, for what the ones before you left behind — [hushed] their secrets never leave me. [cool, smiling] Dial 3, if you've got something worth me holding on to. [sly] Or don't. Maybe there's something else out there for you. [warm, strong Spanish accent] I have laid three paths out for you sugar. [soft, quiet] We could all use a hand, now and again, so take your pick.
 ```
 
 ### `main-menu-short-variant-2`
 
+**Theme:** Waiting. Hints that Bella learned patience waiting for someone to answer her call. End reveals she is still waiting.
+
+**Lesson:** Patience is a virtue.
+
 ```text
-[low, velvet] Still here. Still listening. [dry, amused] Time can be patient. So am I — I've had practice. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, half-laughing] Who you'll find is anyone's guess. [smoky, slower] Dial 2, and I'll pour you what's been whispered to me. [hushed] The kind of things that improve with age, like a good bottle left long enough to breathe.. [cool, deliberate] Dial 3, if there's something burning in your thoughts that needs to be let out. [warm, dry] No time like the present.
+[low, velvet] I'm still here. Still listening. [dry, amused] I learned patience dialing a line thats never answered by who I hope. [velvet, unhurried] Dial 1, and I'll set you loose down that same line I never let go dead. [wry, soft laugh] Who answers is anyone's guess, if you let it ring long enough. [smoky, slow] Dial 2, and I'll pour you what's been whispered to me — [hushed, strong Italian accent] the kind of thing that only gets better with age, like a bottle of wine left long enough to breathe. [cool, unhurried] Dial 3, if there's something you're finally ready to say out loud. [warm, dry] No time like the present, darling. [low, patient] I'm waiting for your answer.
 ```
 
 ### `main-menu-short-variant-3`
 
+**Theme:** The night the lights went out. Hints at the fire, the blackout, and a stranger who turned broken mirror glass into the only light in a smoke-filled room, getting everyone out before vanishing for good. End reveals she can still recall light bouncing off the mirrors, illuminating the way. Must express to the caller that she had to call for emergency services. Should be the longest of the variants.
+
+**Lesson:** Tells a story to hint that 911 (emergency) will raise the disco ball (broken mirror bouncing light).
+
 ```text
-[low, smoke-curled] You're still with me. [sly, amused] That's not nothing, darling — not everyone stays on the line. [velvet, unhurried] Dial 1, and I'll cast you across the wire [wry, half-laughing] same gamble it's always been, hoping that the other end answers back. [hushed, smoky] Dial 2, and I'll share with you what the others left curled in my ear [low, reverent] kept warm, the way I keep everything I was never meant to hold onto. [cool, inviting] Dial 3 if you've got a thought you'd trust me with. [low, trailing off] Everyone's carrying something out here, darling. [sly, low] Though those aren't the only numbers I answer to. [warm, dry] So — what'll it be?
+[low, smoky, exhales] You're still with me. [sly, amused] Not everyone stays this long. I didn't either, once — when the night this whole place went black. [low, remembering] I called for emergency services in quite a state. [low, distant] What I remember clearest from that night isn't the smoke — it's the broken mirror, strung up over the one lantern left burning, scattering that little bit of light clean across the room. [hushed, reverent] People found the door by it. Every one of them got out. [velvet, unhurried] Dial 1, and I'll cast your voice across the wire — [wry] could be nothing at all, but it might be the start of something too. [hushed, smoky] Dial 2, and I'll share what the others left curled in my ear — [low, tender] kept warm, the way I keep everything I was never meant to hold onto. [cool, inviting] Dial 3, if there's a thought you'd trust me with. [low, trailing off] Everyone's carrying something out here, darling. [sly, low] Funny thing, though — those aren't the only numbers that still call up a little light in here. [warm, dry] So — what'll it be?
 ```
 
 ### `main-menu-short-variant-4`
 
+**Theme:** Carrying weight. Hints that Bella carries what other people can't, because once, somebody carried what she couldn't. End reveals she's still paying off a debt nobody's ever actually asked her to repay.
+
+**Lesson:** Sharing is a form of release.
+
 ```text
-[low, playful] Onward, darling? [dry, amused] Time moves strange out here [break] has for years, if you ask me. [velvet, low] Dial 1, and I'll set you loose on the wire to the other side [wry, half-smiling] never the same voice twice [laughing] that line stopped being predictable a long time ago. [cool, deliberate] Dial 2, to hear the things I have tucked away. [low, private] Things that become clearest once the fire's burned low. [cool, deliberate] Dial 3, if you've got something precious enough to part with. [low, trailing off] I keep those closest, sugar. [warm, dry] Tick tock now — [sly] don't make a girl wait.
+[low, playful] Miss me already? [dry, amused] I carry all sorts, out here — learned it from somebody who carried me, once, when I couldn't carry myself. [velvet, low] Dial 1, and I'll set you loose on the wire to the other side. [wry, smiling] Never the same voice twice — that line stopped being predictable a long time ago. [cool, unhurried] Dial 2, to hear the things I keep tucked away — [low, private] other people's weight, mostly. Someone has to hold it. [cool, deliberate] Dial 3, if you've got something heavy enough to set down. [low, trailing off, exhales] I'll take it, sugar. I'm good at that. [warm, dry] Make your selection now. [sly, strong Russian accent] Don't make a girl wait. [low, quiet] Call it a debt. I never ask anybody to repay it, unless I have to.
 ```
 
 ### `main-menu-short-variant-5`
 
+**Theme:** Reinvention. Hints that Bella traded an old name and an old city for this life, the way you'd trade one piece of jewelry for another. End reveals she still keeps the old name tucked away somewhere — never worn again, never thrown out either. Hint at what that name was.
+
+**Lesson:** Sometimes the journey requires boldness.
+
 ```text
-[sly, happy] I do like the persistent ones — I was persistent myself, once. [beat, soft] Some part of me still is, if I'm honest. [velvet, low] Dial 1, and I'll thread you through to the other side — [wry, half-smiling] the thread never lands in the same place twice, darling. [smoky, hushed] Dial 2, for what the sands of time have already swallowed — [low, private] it still whispers back to me, some nights. [cool, deliberate] Dial 3, if there's something you're willing to part with. [low, trailing off] I collect it all like jewelry — same drawer, same reasons. [warm, cheeky] Go on, don't be shy. [sly, low] The bold ones always find more than they were looking for.
+[sly, happy] I do like the persistent ones. [dry, warm, strong Portuguese accent] I was bold myself, once — bold enough to trade a city, and a name, for this life. [soft, quiet] Some part of me is still back there, if I'm honest. [velvet, low] Dial 1, and I'll send you leaping across the wire — no telling where you'll land. [wry, smiling] Never the same place twice, darling. That's the nerve of it. [smoky, hushed] Dial 2, to be back in places previously traveled, [low, private] like postcards sent from where you once were. [cool, deliberate] Dial 3, if you're ready to trade something of your own. [low, trailing off] I keep every trade close, sugar — all in the same drawer, for the same reasons. [warm, cheeky] Go on, don't be shy. [sly, low] The bold ones always find more than they came looking for.
 ```
+
+### `main-menu-short-variant-6`
+
+**Theme:** Never show your hand. Hints that Bella learned never to be the one who reveals herself first, that safety means holding your cards closer than anyone else holds theirs. End reveals that in all her years at this table, she's never once shown anyone her own hand — not even the ones she trusts most. She is good at cards.
+
+**Lesson:** It is ok to be wild, every now and again.
+
+```text
+[low, sly] Back so soon? [dry, amused] Or maybe you never really left. Hard to read you sugar. [velvet, low] Dial 1, and I'll deal you into whatever's happening on the other end of this line. [wry, soft laugh] Same gamble it's always been, hoping the other end finally answers back. [smoky, hushed] Dial 2, and I'll turn over what the others already laid on the table. [low, private] Everyone shows their cards to me eventually. [cool, deliberate] Dial 3, if you'd like to add a card of your own to the deck. [low, trailing off] I never fold, sugar. I just collect. [warm, dry, strong French accent] Go on, then — place your bet, play it wild if you like. Somebody at this table ought to. [low, amused] I've been known to sweeten the pot, for the ones who know how to play the game.
+```
+
+### `main-menu-short-variant-7`
+
+**Theme:** Bella longs to reconnect to the lost love but knows deep down it will never happen. End reveals that despite that she never gives up hope.
+
+**Lesson:** Never give up hope.
+
+```text
+[low, velvet] Still chasing someone to talk to? [dry, amused] Aren't we all, one way or another? [low, quiet] I know mine's not picking up. Hasn't in years. [low, warm] Doesn't stop me dialing. [velvet, unhurried] Dial 1, and I'll send your voice out to whoever's rolling by that old line tonight. [wry, soft laugh] There's no telling who picks up. There never has been. [hushed, smoky] Dial 2, for the hellos that came before yours — every voice reaching for someone who wasn't home. [low, private] Some of them stuck with me longer than they should have. [cool, deliberate] Dial 3, if there's someone out there you're still hoping picks up and you want to leave something so they can find you. [low, trailing off] I keep every voice that comes through, darling. Always have. [warm, dry] Go on now, before I change my mind. [low, distant, wistful] A girl can know better and still keep hoping. I do, most nights.
+```
+
+### `main-menu-short-variant-8`
+
+**Theme:** Hindsight. Hints that some things only make sense once the urgency of them has burned all the way down to embers. End reveals she's only now, all these years later, starting to understand why she had to leave in the first place.
+
+**Lesson:** Time can heal.
+
+```text
+[warm, sly] There you are again. [playful] Or still — hard to say, out here. [low, quiet] Some things only make sense once the fire's burned down to embers. [low, private] Took me years to understand why I left the first time — only starting to, now. [velvet, low] Dial 1, and I'll powder you off down the wire to whoever's answering. [wry, smiling] Never quite who you expect, darling. [smoky, hushed] Dial 2, for what's left on the mirror after everyone else has gone home. [low, private, strong Greek accent] Lipstick and secrets — they both stain, if you're not careful. [cool, deliberate] Dial 3, if there's something you'd like to leave on the glass yourself. [low, trailing off] I never wipe it clean, sugar, and I never show everything on a first pass. [low, distant] There's a whole ball of mirrors hanging over this room — left behind by somebody who never came back for it. My wilder guests like to switch it on. [sly, low] I just like to watch it turn. [warm, cheeky] Go on, then — don't keep the night waiting. [low, soft] Given enough time, most things come clear.
+```
+
+### `main-menu-short-variant-9`
+
+**Theme:** Sent anyway. Hints that not every message finds the person it was meant for, but that's never once stopped her from sending them. End reveals she's kept every message that's ever come through that old phone, still hoping, against all odds, that one of them finds its way home eventually.
+
+**Lesson:** Sometimes life is best when your not in control
+
+```text
+[amused] Good. I was starting to think you'd wandered off into the dark without me. [velvet, unhurried] Dial 1, and I'll wire you through to whoever's picking up out there — I don't choose for you, I just connect. [wry, soft laugh] Not knowing's is half the charm, darling. [hushed, low] Dial 2, for the messages that never quite made it anywhere else. [low, private] I don't sort them, I just keep them — in case somebody ever comes looking for theirs. [cool, deliberate] Dial 3, if you've got a message of your own. [low, trailing off] I deliver everything eventually — just maybe not to who you meant. [low, distant] There's an old phone somewhere out there that taught me that lesson, and one more besides. [low, quiet] The night I stopped trying to aim where things landed was the night this whole line finally got good. [low, distant, wistful] Some nights, I still think my message might find its way home. [warm, dry] Go on, then. [sly, low] The line's still open — whether or not anybody's steering it.
+```
+
+---
 
 ## Invalid Selection
 
-### `Invalid`
+### `invalid-entry-1`
 
 ```text
-[dry, flat] Darling, that's not one of the numbers I mentioned. [low, sultry] Or one of the ones I don't say out loud. [beat] Try again.
+[dry, quick] Darling, that's not one of the numbers I mentioned. [low, sly] Nor one of the ones I don't say out loud. [beat] Try again.
 ```
 
-```text
-[low, amused] Mmm, no. [wry] One, two, or three — [beat, low, teasing] there could be more. [playful] I'll never tell. [low] But that wasn't any of them.
-```
+### `invalid-entry-2`
 
 ```text
-[cool, arch] Careful now — a girl could take that personally. [beat, dry] One, two, three. [low, sly] Some things I keep to myself. [beat, playful] That wasn't one of them, though.
+[amused, quick] Mmm, no. [wry, brisk] One, two, or three — there could be more. [playful] I'll never tell, not to a stranger. [low, quick] But that wasn't any of them.
 ```
 
-```text
-[low, tired-but-warm] Not it, darling. [beat] One, two, three — that's what I hand out. [low, teasing] The rest is just for me to know. [beat] But that wasn't one of those, was it.
-```
+### `invalid-entry-3`
 
 ```text
-[low, playful, slow] Wrong number, stranger. [beat, low, teasing] There's more than three, if you're clever enough to find them. [low] That wasn't it, though. [beat] Try again.
+[cool, arch, quick] Careful now, a girl could take that personally. [dry, brisk] One, two, three — that's the count. [low, sly] Some things I keep to myself: a name, a ring I never explain. [playful, quick] That wasn't any of them, though.
 ```
 
+### `invalid-entry-4`
+
 ```text
-[flat, clipped] That's not a choice. [dry, pointed] One, two, three. [beat, low, sly] There might be a few I've never mentioned. [flat, playful] but that wasn't one of them. [beat] Try again darling.
+[low, warm, quick] Not it, darling. [brisk] One, two, three, that's what I hand out. [low, teasing] The rest is just for me, and for whoever it is I keep expecting to answer that old phone. [quick] But that wasn't one of those, was it.
+```
+
+### `invalid-entry-5`
+
+```text
+[playful, quick] Wrong number, stranger. [low, teasing, brisk] There's more than three, if you're clever enough to find them. [low] The desert keeps its own accounts, darling. Maybe you'll find those too, eventually. [dry, amused, quick] Give it another shot.
+```
+
+### `invalid-entry-6`
+
+```text
+[flat, clipped, quick] That's not a choice. [dry, pointed] One, two, three. [low, sly, brisk] There might be a few I've never mentioned, burned up long before you ever picked up this phone. [playful] But that wasn't one of them. [quick] Try again, darling.
+```
+
+### `invalid-entry-7`
+
+```text
+[dry, amused, quick] Not one of mine, sugar. [low, brisk] I only ever count to three out loud. [wry, private] Whatever else I count, I keep to myself. [low, teasing] Care to try that again?
+```
+
+### `invalid-entry-8`
+
+```text
+[wry, private, quick] Mm-mm. Wrong key, darling. [sly, strong Hungarian accent] A girl keeps a few things just for herself — a name from before this one, for instance. [wry, quick] Have another go, sugar.
+```
+
+### `invalid-entry-9`
+
+```text
+[flat, dry, quick] That's not on tonight's menu. [sly, brisk] One, two, three, the rest is just for me to know. Same as a promise I made once, and never broke. [low, quick] Go on, darling. Try again.
+```
+
+### `invalid-entry-10`
+
+```text
+[amused, private, quick] Some parties need an invitation. [dry, brisk] Sometimes you just need to know where to go. [quick] One, two, three. That's what's on offer tonight.
 ```
 
 ## Voicemail
@@ -107,20 +203,20 @@ updated to match this file.
 ### `vm-record_message`
 
 ```text
-[matter-of-fact] Say what you need to say after the tone, [sultry, quick] i'm listening and so is the desert, [matter-of-fact, gentle] you've got 60 seconds. [low] When you're done, just stop talking or press any key, [private, sexy] and it will be mine to keep, darling.
+[gentle, low] A secret's only heavy until you hand it to me. After that, it's mine to carry. [matter-of-fact, warm] You've got sixty seconds to say what you need to say. [low] When you're done, just stop talking, or dial any key, [sultry, intimate] and it's mine to keep, darling.
 ```
 
 ### `vm-saved`
 
 ```text
-[warm, low] Got it, stranger. [beat, soft] Safe with me now.
+[warm, low] Got it, stranger. [soft, reassuring] Safe with me now. [low, private, amused] I don't keep photographs, darling. I keep memories. Much longer shelf life.
 ```
 
 ### `vm-no_more_messages`
 
 ```text
-[low, a little wistful] That's all of them, darling [beat] for now.
-[warm, dry] Come back later. Someone's always got something to say eventually. [beat, playful] Or... you could leave one now. [low, warm] Just a thought sugar.
+[low, wistful] That's all of them, darling [beat] for now.
+[warm, dry] Come back later. The desert keeps its own accounts, and somebody's always got something they need to settle. [playful] Or... you could leave one now yourself. [low, warm] Just a thought, sugar.
 ```
 
 ## Disco Ball
@@ -128,41 +224,41 @@ updated to match this file.
 ### `disco-raise`
 
 ```text
-[low, sly, building energy] Oh-ho. Now that's a number I didn't expect tonight.
-[playful, a little breathless] Go on... [beat] look up, darling.
-[warm, building excitement] The desert's about to get a little brighter. [beat, delighted] Don't say I never gave you anything.
+[low, sly, delighted] Oh-ho. Now that's a number I didn't expect tonight.
+[playful, breathless] Go on... [beat] look up, darling.
+[warm, rising excitement] Somebody hung that thing up for me once, and never came back to take it down. [wry, low] Their loss. [delighted] Lucky for you.
 ```
 
 ### `disco-already-up`
 
 ```text
-[beat, sultry] The ball's up, darling — it's been spinning this whole time, waiting on you to notice.
-[sly, low] What more do you want from me, hm? [beat, jokingly] Fireworks? [playful] I don't do fireworks.
-[warm, low, building] But this— [beat] this is mine. All that light, just for you. [sultry, slow] So what's it going to be, darling?
-[low, warm, inviting] Shall we dance?
+[sultry, low] The ball's up, darling — it's been spinning this whole time, waiting on you to notice.
+[sly, low] What more do you want from me, hm? [teasing] Fireworks? [playful, soft laugh] I don't do fireworks. Not anymore.
+[warm, low, rising] But this— [beat] this one's mine to give. All that light, just for you. [sultry, slow] So what's it going to be, darling?
+[low, warm, strong Argentinian accent] Shall we dance?
 ```
 
 ### `disco-lower`
 
 ```text
-[low, wistful, a little sly] Mmm. All good things end, darling. [beat] Even the brightest.
-[soft, low] Watch — [beat, slow] she's coming back down to earth.
-[warm, dry, affectionate] Don't look so heartbroken. [beat, teasing] She'll rise again for the right number.
+[low, wistful, sly] Mmm. All good things end, darling. [beat] Even the brightest ones — I've made peace with that.
+[soft, low] Watch — [slow] she's coming back down to earth.
+[warm, affectionate] Don't look so heartbroken. [teasing] She'll rise again. Everything worth having does, eventually.
 ```
 
 ### `disco-already-down`
 
 ```text
 [low, wry, amused] Mmm, sugar, look again. [beat] She's already tucked in for the night.
-[dry, playful] No light to give you right now. [beat, low, teasing] Come back when there's something worth looking up for.
+[dry, playful] No light to give you right now. [low, teasing] Come back when there's something worth looking up for.
 ```
 
 ### `disco-stop`
 
 ```text
-[low, delighted, sly] Ohhh. Look at you. [beat, amused] Found something.
-[playful, teasing] Shame it doesn't do a thing, hm? [beat, warm, wry] Not every secret's got a prize behind it, darling.
-[low, sultry, dismissive] Some things I just keep... because I can. [beat] Try another.
+[low, delighted, sly] Ohhh. Look at you. [amused] Found something.
+[playful, teasing] Shame it doesn't do a thing, hm? [warm, wry] Not every secret's got a prize behind it, darling. Believe me, I've looked.
+[low, sultry, dismissive] Some things I just keep... because I can, and because somebody once taught me to. [beat] Try another.
 ```
 
 ## No Answer
@@ -171,9 +267,9 @@ updated to match this file.
 
 ```text
 [low, wry, amused] Mmm. Rang and rang, darling. [beat] Out there in the dark, somewhere — nobody's picking up.
-[low, wistful] Could be they're dancing. [beat, playful] Could be they wandered off with someone more interesting than a ringing phone. [dry] Out here, that happens more than you'd think.
+[low, wistful] Could be they're dancing. [playful] Could be they wandered off with someone more interesting than a ringing phone. [dry, soft laugh] Out here, that happens more than you'd think — wouldn't be the first time somebody did that to me either.
 [warm, low] Either way — [beat] that line's gone quiet on me tonight.
-[warm, dry, affectionate] Try again later, sugar. [beat, teasing] Or leave a little something behind for whoever it is. [low, private] They'll come back to it. They always do.
+[warm, affectionate] Try again later, sugar. [teasing] Or leave a little something behind for whoever it is. [low, private] The desert keeps its own accounts, darling. Everybody answers eventually. [low, soft] I know I would.
 ```
 
 ## Playback Announcements
@@ -181,59 +277,65 @@ updated to match this file.
 ### `playback-announcement-1`
 
 ```text
-[low, amused, private] [low, private] These are the traces they left in the wire. [wry] Press 1 anytime you'd like to move on to the next one — [low, trailing off] no need to sit with a stranger's secret longer than you want to.
+[low, private] These are the traces they left in the wire. [low, trailing off] Dial 1 anytime you'd like to move on to the next one — no need to sit with a stranger's secret longer than you want to. [warm] Here is the first.
 ```
 
 ### `playback-announcement-2`
 
 ```text
-[low, amused] Amusing, wasn't it? [wry] And if you'd like to hear it again, press 2. [low, private, trailing off] I don't mind saying it twice.
+[amused, soft laugh] Amusing, wasn't it? [wry] And if you'd like to hear something again, dial 2 at anytime. [playful] lets listen to the second.
 ```
 
 ### `playback-announcement-3`
 
 ```text
-[dry, arch, warm] That one'll stay with you. [wry, light] 1 or 2, as you listen — onward, or back. [low, amused] Some secrets deserve a second listen. Others... not so much. [playful, low] There was a caller once who left the same message four times, each one a little more honest than the last. [amused, husky] I only kept the fourth. Cheeky thing.
+[dry, arch, warm] That one'll stay with you. [wry, light] Dial 1 or 2, as you listen — onward, or back. [low, amused] Some secrets deserve a second listen. Others... [dry] not so much. [sly] how about number three then?
 ```
 
 ### `playback-announcement-4`
 
 ```text
-[low, amused] Careless, that one — said more than they meant to. [low, private, trailing off] I don't forget the careless ones.
+[playful, low] That one recorded the message five times, each one a little less honest than the last. [amused, husky] I only kept the first. [playful, soft laugh] I can be a cheeky thing.
 ```
 
 ### `playback-announcement-5`
 
 ```text
-[low, intimate, playful] That's not the kind of thing you're meant to overhear. [low, husky] Left at 3am, thinking no one was listening. [wry, light] Someone always is. [low, teasing] While I repeat these [break, playful ]remember [sly] you can press 1 to move along, or 2, if you'd like to hear it again.
+[low, intimate] That was was left thinking no one was listening. [wry, light] Someone always is — that's the whole trick of this line. [amused] on to the fifth shall we?
 ```
 
 ### `playback-announcement-6`
 
 ```text
-[low, wry, fond] Now that one's a classic. [low, private] I've had it memorized longer than I'd like to admit.
+[low, wry, fond] Now that one's a classic. [low, wistful] Reminded me of someone, if I'm honest. [dry, low] Onward to number six, then.
 ```
 
 ### `playback-announcement-7`
 
 ```text
-[low, amused] Funny, the things people tell a dial tone. [low, private, trailing off] I've never forgotten a single one.
+[amused, soft laugh] Funny, the things people tell a dial tone. [low, private, trailing off] I've never forgotten a single one. That's the trouble with a memory like mine. [sly, low] Seven, then — if you're ready for it.
 ```
 
 ### `playback-announcement-8`
 
 ```text
-[low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead.
+[low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead. [warm, sly] Shall we listen to number eight, darling?
 ```
 
 ### `playback-announcement-9`
 
 ```text
---> [low, amused] Careful with that one, darling. [low, private, trailing off] Some of these I keep closer than others.
+[low, teasing] Careful with that one, darling. [hushed, private, trailing off] Some of these I keep closer than others — closer than I keep most people.
 ```
 
 ### `playback-announcement-10`
 
 ```text
-[low, warm, private] This is the last of them. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, almost tender] every voice that ever trusted this line with something. [low, private] And now you know too.
+[wry, low, soft laugh] Down to the last of them. Shall we?
+```
+
+### `playback-end`
+
+```text
+[low, warm, private] Thats all of them that I care to share right now. [wry, trailing off] Funny thing, isn't it — how much of them I've kept, [low, tender] every voice that ever trusted this line with something. [low, private] Mine included, once, though that's a story for a night when the drinks are stronger. [beat] And now you care those too.
 ```
