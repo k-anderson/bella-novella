@@ -81,7 +81,7 @@ of it that way.
 [dry, amused] I've spent years dialing a line that's never answered by the one I hope for. 
 [low, content] It taught me how to wait without minding, the way you reread a favorite chapter.
 [velvet, unhurried] So take your time. That same line I keep ringing, I'll set it ringing for you if you dial 1 
-[beat] [wry, chuckles] If let it ring long enough, who answers is anyone's guess.
+[beat] [wry, chuckles] If you let it ring long enough, who answers is anyone's guess.
 [smoky, slow] For a taste of what's been whispered my way, dial 2. [hushed] The kind of thing that only gets 
 better with age, like a bottle of wine left long enough to breathe.
 [low, warm] And when you're ready to say a thing aloud, dial 3. [gentle] I'm in no hurry, love. This line 
@@ -101,7 +101,7 @@ stays open as long as you please.
 thick with smoke, and me on the phone begging the emergency operator to send help, quick.
 [hushed, reverent] But it wasn't the sirens that saved us. It was an old mirror the heat had split. 
 It caught the flame and flung it clear across the room, [soft] bright as a beacon. 
-[wistful] Almost seemed to dance.  [content] Every last soul found the door by those beams of light it cast.
+[wistful] Almost seemed to dance.  [serene] Every last soul found the door by the beams of light it cast.
 [velvet, unhurried] [exhales] Anyhow. [coaxing] Dial 1 to throw your voice out across the wire and 
 see who catches it. [wry] Could amount to nothing, could be the spark of something.
 [hushed, smoky] For what others have breathed into this line before you. Every one kept warm like embers I won't let die, 
@@ -125,7 +125,7 @@ everyone else's troubles. I've a gift for it.
 [low] So I carry now, and I carry well.
 [velvet, low] Dial 1 and I will try to connect you to whichever voice is holding the other end. 
 [wry, low] Never the same twice; that line stopped being predictable a long time ago.
-[cool, unhurried] To unlock the things I keep tucked away, other people's weight mostly, dial 2. 
+[cool, unhurried] To unlock the things I keep tucked away, dial 2. 
 [low, private] Somebody has to shoulder it.
 [cool, deliberate] Dial 3 if you are weighed down yourself, [carring] leave it here with me and walk out lighter. 
 [low, sly] Call it a debt; I won't come collecting. [sly] Not unless I must.
@@ -149,7 +149,7 @@ where you'll land.
 from life's journey.
 [cool, deliberate] Fancy trading something of your own? Dial 3. I keep every trade in one drawer. 
 [low, private] The old name's still in there, never worn again, never thrown out.
-[low, cheeky] Fortune does favour the bold sugar. [sly] The bold ones always find more than they came 
+[low, cheeky] The bold ones sometimes find more than they came 
 looking for. Time to choose darling.
 ```
 
@@ -259,7 +259,7 @@ on offer darling.
 ```text
 [cool, arch] Ah-ah. [amused, soft laugh] I've sat at enough card tables to never show my whole hand, 
 [sly] and that's not a card I'm playing.
-[dry] The count is three. Have another go.
+[playful] The count is three. Have another go.
 ```
 
 ### `invalid-entry-4`
@@ -297,8 +297,8 @@ on offer darling.
 ### `invalid-entry-8`
 
 ```text
-[low, velvet, unhurried] That's not one of mine, stranger. [warm, soft laugh] Slip of the finger, 
-or you're hunting for something I haven't offered — [low, content] either way, try again. One through three.
+[low, velvet, unhurried] That's not one of mine, stranger. [warm, soft laugh] Slip of the finger?
+or are you hunting for something I haven't offered? [low, content] either way, try again. One through three.
 ```
 
 ### `invalid-entry-9`
@@ -439,7 +439,7 @@ and I'll play it again.
 
 ```text
 [amused] What a person will admit to an empty room. [soft laugh] Warms me, it does.
-[low] Keep it in mind sugar: 1 moves you ahead, 2 and back you go. [velvet] Onward to number four.
+[low] 1 moves you ahead, 2 and back you go, keep it in mind sugar. [velvet] Onward to number four.
 ```
 
 ### `playback-announcement-4-3`
@@ -614,8 +614,9 @@ nobody's seen the bottom of it but me. [low] Until now.
 ```text
 [low, delighted, surprised] Oh, you found one of my little secrets. [intrigued] Shall we play?
 [velvet, amused] Here's the shape of it. I'm holding a number, one through nine.
-[teasing, playful] Dial a digit and I'll tell you higher or lower sugar.
-[low, purring] You've a handful of tries to catch me. [coaxing, a spark of mischief] Give me your first guess?
+[teasing, playful] Dial a digit and I'll tell you higher or lower.
+[low, purring] You've a handful of tries to catch me. 
+[coaxing, a spark of mischief] Give me your first guess sugar.
 ```
 
 ### `game-intro-3`
@@ -623,7 +624,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 ```text
 [sly, low, amused] Look at that, a challenger.
 [velvet] Here's my game. One number, tucked in my head, somewhere between one and nine.
-[playful] Guess it. Every miss, and I'll nudge you higher or lower.
+[playful] Try to guess it. Every miss, and I'll nudge you higher or lower.
 [low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, what's your first?
 ```
 
@@ -678,13 +679,13 @@ nobody's seen the bottom of it but me. [low] Until now.
 ### `game-higher-6`
 
 ```text
-[teasing, warm] Keep climbing. [low, purring] I'm living somewhere over your head.
+[teasing, warm] Keep climbing. [low, purring] I'm somewhere above that guess.
 ```
 
 ### `game-higher-7`
 
 ```text
-[amused, coaxing] Go higher. [dry, teasing] Warm, but you're underselling me.
+[amused, coaxing] Go higher. [dry, teasing] You're underselling me.
 ```
 
 ### `game-higher-8`
@@ -762,7 +763,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 ### `game-lower-10`
 
 ```text
-[velvet, teasing] Lower. [low, amused] I'm smaller than you're giving me credit for.
+[velvet, teasing] Lower. [low, amused] I'm thinking of something smaller.
 ```
 
 ### `game-win-1`
