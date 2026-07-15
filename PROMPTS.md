@@ -48,7 +48,7 @@ interesting one.
 
 ### `main-menu-short-variant-1`
 
-**Theme:** Finding her own way. Hints that Bella once had no one to show her the way and had to learn the hard way, on her own, in the dark. End reveals that's she is trying to help by laying out 3 paths.
+**Theme:** Finding her own way. Hints that Bella once had no one to show her the way and had to learn everything the hard way, on her own, in the dark. Reveals that somewhere in her life someone took her in and helped her become the woman she is today.
 
 **Lesson:** We all need help.
 
@@ -65,7 +65,7 @@ so take your pick.
 
 ### `main-menu-short-variant-2`
 
-**Theme:** Waiting. Hints that Bella learned patience waiting for someone to answer her call. End reveals she is still waiting.
+**Theme:** Waiting. Hints that Bella learned patience waiting for someone to answer her call. Reveals they never will but she tries anyway.
 
 **Lesson:** Patience is a virtue.
 
@@ -82,9 +82,9 @@ like the present, sugar. [low, patient] [sighs] I'm waiting for your answer.
 
 ### `main-menu-short-variant-3`
 
-**Theme:** The night the lights went out. Hints at the fire, the blackout, and a stranger who turned broken mirror glass into the only light in a smoke-filled room, getting everyone out before vanishing for good. End reveals she can still recall light bouncing off the mirrors, illuminating the way. Must express to the caller that she had to call for emergency services. Should be the longest of the variants.
+**Theme:** The night the lights went out. Hints at the fire, the blackout, a mirror that broke under the heat.  Flames being reflect oddly from the broken mirror providing the spots of light in a smoke-filled room. Reveals she can still recall the light bouncing off the mirror, illuminating the way. Must express to the caller that she had to call for emergency services. Should be the longest of the variants.
 
-**Lesson:** Tells a story to hint that 911 (emergency) will raise the disco ball (broken mirror bouncing light).
+**Lesson:** Tells a story to hint that 911 (emergency) will expose the broken mirror (disco ball) lighting up the darkness once more.
 
 ```text
 [low, smoky] You're still with me. [sly, amused] Not everyone stays this long. Like the night this whole place
@@ -101,7 +101,7 @@ call up a little light in here. [dry, knowing] So — what'll it be?
 
 ### `main-menu-short-variant-4`
 
-**Theme:** Carrying weight. Hints that Bella carries what other people can't, because once, somebody carried what she couldn't. End reveals she's still trades in favors.
+**Theme:** Carrying weight. Hints that Bella carries what other people can't, because once, somebody carried what she couldn't. Reveal she is willing to carry a persons secret but there might be a price.
 
 **Lesson:** Sharing is a form of release.
 
@@ -119,7 +119,7 @@ take it. Call it a debt. I wont ask you to repay it, [sly] unless I have to.
 
 ### `main-menu-short-variant-5`
 
-**Theme:** Reinvention. Hints that Bella traded an old name and an old city for this life, the way you'd trade one piece of jewelry for another. End reveals she still keeps the old name tucked away somewhere — never worn again, never thrown out either.
+**Theme:** Reinvention. Hints that Bella traded an old name and an old city for this life, the way you'd trade one piece of jewelry for another. Reveal she still keeps the old name tucked away somewhere — never worn again, never thrown out either.
 
 **Lesson:** Sometimes the journey requires boldness.
 
@@ -138,7 +138,7 @@ trade close, sugar — all in the same drawer, for the same reasons.
 
 ### `main-menu-short-variant-6`
 
-**Theme:** Never show your hand. Hints that Bella learned never to be the one who reveals herself first, that safety means holding your cards closer than anyone else holds theirs. End reveals that in all her years at this table, she's never once shown anyone her own hand — not even the ones she trusts most. She is good at cards.
+**Theme:** Never show your hand. Hints that Bella learned never to be the one who reveals herself first, that safety means holding your cards closer than anyone else holds theirs. Reveal that people underestimate her and she can be unexpected in many ways.
 
 **Lesson:** It is ok to be wild, every now and again.
 
@@ -157,9 +157,9 @@ it be?
 
 ### `main-menu-short-variant-7`
 
-**Theme:** Bella longs to reconnect to the lost love but knows deep down it will never happen. End reveals that despite that she never gives up hope.
+**Theme:** Bella still dials an old phone some nights that belonged to a love intrest — not out of heartbreak, but for the fondness of it, the way you'd reread a favorite chapter. Reveal they will never pick up, and she made her peace with that a long time ago.
 
-**Lesson:** Never give up hope.
+**Lesson:** Never give up hope and love.
 
 ```text
 [low, velvet] Still chasing someone to talk to? [dry, amused] Aren't we all, one way or another? [low, quiet]
@@ -175,7 +175,7 @@ something so they can find you. [low, trailing off] I keep every voice that come
 
 ### `main-menu-short-variant-8`
 
-**Theme:** Hindsight. Hints that some things only make sense once the urgency of them has burned all the way down to embers. End reveals she's only now, all these years later, starting to understand why she had to leave in the first place.  Another hint at the disco ball and emergency number.
+**Theme:** Hindsight. Hints that some things only make sense once the urgency of them has burned all the way down to embers. Reveals that the fire is might be the same one from her old life, finally catching up with her under a new name, abut it might not be. She's never told it the same way twice, and by now, that inconsistency might be the most honest thing about her.
 
 **Lesson:** Time can heal.
 
