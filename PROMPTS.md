@@ -414,93 +414,93 @@ would.
 ### `playback-announcement-1`
 
 ```text
-[low, private] These are the traces they left in the wire.
-[teasing, trailing off] Dial 1 anytime you'd like to move on to the next one — [sly] no need to sit with a
-stranger's secret longer than you want to. [low, unhurried] Here is the first.
+[warm, low] These are the traces left in the wire.
+[teasing] Heard your fill of any one of them? Dial 1, anytime, and I'll whisk you along to the next. 
+[warm, unhurried] Here's the first.
 ```
 
 ### `playback-announcement-2`
 
 ```text
-[amused, soft laugh] Amusing, wasn't it? [wry] And if you'd like to hear something again, dial 2 at anytime.
-[sly, low] lets listen to the second.
+[amused, soft laugh] Amusing, wasn't it? [warm] And should one ever beg a second hearing — dial 2, anytime,
+and I'll play it again.
+[sly, low] Now, let's have the second.
 ```
 
 ### `playback-announcement-3`
 
 ```text
-[dry, arch] That one'll stay with you. [wry, low] Dial 1 or 2, as you listen — onward, or back.
-[low, amused] Some secrets deserve a second listen. Others... [dry] not so much. [sly] how about number three
-then?
+[dry, amused] Mmm. That one had a bit of everything, didn't it. [wry] Some people simply cannot help themselves — 
+[soft laugh] and thank goodness for that.
+[low, sly] On to the third.
 ```
 
 ### `playback-announcement-4`
 
 ```text
-[dry, low] That one recorded the message five times, each one a little less honest than the last.
-[amused, husky] I only kept the first. [sly, soft laugh] I can be a cheeky thing.
+[amused] The things folk will own up to, with only a dial tone for company. [soft laugh]
+[low, unhurried] Remember — 1 carries you onward, 2 takes you back. [warm] The fourth, then.
 ```
 
 ### `playback-announcement-5`
 
 ```text
-[low, intimate] That was was left thinking no one was listening. [wry, low] Someone always is — that's the
-whole trick of this line.
-[low, amused] on to the fifth shall we?
+[low, amused] Oh, I've a soft spot for that one. [wry] The bold ones always did know how to hold a room.
+[warm] Here comes the fifth.
 ```
 
 ### `playback-announcement-6`
 
 ```text
-[low, wry, fond] Now that one's a classic. [low, wistful] Reminded me of someone, if I'm honest. [sighs]
-[dry, low] Onward to number six, then.
+[amused] Reminded me of someone — [soft laugh] most of them do, one way or another.
+[low] Number six, coming up.
 ```
 
 ### `playback-announcement-7`
 
 ```text
-[amused, soft laugh] Funny, the things people tell a dial tone. [low, private, trailing off] I've never
-forgotten a single one. That's the trouble with a memory like mine.
-[sly, low] Seven, then — if you're ready for it.
+[amused, soft laugh] People are marvellous, aren't they — the things they'll confess to a telephone.
+[low, private] I've not forgotten a one; that's the curse of a memory like mine. [sly] The seventh's next.
 ```
 
 ### `playback-announcement-8`
 
 ```text
-[low, private] That one wasn't meant for anyone. [wry, low] Lucky it found me instead.
-[low, sly] Shall we listen to number eight, stranger?
+[low, amused] Ha. That one wasn't meant for a soul [sly] lucky it wandered in to me.
+[low, warm] Let's hear the eighth.
 ```
 
 ### `playback-announcement-9`
 
 ```text
-[low, teasing] Careful with that one, sugar.
-[hushed, private, trailing off] Some of these I keep closer than others — [whispers] closer than I keep most
-people.
+[dry, low] That one recorded the message five times, each one a little less honest than the last.
+[amused, husky] I only kept the first go. [sly, soft laugh] I can be a cheeky thing.
+[low] On we go — the ninth.
 ```
 
 ### `playback-announcement-10`
 
 ```text
-[wry, low, soft laugh] Down to the last of them. Shall we?
+[wry, amused, soft laugh] Well — we've reached the last of the ten I laid out on the table.
+[warm] Go on, then: the tenth.
 ```
 
 ### `playback-end`
 
 ```text
-[low, private] Thats all of them that I care to share right now. [wry, trailing off] Funny thing, isn't it —
-how much of them I've kept, [low, tender] every voice that ever trusted this line with something.
-[low, private] Mine included, once, though that's a story for a night when the drinks are stronger.
+[warm, low] And that's the ones I'm of a mind to share. [sly] Right now at least. [soft laugh]
+[low, fond] I've kept every voice that ever trusted this line — even one of my own is tucked in here somewhere.
+[warm] But that's a tale for another night.
+[encouraging, warm] Come back soon, darling. There's always another being added to the collection.
 ```
 
 ### `playback-special`
 
 ```text
-[low, sly, suprise] You went and opened the drawer!
-[velvet, intimate] My little drawer of secrets, sugar. Nobody sees the bottom of it but me... and now you.
-[low, purring] Everything I've ever been handed and never quite let go of — it all lives in here.
-[wry, low] Remeber you can dial 1 or 2, as you listen — onward, or back. [warm, coaxing] Go on, then.
-Take your time, have a good look. I'm not going to guide you. [hushed] Just... don't tell a soul what you find.
+[low, sly, surprised] Well now — you found the drawer. [velvet, intimate] My private little collection sugar;
+nobody's seen the bottom of it but me. [low] Until now.
+[low, purring] Everything I've ever been handed and never quite let go of lives right in here.
+[warm, coaxing] Dial 1 to wander onward, 2 to slip back. [hushed] Take your time — just don't breathe a word of what you find.
 ```
 
 ## Game
@@ -736,7 +736,7 @@ once more. [warm] You just have to listen carefully and you'll eventually figure
 Nobody's read me that quick in a long while.
 [beat, sly, low] So here's what winning buys you. [low, private, amused] I don't keep photographs,
 darling. I keep memories. Much longer shelf life. [soft laugh] [beat, amused] And I run a
-quiet little arrangement or two of my own, on the side — [sly, purring] if you want to hear all the secrets,
+quiet little arrangement or two of my own, on the side — [sly, purring] if you want me to share everything with you,
 not just the last 10, dial 9 while you are listening to the messages I have kept and I will give you access
 to every one of them. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat]
 Don't make me regret opening it for you.
