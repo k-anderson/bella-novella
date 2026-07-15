@@ -20,6 +20,9 @@ export ELEVENLABS_API_KEY=...        # your ElevenLabs key
 ./scripts/bella-regen-prompts        # regenerate only what changed
 ./scripts/bella-regen-prompts --list # list every parsed prompt
 ./scripts/bella-regen-prompts --all  # regenerate everything
+
+
+.venv/bin/python -c "import elevenlabs; print('elevenlabs', elevenlabs.__version__)" 2>&1 | head -5; echo "---dry run---"; ./scripts/bella-regen-prompts --dry-run 2>&1 | head -60
 ```
 
 ## Main Menu
@@ -246,7 +249,7 @@ only I open. [soft laugh]
 ### `invalid-entry-2`
 
 ```text
-[dry, amused] Well now. [low, private] Like this ring I never explain, some things simply aren't 
+[dry, amused] Ah, curious, are we? [low, private] Like this ring I never explain, some things simply aren't 
 on offer darling.
 [low, coaxing] One through three. [beat] Give it another turn.
 ```
@@ -294,13 +297,17 @@ on offer darling.
 ### `invalid-entry-8`
 
 ```text
-[low, velvet, unhurried] [exhales] No rush. [warm] The room's in no hurry, and neither am I. [soft laugh]
-[low, content] Take a breath and choose again when you're ready stranger.
+[low, velvet, unhurried] That's not one of mine, stranger. [warm, soft laugh] Slip of the finger, 
+or you're hunting for something I haven't offered — [low, content] either way, try again. One through three.
 ```
 
 ### `invalid-entry-9`
 
 ```text
+[amused, private] Some parties need an invitation. [dry, low] Sometimes you just need to know where to go.
+[gentle] One, two, three. [sly] Those are the invitations I have given out, why don't you try again?
+
+
 [amused, private] Some things here open only for those who know who to ask. [sly] The concierge 
 and I, we have an understanding.
 [low, warm] But I'm not in a generous mood tonight. [beat] So ask me again, properly.
@@ -318,17 +325,16 @@ and I, we have an understanding.
 ### `vm-record_message`
 
 ```text
-[warm, inviting] Go on, then, leave me a little something to keep. [low, fond] I keep a whole drawer of 
-such treasures; there's always room for one more.
-[low, matter-of-fact] Sixty seconds is all, no more. [gentle] When you're through, simply stop talking, 
-or press any key, [loving] and it's mine to hold onto.
+
+[warm, inviting] Go on, then, You've got sixty seconds to say what you need to say. [low] When you're done,
+just stop talking, or dial any digit, [sultry, intimate] [whispers] and it's mine to keep darling.
 ```
 
 ### `vm-saved`
 
 ```text
 [warm, gentle] There. [low, fond] Tucked away safe, alongside all the rest.
-[low, worldly] I don't keep photographs, darling, [dry] those only get you caught. [warm] But a keepsake 
+[low, worldly] I don't keep photographs sugar, [dry] those only get you caught. [warm] But a keepsake 
 like this? [soft laugh] That one stays with me for good.
 ```
 
@@ -501,7 +507,7 @@ how much of them I've kept, [low, tender] every voice that ever trusted this lin
 ### `playback-special`
 
 ```text
-[low, sly, surprised] Well now, you found the drawer. [velvet, intimate] My private little collection sugar;
+[low, sly, surprised] Right then, you found the drawer. [velvet, intimate] My private little collection sugar;
 nobody's seen the bottom of it but me. [low] Until now.
 [low, purring] Everything I've ever been handed and never quite let go of lives right in here.
 [warm, coaxing] Dial 1 to wander onward, 2 to slip back. [hushed] Take your time, just don't breathe a word of what you find.
@@ -523,14 +529,14 @@ nobody's seen the bottom of it but me. [low] Until now.
 ```text
 [low, delighted, surprised] Oh, you found one of my little secrets. [intrigued] Shall we play?
 [velvet, amused] Here's the shape of it. I'm holding a number, one through nine.
-[teasing, playful] Call one out and I'll tell you higher or lower sugar.
+[teasing, playful] Dial a digit and I'll tell you higher or lower sugar.
 [low, purring] You've a handful of tries to catch me. [coaxing, a spark of mischief] Give me your first guess?
 ```
 
 ### `game-intro-3`
 
 ```text
-[sly, low, amused] Well now, a challenger.
+[sly, low, amused] Look at that, a challenger.
 [velvet] Here's my game. One number, tucked in my head, somewhere between one and nine.
 [playful] Guess it. Every miss, and I'll nudge you higher or lower.
 [low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, what's your first?
@@ -703,7 +709,7 @@ little game, and you won, so, now you know where I learned it.
 ### `game-win-3`
 
 ```text
-[delighted, low] Well now. Right on the nose. [a soft laugh] [impressed, warm] You've got a feel for me
+[delighted, low] Right on the nose! [a soft laugh] [impressed, warm] You've got a feel for me
 already, and we've barely met.
 [beat, low, private] A winner deserves a secret, so, [soft, confiding] that old phone I keep sending you down
 the line to? [low, quiet] It was somebody's.
