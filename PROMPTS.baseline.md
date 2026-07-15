@@ -98,17 +98,16 @@ stays open as long as you please.
 ```text
 [low, smoky] You've not gone anywhere. [sly, amused] I do like that. Not everyone stays this long.
 [low, remembering] Puts me in mind of the night this whole room caught fire. [low, distant] Black as pitch, 
-thick with smoke, and me on the phone begging the emergency operator to send help, quick.
+thick with smoke, and me on the phone begging the emergency operator to send help.
 [hushed, reverent] But it wasn't the sirens that saved us. It was an old mirror the heat had split. 
-It caught the flame and flung it clear across the room, [soft] bright as a beacon. 
-[wistful] Almost seemed to dance.  [serene] Every last soul found the door by the beams of light it cast.
+It caught the flame and flung spots of light clear across the room, [soft] bright as a beacon. 
+[wistful] Almost seemed to dance. [serene] Every last soul found the door by the beams it cast.
 [velvet, unhurried] [exhales] Anyhow. [coaxing] Dial 1 to throw your voice out across the wire and 
 see who catches it. [wry] Could amount to nothing, could be the spark of something.
-[hushed, smoky] For what others have breathed into this line before you. Every one kept warm like embers I won't let die, 
-dial 2. [low, tender]
-[cool, low] And if there's a thought you'd trust to me and no one else, dial 3.
+[hushed, smoky] Dial 2 for what others have breathed into this line before you, every one kept warm like embers I won't let die.
+[low, tender] And if there's a thought you'd trust to me and no one else, dial 3.
 [low, trailing off] We're all out here carrying something, aren't we. [sly, low] And just between us, 
-those three aren't the only numbers that can wake a little light in this old room. [dry, knowing] So. What'll it be.
+those three aren't the only numbers that can wake a little light in this old room. [dry, knowing] So. What'll it be?
 ```
 
 ### `main-menu-short-variant-4`

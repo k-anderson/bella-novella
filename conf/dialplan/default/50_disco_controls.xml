@@ -25,6 +25,7 @@
       <!-- not up (down or unknown): start the raise, then announce over it -->
       <anti-action application="set" data="disco_move=${system($${disco_raise})}"/>
       <anti-action application="playback" data="$${prompts_dir}/disco-raise.wav"/>
+      <action applicaton="sleep" data="1000"/>
       <anti-action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -34,6 +35,7 @@
     <condition field="destination_number" expression="^DISCO_LOWER$">
       <action application="answer"/>
       <action application="set" data="disco_pos=${system($${disco_position})}"/>
+      <action applicaton="sleep" data="1000"/>
       <action application="transfer" data="DISCO_LOWER_GO XML default"/>
     </condition>
   </extension>
@@ -47,6 +49,7 @@
       <!-- not down (up or unknown): start the lower, then announce over it -->
       <anti-action application="set" data="disco_move=${system($${disco_lower})}"/>
       <anti-action application="playback" data="$${prompts_dir}/disco-lower.wav"/>
+      <action applicaton="sleep" data="1000"/>
       <anti-action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
@@ -58,6 +61,7 @@
       <action application="answer"/>
       <action application="set" data="disco_move=${system($${disco_stop})}"/>
       <action application="playback" data="$${prompts_dir}/disco-stop.wav"/>
+      <action applicaton="sleep" data="1000"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>
