@@ -378,9 +378,9 @@ like this? [soft laugh] That one stays with me for good.
 ### `playback-announcement-1-3`
 
 ```text
-[warm, low] The dark here keeps everything ever whispered into it.
-[amused] Done listening to a message? Dialing 1 at anytime leads onward. [coaxing] 
-Here is the first love.
+[warm, low] Every voice that ever drifted through here, I've kept close.
+[amused] Grown weary of one? Dial 1 whenever it suits and I'll carry you onward.
+[coaxing] We open with the first, love.
 ```
 
 ### `playback-announcement-2-1`
