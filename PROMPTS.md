@@ -488,7 +488,7 @@ and I'll play it again.
 ### `playback-end`
 
 ```text
-[warm, low] And that's the ones I'm of a mind to share. [sly] Right now at least. [soft laugh]
+[warm, low] And that's all the ones I'm of a mind to share. [sly] Right now at least. [soft laugh]
 [wry, trailing off] Funny thing, isn't it —
 how much of them I've kept, [low, tender] every voice that ever trusted this line with something.
 [low, private] Mine included, once, though that's a story for a night when the drinks are stronger.
@@ -509,172 +509,167 @@ nobody's seen the bottom of it but me. [low] Until now.
 ### `game-intro-1`
 
 ```text
-[low, sly, utterly delighted] Ohh. [intrigued, leaning in] A little game with me?
-[velvet, amused] Its simple, stranger. [warm] I'm thinking of a number, one through nine. [teasing, playful]
-You guess, [sing-song] I'll tell you higher, or lower.
-[low, purring] You'll have a handful of tries to find me out. [warm, coaxing, a spark of mischief] Go on then.
-[inviting] First guess?
+[low, sly, utterly delighted] Ohh. [intrigued, leaning in] You want to play a little game with me?
+[velvet, amused] Simple enough. I've a number in mind, somewhere from one to nine.
+[teasing, playful] You guess, and I'll whisper whether to climb higher or drop lower.
+[low, purring] Only a handful of tries, mind. [warm, coaxing, a spark of mischief] Go on. Your first guess?
 ```
 
 ### `game-intro-2`
 
 ```text
-[low, delighted, surprised] You found one of my secrets! [intrigued] Lets play a game, shall we?
-[velvet, amused] Here's how it goes. I've picked a number, one through nine. [teasing, playful] You guess, and
-I'll tell you whether it's higher or lower.
-[low, purring] You've only got a handful of tries to catch me out. [coaxing, a spark of mischief] Go on then
-sugar. [inviting] Give me your first.
+[low, delighted, surprised] Oh, you found one of my little secrets. [intrigued] Shall we play?
+[velvet, amused] Here's the shape of it. I'm holding a number, one through nine.
+[teasing, playful] Call one out and I'll tell you higher or lower, sugar.
+[low, purring] You've a handful of tries to catch me. [coaxing, a spark of mischief] Give me your first.
 ```
 
 ### `game-intro-3`
 
 ```text
-[sly, low, amused] A challenger.
-[velvet] Simple little thing, stranger, one number, somewhere between one and nine, [teasing] living in my
-head. [playful] Guess it. Every time you miss, I'll nudge you higher or lower.
-[low, purring] A handful of tries, that's all, spend them wisely. [warm, coaxing] Now.
-[inviting, a spark of mischief] whats your first guess?
+[sly, low, amused] Well now, a challenger.
+[velvet] Here's my game. One number, tucked in my head, somewhere between one and nine.
+[playful] Guess it. Every miss, and I'll nudge you higher or lower.
+[low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, what's your first?
 ```
 
 ### `game-intro-4`
 
 ```text
-[low, intrigued, warm] Mmm, you found your way to one of my little secrets. [delighted] Not many do.
-[velvet, amused] So. I'm thinking of a number, one to nine. [teasing, playful] You call one out, and I'll
-whisper higher, or lower, till you land on me.
-[low, purring] But you've only got so many tries darling, [sly] I'm not that easy. [coaxing] Go on.
-[inviting] Let's hear your first.
+[low, intrigued, warm] Mmm, you wandered right into one of my secrets. [delighted] Not many manage that.
+[velvet, amused] So. A number, one to nine, and I'm the only soul who knows it.
+[teasing, playful] You dial a number. I answer, higher or lower.
+[low, purring] A handful of guesses, no more. [coaxing] Off you go. Let's hear your first.
 ```
 
 ### `game-intro-5`
 
 ```text
-[sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just the two of us and a little
-game.
-[velvet, warm] One number, darling, one through nine, I've got it tucked away. [teasing, playful] You guess,
-I steer you: higher, or lower.
-[low, purring] A handful of tries to find me out, and not one more. [warm, coaxing, a spark of mischief] So
-don't be shy sugar. [inviting] First guess, surprise me.
+[sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just us two and a little game.
+[velvet, warm] One number, darling, one to nine, and I've got it hidden away.
+[teasing, playful] You guess, I steer you. Higher. Lower.
+[low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] First guess.
+[inviting] Surprise me.
 ```
 
 ### `game-higher-1`
 
 ```text
-[amused, leaning in] Higher, stranger. [sly, coaxing] Don't be shy.
+[amused, leaning in] Higher. [sly, coaxing] Be bolder than that.
 ```
 
 ### `game-higher-2`
 
 ```text
-[warm, delighted, teasing] Mmm, [coaxing] reach a little higher than that.
+[warm, delighted, teasing] Ooh, not quite. Climb a little.
 ```
 
 ### `game-higher-3`
 
 ```text
-[sly, purring] Up you go sugar. [amused, low] My number's bigger than yours.
+[sly, purring] Up you go. [amused, low] Mine's the bigger number.
 ```
 
 ### `game-higher-4`
 
 ```text
-[low, playful] Higher still, darling. [dry, amused] You're being far too polite with me.
+[low, playful] Higher still, darling. [dry, amused] No need to be so polite.
 ```
 
 ### `game-higher-5`
 
 ```text
-[intrigued, soft] Oh, aim higher than that, darling. [sly, low] I'm not so easily found.
+[intrigued, soft] Aim above that. [sly, low] I don't give myself up so easily.
 ```
 
 ### `game-higher-6`
 
 ```text
-[teasing, warm] Climb sugar. [low, purring] My number's living somewhere above yours.
+[teasing, warm] Keep climbing. [low, purring] I'm living somewhere over your head.
 ```
 
 ### `game-higher-7`
 
 ```text
-[amused, coaxing] Higher, love. [dry, teasing] You're warm, but you're underselling me.
+[amused, coaxing] Go higher. [dry, teasing] Warm, but you're underselling me.
 ```
 
 ### `game-higher-8`
 
 ```text
-[playful, low] Up. [sly, delighted] A little more nerve, my number's got some height to it.
+[playful, low] Up. [sly, delighted] Show a little more nerve than that.
 ```
 
 ### `game-higher-9`
 
 ```text
-[warm, delighted] Higher, stranger. [teasing, low] Reach like you actually want to catch me.
+[warm, delighted] Higher, stranger. [teasing, low] Reach like you mean to catch me.
 ```
 
 ### `game-higher-10`
 
 ```text
-[amused, purring] Mmm, no, go up. [sly, private] I'm hiding a little further than that.
+[amused, purring] Mmm, no. Upward. [sly, private] I'm tucked a bit further than that.
 ```
 
 ### `game-lower-1`
 
 ```text
-[dry, amused] Lower, stranger. [teasing] You overshot me.
+[dry, amused] Lower. [teasing] You sailed clean past me.
 ```
 
 ### `game-lower-2`
 
 ```text
-[teasing, low] Come down sugar, [amused] that's too high.
+[teasing, low] Ease on down. [amused] That's too high by a mile.
 ```
 
 ### `game-lower-3`
 
 ```text
-[velvet, wry] Lower. [dry, amused] A touch less ambition.
+[velvet, wry] Lower, sugar. [dry, amused] A little less ambition.
 ```
 
 ### `game-lower-4`
 
 ```text
-[low, playful] Down, stranger. [sly] You've reached clean over my head.
+[low, playful] Down you go. [sly] You've reached over my head.
 ```
 
 ### `game-lower-5`
 
 ```text
-[amused, coaxing] Lower sugar, [low] you're aiming above where I'm hiding.
+[amused, coaxing] Come down. [low] You're above where I'm hiding.
 ```
 
 ### `game-lower-6`
 
 ```text
-[warm, teasing] Come down a little, love. [dry] That's more than I am.
+[warm, teasing] Bring it down a touch. [dry] That's more than I am.
 ```
 
 ### `game-lower-7`
 
 ```text
-[low, wry] Lower still, stranger. [amused] Not quite so bold.
+[low, wry] Lower still. [amused] Not quite so daring this time.
 ```
 
 ### `game-lower-8`
 
 ```text
-[teasing, purring] Down you come sugar. [sly] My number's the modest sort.
+[teasing, purring] Down you come, love. [sly] Mine's a modest little number.
 ```
 
 ### `game-lower-9`
 
 ```text
-[amused, low] Ease it down, love. [dry, playful] You've gone and passed me.
+[amused, low] Drop it down. [dry, playful] You've gone and overshot me.
 ```
 
 ### `game-lower-10`
 
 ```text
-[velvet, teasing] Lower, darling. [low, amused] I'm smaller than that guess gives me credit for.
+[velvet, teasing] Lower. [low, amused] I'm smaller than you're giving me credit for.
 ```
 
 ### `game-win-1`
@@ -738,7 +733,7 @@ Nobody's read me that quick in a long while.
 [beat, sly, low] So here's what winning buys you. [low, private, amused] I don't keep photographs,
 darling. I keep memories. Much longer shelf life. [soft laugh] [beat, amused] And I run a
 quiet little arrangement or two of my own, on the side, [sly, purring] if you want me to share everything with you,
-not just the last 10, dial 9 while you are listening to the messages I have kept and I will give you access
+not just the last 10, dial 9 while you are listening to the messages and I will give you access
 to every one of them. [low, warm] You just earned a look inside the drawer most folks don't know exists. [beat]
 Don't make me regret opening it for you.
 ```
@@ -746,71 +741,50 @@ Don't make me regret opening it for you.
 ### `game-lose-1`
 
 ```text
-[low, amused, still enjoying herself] And that's the last of your guesses, stranger. [teasing, a soft laugh]
-No, I'm not going to tell you what it was. [sly, warm] A lady keeps a few secrets, doesn't she.
-[beat, low, confiding] I learned that at a card table, a lifetime ago. [dry] Never be the one who shows their
-hand first, that's the whole game, darling, cards or otherwise.
-[low, private] In all my years at this table, I've never once turned mine over. [wry] Not for anyone. Not even
-the ones I trust with everything else.
-[beat, inviting, fond] So don't take it personal. [warm] Come try me again sometime. [low, purring] Perhaps
-I'll be in a giving mood.
+[low, amused, still enjoying herself] And that's your last guess, darling. [teasing, soft laugh] No.
+[sly] I shan't tell you the number. A lady keeps a card or two up her sleeve.
+[warm] Learned that at a card table, years ago. [inviting] Come try me again sometime.
+[low, purring] I might even be in a giving mood.
 ```
 
 ### `game-lose-2`
 
 ```text
-[low, amused] And there go the last of your guesses. [teasing] The number stays with me, [sly] you
-didn't really think I'd just hand it over?
-[beat, low, confiding] Patience, darling. I know something about that. [wistful] I spent years waiting on a
-line that never answered by the one I hoped for. [low, soft] Still do, if I'm honest.
-[dry, wry] Taught me how to wait for a thing without needing it to come. [beat, warm] You'll get another go at
-me, [inviting] the good ones always come back.
-[low, purring] And I'm still here. Still listening. I always am.
+[low, amused] And there go your last guesses. [teasing] The number stays right here with me.
+[sly] You didn't truly think I'd hand it over? [warm] I'm a patient soul. I can wait for a rematch.
+[low, purring, inviting] And I'll be here. I always am.
 ```
 
 ### `game-lose-3`
 
 ```text
-[low, amused, fond] That's your last one, stranger. [teasing, soft laugh] And no, the number's mine to keep.
-[beat, low] But don't go slinking off just yet.
-[confiding, warm] I lost a few hands myself, once, big ones. [dry] Lost a whole city, a whole name, the night
-I decided to trade them for this life. [low, sly] Took more nerve than any guess you made tonight.
-[beat, worldly] Losing isn't the thing that finishes you, darling. [low, tender] It's refusing to sit back
-down at the table.
-[warm, inviting] So sit back down. [purring] Try me again, the bold ones always find more than they came for.
+[low, amused, fond] That's your last one. [teasing, soft laugh] And no, the number's mine to keep.
+[confiding, warm] I've lost bigger hands than this and had a grand time doing it.
+[sly] Losing's only losing if you stay gone. [warm, inviting] So come back. Try me again.
+[low] The bold ones always do.
 ```
 
 ### `game-lose-4`
 
 ```text
-[low, amused] And that's all the guesses you get. [teasing] The answer walks out of here with me,
-[sly, warm] a girl's got to keep something.
-[beat, low, confiding] Don't look so glum, darling. [soft] I've come up short more times than I'd ever admit
-at this table. [low, tender] Somebody carried me once, when I couldn't carry myself, [wry] and I've been
-quietly paying that back ever since, to nobody who ever asked me to.
-[beat, warm] That's the thing about a loss. [low] It's only a loss if you leave. [inviting, purring] So come
-back. Try me again. [dry, fond] I'll still be here, holding what everyone else set down.
+[low, amused] And that's all the guesses you get. [teasing] The answer walks out of here with me.
+[warm, playful] A girl's got to keep something. [sly] I forget nothing. I'll remember this little game.
+[inviting, low] Come back and we'll go again.
 ```
 
 ### `game-lose-5`
 
 ```text
-[low, amused, still enjoying herself] Last guess, and, [teasing, soft laugh] no, darling, that's a door that
-stays shut tonight. [sly] The number's mine.
-[beat, low, confiding] But I'll leave you with something better than a number anyway. [soft, private] I forget
-nothing sugar. Every voice that's ever come through this line, every secret handed to me in the dark, [low]
-I've kept them all.
-[wry, worldly] I don't keep photographs. I keep memories. Much longer shelf life. [beat, warm] Which means
-I'll remember you, and this little game, [sly, purring] long after you've forgotten you ever called.
+[low, amused, still enjoying herself] Last guess, and that door stays shut tonight. [sly] The number's mine.
+[soft, playful] But here's better than a number. I'll remember you. [warm] I always do.
 [inviting] Come back and lose to me again sometime. [low, amused] I'd like that.
 ```
 
 ### `game-invalid`
 
 ```text
-[dry, arch, amused] That's not a number between one and nine, darling. [beat, teasing, patient] One little
-digit, [warm] that's all I ask of you.
-[low, coaxing] Go on, try me again.
+[dry, arch, amused] That's not one of my numbers. [beat, teasing, patient] A single digit, one through nine.
+[low, coaxing] That's all I need. Go on, try again.
 ```
 
 ## Story
