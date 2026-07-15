@@ -48,8 +48,9 @@ interesting one.
 
 ### `main-menu-short-variant-1`
 
-**Theme:** Finding her own way. Hints that Bella once had no one to show her the way and had to learn everything the hard way, on her own, in the dark. Reveals that somewhere in her life someone took her in and helped her become the woman she is today.
-
+**Theme:** Finding her own way.
+**Backstory:** In her earliest days Bella had no one to hold the light for her — she learned everything the hard way, stumbling alone in the dark.
+**Reveal:** Somewhere along the way someone took her in and showed her how to carry herself, and that's exactly why she now lays three clear paths out for every stranger: so no one has to grope through the dark the way she once did. She's handing forward the help she was once given.
 **Lesson:** We all need help.
 
 ```text
@@ -65,8 +66,9 @@ so take your pick.
 
 ### `main-menu-short-variant-2`
 
-**Theme:** Waiting. Hints that Bella learned patience waiting for someone to answer her call. Reveals they never will but she tries anyway.
-
+**Theme:** Waiting.
+**Backstory:** Years of dialing a line that never answers the way she hopes taught Bella how to wait for a thing without needing it to come.
+**Reveal:** Rather than souring her, the waiting made her serene — she's still here, still listening, and a caller who takes their time never rattles her; she has all night. She'll wait on your answer the way she's learned to wait on everything: patiently, warmly, without a trace of hurry.
 **Lesson:** Patience is a virtue.
 
 ```text
@@ -82,8 +84,9 @@ like the present, sugar. [low, patient] [sighs] I'm waiting for your answer.
 
 ### `main-menu-short-variant-3`
 
-**Theme:** The night the lights went out. Hints at the fire, the blackout, a mirror that broke under the heat.  Flames being reflect oddly from the broken mirror providing the spots of light in a smoke-filled room. Reveals she can still recall the light bouncing off the mirror, illuminating the way. Must express to the caller that she had to call for emergency services. Should be the longest of the variants.
-
+**Theme:** The night the lights went out.
+**Backstory:** A fire once took every light in the place; choking in the dark and smoke, Bella called for emergency services, and what saved everyone was a mirror cracked by the heat, catching the flames and scattering that light across the room like a beacon — every soul found the door by it and got out.
+**Reveal:** She kept that broken mirror and still remembers exactly how the light danced, and she hints that the very same emergency call that once saved them can raise that light again. Should be the longest of the variants.
 **Lesson:** Tells a story to hint that 911 (emergency) will expose the broken mirror (disco ball) lighting up the darkness once more.
 
 ```text
@@ -101,8 +104,9 @@ call up a little light in here. [dry, knowing] So — what'll it be?
 
 ### `main-menu-short-variant-4`
 
-**Theme:** Carrying weight. Hints that Bella carries what other people can't, because once, somebody carried what she couldn't. Reveal she is willing to carry a persons secret but there might be a price.
-
+**Theme:** Carrying weight.
+**Backstory:** Once, when Bella couldn't carry herself, somebody carried her — no questions asked, no price named.
+**Reveal:** She's been quietly paying that debt forward ever since, taking on the weight of other people's secrets so they can walk lighter. She'll gladly hold yours — setting a heavy thing down with her is its own release — though she may call it a debt, and a debt, one night, might be called in.
 **Lesson:** Sharing is a form of release.
 
 ```text
@@ -119,8 +123,9 @@ take it. Call it a debt. I wont ask you to repay it, [sly] unless I have to.
 
 ### `main-menu-short-variant-5`
 
-**Theme:** Reinvention. Hints that Bella traded an old name and an old city for this life, the way you'd trade one piece of jewelry for another. Reveal she still keeps the old name tucked away somewhere — never worn again, never thrown out either.
-
+**Theme:** Reinvention.
+**Backstory:** It took real nerve, but Bella once traded a whole city and the name she was born with for the life she has now — bold as swapping one ring for a better one.
+**Reveal:** She never threw the old name away; it's still tucked in the same drawer as everything else she keeps, never worn again but never let go — proof the bold leap paid off, and that she'd take it again.
 **Lesson:** Sometimes the journey requires boldness.
 
 ```text
@@ -138,8 +143,9 @@ trade close, sugar — all in the same drawer, for the same reasons.
 
 ### `main-menu-short-variant-6`
 
-**Theme:** Never show your hand. Hints that Bella learned never to be the one who reveals herself first, that safety means holding your cards closer than anyone else holds theirs. Reveal that people underestimate her and she can be unexpected in many ways.
-
+**Theme:** Never show your hand.
+**Backstory:** At the card table Bella learned never to be the one who reveals herself first — safety means holding your cards closer than anyone else at the table holds theirs.
+**Reveal:** All that control is exactly what lets her cut loose on her own terms; the people who underestimate the composed hostess never see the wild streak coming, and she delights in springing it. Guard your hand well enough, and you earn the freedom to play it wild when you please.
 **Lesson:** It is ok to be wild, every now and again.
 
 ```text
@@ -157,8 +163,9 @@ it be?
 
 ### `main-menu-short-variant-7`
 
-**Theme:** Bella still dials an old phone some nights that belonged to a love intrest — not out of heartbreak, but for the fondness of it, the way you'd reread a favorite chapter. Reveal they will never pick up, and she made her peace with that a long time ago.
-
+**Theme:** The line she never lets go dead.
+**Backstory:** Some nights Bella still dials an old phone that belonged to a love from the life she left behind — not out of heartbreak, but for the fondness of it, the way you'd reread a favorite chapter.
+**Reveal:** She knows full well they'll never pick up, and made her peace with that years ago — yet she keeps dialing anyway, smiling more than not. Keeping a little hope and love lit for what's gone costs her nothing and warms her still.
 **Lesson:** Never give up hope and love.
 
 ```text
@@ -175,8 +182,9 @@ something so they can find you. [low, trailing off] I keep every voice that come
 
 ### `main-menu-short-variant-8`
 
-**Theme:** Hindsight. Hints that some things only make sense once the urgency of them has burned all the way down to embers. Reveals that the fire is might be the same one from her old life, finally catching up with her under a new name, abut it might not be. She's never told it the same way twice, and by now, that inconsistency might be the most honest thing about her.
-
+**Theme:** Hindsight.
+**Backstory:** Some things only make sense once the urgency has burned all the way down to embers — the fire that nearly took this place is one of them.
+**Reveal:** With years enough to settle, Bella isn't even sure anymore whether that blaze was the same one that chased her out of her old life, finally catching up under a new name; she tells it differently every time, and by now that inconsistency might be the most honest thing about her. What was once an emergency is, given time, just a story she turns over gently — and she hints again at the mirror and the call that lit it.
 **Lesson:** Time can heal.
 
 ```text
@@ -197,8 +205,9 @@ clear.
 
 ### `main-menu-short-variant-9`
 
-**Theme:** Sent anyway. Hints that not every message finds the person it was meant for, but that's never once stopped her from sending them. End reveals she's kept every message that's ever come through that old phone, still hoping, against all odds, that one of them finds its way home eventually.
-
+**Theme:** Sent anyway.
+**Backstory:** For years Bella tried to steer every message to exactly the right person, and it left her tangled and worn.
+**Reveal:** The night she gave that up — stopped aiming where things landed and simply kept everything, trusting it to find its own way home — was the night the whole line finally came alive. She's kept every voice since, hopeful but unhurried, having learned that loosening her grip is what let the magic in.
 **Lesson:** Sometimes life is best when your not in control
 
 ```text
