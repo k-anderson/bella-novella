@@ -23,7 +23,7 @@ Usage:
 Options:
   --all, --force     Regenerate every prompt, ignoring the baseline diff.
   --prompt NAME      Regenerate only the named prompt (repeatable), e.g.
-                     --prompt main-menu --prompt vm-saved. Bypasses the diff.
+                     --prompt main-menu --prompt message-saved. Bypasses the diff.
   --dry-run          Show what would change; do not call the API or write files.
   --list             List every prompt parsed from PROMPTS.md and exit.
   --no-convert       Skip the MP3 -> WAV conversion step.

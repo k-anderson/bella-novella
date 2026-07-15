@@ -103,7 +103,7 @@
       <action application="play_and_get_digits"
               data="0 1 1 1500 # $${prompts_dir}/playback-end.wav silence_stream://10 drawer_key '^9$' 100"/>
       <action application="transfer" data="PLAYBACK_END_KEY XML default"/>
-      <anti-action application="playback" data="$${prompts_dir}/vm-no_more_messages.wav"/>
+      <anti-action application="playback" data="$${prompts_dir}/playback-no-messages.wav"/>
       <anti-action application="sleep" data="1500"/>
       <anti-action application="transfer" data="700 XML default"/>
     </condition>

@@ -300,7 +300,7 @@ map the index to files, and resets `max_forwards` each cycle.
 
 **End sign-off & the hidden drawer.** After the last curated message, `MESSAGE_END` plays a
 reflective sign-off (`prompts/playback-end.wav`); if the store was empty it instead plays
-`vm-no_more_messages.wav` and returns to the menu. The drawer — **"Bella's drawer of secrets"** —
+`playback-no-messages.wav` and returns to the menu. The drawer — **"Bella's drawer of secrets"** —
 is opened either by pressing **9** during the sign-off (`PLAYBACK_END_KEY` → `DRAWER_OPEN`, starting
 at `drawer-start` = `PLAYBACK_LIMIT+1`, i.e. just past the curated window) **or** by pressing **9**
 any time during playback (`MESSAGE_KEY_DRAWER`/`MESSAGE_ANNOUNCE_KEY` → `DRAWER_OPEN`, starting at the
@@ -313,11 +313,11 @@ key replays it, and no key auto-advances. Because `bella-messages` re-lists the 
 oldest signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
 
 ### 4.5 `40_option3_leave.xml` — leave a message (option 3)
-`LEAVE_MESSAGE` answers, plays `vm-record_message.wav` and a beep, then `record`s up to **60 s** to
+`LEAVE_MESSAGE` answers, plays `message-record.wav` and a beep, then `record`s up to **60 s** to
 `recordings/messages/msg_<timestamp>_<uuid>.wav`. `record_min_sec=2` discards no-speech recordings;
 any DTMF digit stops the recording (`playback_terminators=any`). It then runs `bella-messages
 rotate` (prunes the oldest **only** when disk space is low — everything is kept otherwise), plays
-`vm-saved.wav`, and returns to the menu.
+`message-saved.wav`, and returns to the menu.
 
 ### 4.6 `50_disco_controls.xml` — hidden disco-ball controls (911 / 411 / 11)
 The only "disco" component: three hidden destinations that drive the relay HAT through the `disco_*`

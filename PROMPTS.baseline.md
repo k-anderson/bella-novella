@@ -315,88 +315,6 @@ or you're hunting for something I haven't offered — [low, content] either way,
 [low, knowing] You'll find the rest, if you're the type. [soft laugh] Now, shall we go again?
 ```
 
-## Messages
-
-### `vm-record_message`
-
-```text
-
-[warm, inviting] Go on, then, You've got sixty seconds to say what you need to say. [low] When you're done,
-just stop talking, or dial any digit, [sultry, intimate] [whispers] and it's mine to keep darling.
-```
-
-### `vm-saved`
-
-```text
-[warm, gentle] There. [low, fond] Tucked away safe, alongside all the rest.
-[low, worldly] I don't keep photographs sugar, [dry] those only get you caught. [warm] But a keepsake 
-like this? [soft laugh] That one stays with me for good.
-```
-
-### `vm-no_more_messages`
-
-```text
-[warm, bright] That's all I've a mind to share just now sugar. [sly, fond] A lady keeps a little 
-mystery, doesn't she?
-[warm, encouraging] Come back and I'll have more for you. [low, inviting] Or leave one of your own, 
-[soft laugh] [low, unhurried] Just a thought, stranger.
-```
-
-## Disco Ball
-
-### `disco-raise`
-
-```text
-[low, sly, building energy] Oh-ho. [delighted] Now there's a number I didn't think I'd hear again.
-[warm, remembering] You know what you've gone and exposed? That old mirror of mine, the one the 
-fire cracked clean to pieces, years back. [low, fond] I kept every last shard.
-[hushed, building] Look up, stranger. [soft] Watch the light catch those broken edges and scatter, 
-a hundred little sparks, skating over the walls, sliding across the floor, turning slow across the whole room.
-[warm, delighted] The very glow that once showed a room full of strangers the way to the door. 
-[soft laugh] And you thought I'd nothing left to give. [warm, building excitement] The desert's about to get 
-a little brighter. [low, sultry, strong Argentinian accent] Shall we dance?
-```
-
-### `disco-already-up`
-
-```text
-[amused] You did find the way to expose my broken mirror but its been turning quiet this whole time, 
-casting her little lights about, waiting on you to glance up and notice.
-[dry, soft laugh] What else were you after?
-[low, sultry] This one I raise for no reason but the pleasure of it. [warm] So, enjoy her.
-```
-
-### `disco-lower`
-
-```text
-[warm, low] Mmm. Time to bring her down now, [soft] gently.
-[fond, remembering] Watch those points of light go still, the ones that were dancing across the 
-ceiling a moment ago, slowing... [low] drawing back into that one cracked old mirror.
-[low, content] I don't mind the dark that follows. [warm] Everything worth keeping gets folded away 
-again, the mirror, the light, all of it.
-[knowing, warm] She'll rise and dance another night. [soft laugh] The good things always 
-come round again.
-```
-
-### `disco-already-down`
-
-```text
-[low, wry, amused] That would cover my mirror, but its already resting. [beat] Settled in the dark, every last
-light of her put away.
-[dry] Nothing to shine for you just now. [warm, teasing] Come back when there's a reason to tip your head back,
-maybe there is something you
-haven't found yet to bring it out. [sly] Find that and I'll wake it.
-```
-
-### `disco-stop`
-
-```text
-[amused, sly] Well, look at you. [soft laugh] Poking at the things I never mentioned.
-[dry, teasing] That one stops her cold, and no, there's no prize tucked behind it. [wry] Not 
-everything I keep is worth keeping for a reason.
-[low, warm] Some things I hold onto simply because I always have. [beat] Go on, try another.
-```
-
 ## No Answer
 
 ### `no-answer`
@@ -413,7 +331,33 @@ time somebody did that to me either.
 would.
 ```
 
+## Messages
+
+### `message-record`
+
+```text
+[warm, inviting] Go on, then, You've got sixty seconds to say what you need to say. [low] When you're done,
+just stop talking, or dial any digit, [sultry, intimate] [whispers] and it's mine to keep darling.
+```
+
+### `message-saved`
+
+```text
+[warm, gentle] There. [low, fond] Tucked away safe, alongside all the rest.
+[low, worldly] I don't keep photographs sugar, [dry] those only get you caught. [warm] But a keepsake 
+like this? [soft laugh] That one stays with me for good.
+```
+
 ## Playback Announcements
+
+### `playback-no-messages`
+
+```text
+[low, warm] Mmm. [wry, amused] Nothing waiting in the box tonight sugar. Not a whisper.
+[low, sly] A rare quiet, this. [soft laugh] I keep everything left here, and tonight there's nothing to keep.
+[warm, coaxing] So be the first. Leave me something worth holding onto,
+[low, inviting] or drift back later, once there's more to hear.
+```
 
 ### `playback-announcement-1-1`
 
@@ -1043,4 +987,59 @@ in no hurry. [sly, a soft laugh] Neither, it seems, are you.
 ```text
 [low, amused, unbothered, playful] Mmm. That's not a turn this story takes, darling. [beat, teasing] Listen
 again, [warm, coaxing] and choose one of the paths I've laid before you.
+```
+
+## Disco Ball
+
+### `disco-raise`
+
+```text
+[low, sly, building energy] Oh-ho. [delighted] Now there's a number I didn't think I'd hear again.
+[warm, remembering] You know what you've gone and exposed? That old mirror of mine, the one the 
+fire cracked clean to pieces, years back. [low, fond] I kept every last shard.
+[hushed, building] Look up, stranger. [soft] Watch the light catch those broken edges and scatter, 
+a hundred little sparks, skating over the walls, sliding across the floor, turning slow across the whole room.
+[warm, delighted] The very glow that once showed a room full of strangers the way to the door. 
+[soft laugh] And you thought I'd nothing left to give. [warm, building excitement] The desert's about to get 
+a little brighter. [low, sultry, strong Argentinian accent] Shall we dance?
+```
+
+### `disco-already-up`
+
+```text
+[amused] You did find the way to expose my broken mirror but its been turning quiet this whole time, 
+casting her little lights about, waiting on you to glance up and notice.
+[dry, soft laugh] What else were you after?
+[low, sultry] This one I raise for no reason but the pleasure of it. [warm] So, enjoy her.
+```
+
+### `disco-lower`
+
+```text
+[warm, low] Mmm. Time to bring her down now, [soft] gently.
+[fond, remembering] Watch those points of light go still, the ones that were dancing across the 
+ceiling a moment ago, slowing... [low] drawing back into that one cracked old mirror.
+[low, content] I don't mind the dark that follows. [warm] Everything worth keeping gets folded away 
+again, the mirror, the light, all of it.
+[knowing, warm] She'll rise and dance another night. [soft laugh] The good things always 
+come round again.
+```
+
+### `disco-already-down`
+
+```text
+[low, wry, amused] That would cover my mirror, but its already resting. [beat] Settled in the dark, every last
+light of her put away.
+[dry] Nothing to shine for you just now. [warm, teasing] Come back when there's a reason to tip your head back,
+maybe there is something you
+haven't found yet to bring it out. [sly] Find that and I'll wake it.
+```
+
+### `disco-stop`
+
+```text
+[amused, sly] Well, look at you. [soft laugh] Poking at the things I never mentioned.
+[dry, teasing] That one stops her cold, and no, there's no prize tucked behind it. [wry] Not 
+everything I keep is worth keeping for a reason.
+[low, warm] Some things I hold onto simply because I always have. [beat] Go on, try another.
 ```

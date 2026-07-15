@@ -7,7 +7,7 @@
     <condition field="destination_number" expression="^LEAVE_MESSAGE$">
       <action application="answer"/>
       <!-- "record your message" prompt. -->
-      <action application="playback" data="$${prompts_dir}/vm-record_message.wav"/>
+      <action application="playback" data="$${prompts_dir}/message-record.wav"/>
       <!-- Beep, then begin recording. -->
       <action application="playback" data="tone_stream://%(500,0,800)"/>
       <!-- Discard recordings shorter than 2s (treated as no speech). -->
@@ -19,7 +19,7 @@
       <!-- Prune only if disk is low; keep everything otherwise. -->
       <action application="set" data="bella_rotate=${system($${bella_messages} rotate)}"/>
       <!-- "saved" prompt. -->
-      <action application="playback" data="$${prompts_dir}/vm-saved.wav"/>
+      <action application="playback" data="$${prompts_dir}/message-saved.wav"/>
       <action application="sleep" data="1500"/>
       <action application="transfer" data="700 XML default"/>
     </condition>
