@@ -1,7 +1,8 @@
 <include>
   <!-- Option 2: listen to messages, newest first (newest 10 only).
 
-       Each message has a lead-in announcement (playback-announcement-<idx>)
+       Each message has a lead-in announcement (one of the
+       playback-announcement-<idx>-* variants, chosen at random)
        played as a SEPARATE prompt before the message itself:
          - No key while a message plays: auto-advance to the next message, WITH
            its announcement.

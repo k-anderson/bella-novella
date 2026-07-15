@@ -17,9 +17,9 @@ set -euo pipefail
 #   rotate                  prune the oldest messages ONLY when disk space is low
 #   count                   print how many messages are playable (<= PLAYBACK_LIMIT)
 #   resolve <index>         print the absolute path of the 1-based Nth playable message
-#   announcement <index>    print the lead-in announcement wav for the Nth message,
-#                           or empty when prompts/playback-announcement-<index>.wav
-#                           does not exist
+#   announcement <index>    print a lead-in announcement wav for the Nth message,
+#                           dealt from the playback-announcement-<index>-* shuffle
+#                           bag, or empty when no such variant exists
 #   step <index> next|prev  print the next/previous clamped index (0 = past end)
 #   count-all               print the total number of stored messages (unwindowed)
 #   resolve-all <index>     like resolve, but over ALL stored messages, newest-first
@@ -32,8 +32,9 @@ set -euo pipefail
 #                           archive does not exceed the window
 #   pick <prefix>           print the absolute path of the next
 #                           prompts/<prefix>-N.wav (e.g. invalid-entry,
-#                           main-menu-short-variant, game-win) from a per-prefix
-#                           shuffle-bag: every variant plays once, in random
+#                           main-menu-short-variant, playback-announcement-3,
+#                           game-win) from a per-prefix shuffle-bag: every
+#                           variant plays once, in random
 #                           order, before any repeats. State lives on tmpfs
 #                           (BELLA_PICK_STATE_DIR, default /run/bella-novella/
 #                           pick); falls back to a plain random draw if that dir
@@ -119,16 +120,18 @@ cmd_resolve() {
 }
 
 # Print the lead-in announcement wav for the 1-based Nth message, played as a
-# separate prompt before the message. Empty when that announcement file does not
-# exist (so the message plays with no announcement).
+# separate prompt before the message. Each message index has up to three
+# interchangeable variants (playback-announcement-<idx>-1..3); deal one from the
+# per-index shuffle bag (via cmd_pick) so the same lead-in rarely repeats back to
+# back. Empty when no variant exists for that index (so the message plays with no
+# announcement).
 cmd_announcement() {
-  local idx="${1:-0}" ann
-  ann="$PROMPTS_DIR/playback-announcement-${idx}.wav"
-  if [ -f "$ann" ]; then
-    printf '%s' "$ann"
-  else
-    printf ''
-  fi
+  local idx="${1:-0}"
+  case "$idx" in
+    ''|*[!0-9]*) printf ''; return 0 ;;
+  esac
+  [ "$idx" -ge 1 ] || { printf ''; return 0; }
+  cmd_pick "playback-announcement-${idx}"
 }
 
 cmd_step() {
@@ -211,8 +214,9 @@ cmd_drawer_start() {
 # once, in a random order, before any repeats. State persists between
 # invocations in PICK_STATE_DIR (tmpfs) and is guarded by flock so concurrent
 # calls get distinct entries. Backs every interchangeable prompt family the IVR
-# chooses at random: the invalid-entry scolds, the short main-menu greetings,
-# and the game intro/win/lose and higher/lower variants. Falls back to a single
+# chooses at random: the invalid-entry scolds, the short main-menu greetings, the
+# per-message playback announcements, and the game intro/win/lose and higher/lower
+# variants. Falls back to a single
 # random draw if the state dir is unusable, so the IVR never breaks.
 cmd_pick() {
   local prefix="${1:-}"

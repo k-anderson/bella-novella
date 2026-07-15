@@ -306,11 +306,6 @@ or you're hunting for something I haven't offered — [low, content] either way,
 ```text
 [amused, private] Some parties need an invitation. [dry, low] Sometimes you just need to know where to go.
 [gentle] One, two, three. [sly] Those are the invitations I have given out, why don't you try again?
-
-
-[amused, private] Some things here open only for those who know who to ask. [sly] The concierge 
-and I, we have an understanding.
-[low, warm] But I'm not in a generous mood tonight. [beat] So ask me again, properly.
 ```
 
 ### `invalid-entry-10`
@@ -420,7 +415,7 @@ would.
 
 ## Playback Announcements
 
-### `playback-announcement-1`
+### `playback-announcement-1-1`
 
 ```text
 [warm, low] These are the traces left in the wire.
@@ -428,7 +423,23 @@ would.
 [warm, unhurried] Here's the first.
 ```
 
-### `playback-announcement-2`
+### `playback-announcement-1-2`
+
+```text
+[low, velvet] These are the voices left behind, and I never let a one fade.
+[warm] As you listen dial 1 at any time to skip to the next.
+[coaxing] The first for you darling.
+```
+
+### `playback-announcement-1-3`
+
+```text
+[warm, low] The dark here keeps everything ever whispered into it.
+[amused] Done listening to a message? Dialing 1 at anytime leads onward. [coaxing] 
+Here is the first love.
+```
+
+### `playback-announcement-2-1`
 
 ```text
 [amused, soft laugh] Amusing, wasn't it? [warm] And should one ever beg a second hearing, dial 2, anytime,
@@ -436,7 +447,22 @@ and I'll play it again.
 [sly, low] Now, let's have the second.
 ```
 
-### `playback-announcement-3`
+### `playback-announcement-2-2`
+
+```text
+[low, amused] Someone had a weight on them. [savoring] This line tends to draw that out.
+[warm] Care to hear it again? Dialing 2 at anytime slips you back.
+[velvet, sly] Lets hear the second.
+```
+
+### `playback-announcement-2-3`
+
+```text
+[dry, warm] That's the sort of thing you only say when you're sure no one's near. [amused] Bold.
+[low] Want it again? Dialing 2 anytime will take you back. [sly, velvet] If not, we land on number two.
+```
+
+### `playback-announcement-3-1`
 
 ```text
 [dry, amused] Mmm. That one had a bit of everything, didn't it. [wry] Some people simply cannot help themselves, 
@@ -444,42 +470,129 @@ and I'll play it again.
 [low, sly] On to the third.
 ```
 
-### `playback-announcement-4`
+### `playback-announcement-3-2`
+
+```text
+[dry, amused] That one wandered all over, didn't it. [fond] I do adore a rambler.
+[low, private] Bits like that go in a drawer most folk never find. [velvet] Now the third.
+```
+
+### `playback-announcement-3-3`
+
+```text
+[wry, low] Straight to the point, that one. [amused] I respect a soul who doesn't knock first.
+[dry] The locals here never trust a knock. [soft laugh] Nor do I. [sly, velvet] The third steps up.
+```
+
+### `playback-announcement-4-1`
 
 ```text
 [amused] The things folk will own up to, with only a dial tone for company. [soft laugh]
-[low, unhurried] Remember, 1 carries you onward, 2 takes you back. [warm] The fourth, then.
+[low, unhurried] Remember, 1 carries you onward, 2 takes you back. [warm] The fourth then.
 ```
 
-### `playback-announcement-5`
+### `playback-announcement-4-2`
+
+```text
+[amused] What a person will admit to an empty room. [soft laugh] Warms me, it does.
+[low] Keep it in mind sugar: 1 moves you ahead, 2 and back you go. [velvet] Onward to number four.
+```
+
+### `playback-announcement-4-3`
+
+```text
+[dry, low] Some voices carry a whole history. [wry] I set down a name and a city once, and don't mourn it.
+[warm] The compass stays simple: 1 ahead, 2 back. [velvet] That leaves us at the fourth.
+```
+
+### `playback-announcement-5-1`
 
 ```text
 [low, amused] Oh, I've a soft spot for that one. [wry] The bold ones always did know how to hold a room.
 [warm] Here comes the fifth.
 ```
 
-### `playback-announcement-6`
+### `playback-announcement-5-2`
 
 ```text
-[amused] Reminded me of someone, [soft laugh] most of them do, one way or another.
+[low, amused] Listen to the nerve on that one. [soft laugh] Takes daring to speak so freely.
+[velvet] Time for the fifth.
+```
+
+### `playback-announcement-5-3`
+
+```text
+[dry, warm] A little fire in that one. [amused] My kind of caller, truly.
+soft laugh] The fifth is up now.
+```
+
+### `playback-announcement-6-1`
+
+```text
+[amused] Reminded me of someone, [smirk] most of them do, one way or another.
 [low] Number six, coming up.
 ```
 
-### `playback-announcement-7`
+### `playback-announcement-6-2`
+
+```text
+[low, fond] That voice took me back to someone I used to ring, late, after the music stopped.
+[velvet] Lets usher in the sixth.
+```
+
+### `playback-announcement-6-3`
+
+```text
+[wry, amused] Somebody came a long way to say that. [chuckles] Everything worth hearing travels.
+[low] I did too, once. A port, a train inland, and then, well. Here.
+[velvet] and now we arrive at the sixth.
+```
+
+### `playback-announcement-7-1`
 
 ```text
 [amused, soft laugh] People are marvellous, aren't they, the things they'll confess to a telephone.
 [low, private] I've not forgotten a one; that's the curse of a memory like mine. [sly] The seventh's next.
 ```
 
-### `playback-announcement-8`
+### `playback-announcement-7-2`
+
+```text
+[amused] People are a wonder. [velvet] What they'll trust to a stranger in the dark.
+[low, private] I keep every one. [sly] Seventh next in line.
+```
+
+### `playback-announcement-7-3`
+
+```text
+[warm, amused] A whole story tucked in that one. 
+[sly] I especially like collecting the good ones.
+[velvet] The seventh takes the floor.
+```
+
+### `playback-announcement-8-1`
 
 ```text
 [low, amused] Ha. That one wasn't meant for a soul [sly] lucky it wandered in to me.
 [low, warm] Let's hear the eighth.
 ```
 
-### `playback-announcement-9`
+### `playback-announcement-8-2`
+
+```text
+[low, amused] That one slipped out before they meant it to. [knowing] Happens on this line.
+[private, warm] A secret sits safest with someone who'll hold it and keep it. [sly] Up next, the eighth.
+```
+
+### `playback-announcement-8-3`
+
+```text
+[dry, sly] Between us, that one had business to settle. [soft laugh] I know the type.
+[low, amused] I run a quiet errand now and then. Brown paper, twine, no questions.
+[velvet] Let me deliever you number eight.
+```
+
+### `playback-announcement-9-1`
 
 ```text
 [dry, low] That one recorded the message five times, each one a little less honest than the last.
@@ -487,11 +600,39 @@ and I'll play it again.
 [low] On we go, the ninth.
 ```
 
-### `playback-announcement-10`
+### `playback-announcement-9-2`
 
 ```text
-[wry, amused, soft laugh] Well, we've reached the last of the ten I laid out on the table.
+[dry, amused] That one changed its story halfway through. [tuts] Oh, I know the type.
+[wry, low] Ask about my past twice, you'll get two tales. [sly] Both true. [velvet] Round to the ninth.
+```
+
+### `playback-announcement-9-3`
+
+```text
+[low, amused] That one wanted to be liked.
+[playful] Being liked by me and being safe with me darling, are two different things. [velvet] The ninth.
+```
+
+### `playback-announcement-10-1`
+
+```text
+[wry, amused] Well, we've reached the last of the ten I laid out on the table.
 [warm] Go on, then: the tenth.
+```
+
+### `playback-announcement-10-2`
+
+```text
+[wry, amused] Nine behind us. [reassuring] A patient streak you've got, I'll grant you that.
+[low, knowing] Ten ends the plain menu. [sly] The curious know I keep more back. [velvet] And the tenth.
+```
+
+### `playback-announcement-10-3`
+
+```text
+[warm, low] Nine down, and here we are at the finish. [gentle] Went quick, didn't it.
+[content, fond] I do love where a night like this lands. [velvet] Number ten, the final one love.
 ```
 
 ### `playback-end`
