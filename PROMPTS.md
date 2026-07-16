@@ -1051,11 +1051,11 @@ everything I keep is worth keeping for a reason.
 ```text
 [low, warm, knowing] You're not here for a story, are you sugar? [delighted] I hope that you're 
 enjoying my charm, interactivity and uniqueness. [intimate] But you must be here to look under 
-my skirts. [sly] Must be a builder, like Megan Anderson and Taylor Anderson that brought me to 
+my skirts. [warm, unhurried] Must be a builder, like Megan Anderson and Taylor Anderson that brought me into 
 reality with the help of so many, mostly family. [playful] Come close then, and I'll tell you 
 every detail about me, one maker to another.
 
-[fond, unhurried] Underneath all my velvet I started life as a 2011 Cushman Titan industrial cart, moving 
+[fond] Underneath all my velvet I started life as a 2011 Cushman Titan industrial cart, moving 
 things around a warehouse. [confiding] Saved from oblivion rusting away in a Florida backyard, where I live, 
 [dry] I was stripped clean to the frame.  The original motor, controller, batteries, all the wiring, 
 every ounce of dead weight removed. [brisk, proud] Then I was built back up. The mechanical brakes 
@@ -1066,7 +1066,7 @@ for breathing new life in me?
 [proud] My heart is a thirty-six volt electrical system. [bemused] To give me real muscle, it powers a
 D&D Motor Systems high-torque EZGO motor.  Usually used for large golf carts, it's a shunt-wound thing 
 built to pull. That provides plenty of power to get my more than three thousand pounds around with hardly 
-a strain. [knowing] The motor is controlled by a five hundred amp Alltrax XCT controller, who have provide 
+a strain. [knowing] The motor is controlled by a five hundred amp Alltrax XCT controller, who have provided 
 excellent support despite [sly] not exactly being used as intended. [delighted] And because I have regen, when 
 braking I get that energy back and easy single-pedal drive.
 
@@ -1075,9 +1075,9 @@ maintenance, and relatively simple. [low, matter-of-fact] I have a total of six,
 phosphate batteries. [confiding] Lithium iron phosphate was chosen for its capacity, low weight, long life, 
 steady voltage, and safer chemistry because it has far less chance of thermal runaway. [fond] Each battery also 
 has its own built in battery management system balancing voltages, providing remote shut-off, real-time temperature 
-monitoring, and automatic saftey cut-outs. [knowing] They are wired as two banks of three batteries 
-in parallel, with on-board charges for both to recharge the eleven thousand watt hours of energy simultanously.
-[sultry] That allows me to drive solid in the worse conditions for a minimum of 4 hours per bank, but often 
+monitoring, and automatic safety cut-outs. [knowing] They are wired as two banks of three batteries 
+in parallel, with on-board chargers for both to recharge the eleven thousand watt hours of energy simultaneously.
+[sultry] That allows me to drive solid in the worst conditions for a minimum of 4 hours per bank, but often 
 I go much longer. [reassuring] To keep all those angry electrons from escaping I have redundant fuses everywhere, 
 [brisk] at each battery terminal, the main bus bars, between the converter, inverter, and amplifiers, as well 
 as for every switch and light. [sultry] Safety third, sugar. [knowing] Running off just one bank at a time also 
@@ -1093,7 +1093,7 @@ than one crowded one.
 [velvet] The fire up front is powered by a two kilowatt inverter that lifts thirty-six volts clear to a
 hundred and ten volt alternating current. A normal household outlet. [sly] A hearth that runs on lithium. Imagine.
 [low] For the smaller things I keep a separate twelve volt system. An isolated thirty amp converter steps my
-thirty-six volts down to continously charge a twelve volt AGM battery, [warm] and that carries my lights,
+thirty-six volts down to continuously charge a twelve volt AGM battery, [warm] and that carries my lights,
 all my controls and my amplifiers.
 
 [building] Speaking of amplifiers, I'm no sound car, but I've got a little bump. Four six-and-a-half inch
@@ -1113,7 +1113,7 @@ can use a proper handset to interact with me. [sly] That same little computer wo
 two relays flipping polarity back and forth to drive the actuator that raises and lowers my mirror ball and another 
 to turn on the disco lights as well as spin. [warm] To keep it interesting callers discover hidden features, 
 and my backstory, by experimenting and playing on the phone to find options I only hint at. The most inquisitive 
-discovering how to raise the disco ball themself. But the basics are provided outright for those that are less curious.
+discovering how to raise the disco ball themselves. But the basics are provided outright for those that are less curious.
 
 [steady, reassuring] Keeping my riders safe is a priority. [soft] Decorative pieces stand as barriers so no 
 hem or sleeve gets caught but fold up to reveal the batteries or when I am being transported. [low] I normally brake
