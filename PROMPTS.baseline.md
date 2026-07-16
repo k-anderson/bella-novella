@@ -1052,11 +1052,12 @@ everything I keep is worth keeping for a reason.
 [low, warm, knowing] You're not here for a story, are you sugar. [delighted] I hope that you are 
 enjoying my charm, interactivity and uniqueness. [intimate] But you must be here to look under my skirts. 
 [sly] Must be a builder, like Megan Anderson and Taylor Anderson that brought me to reality with the help of so 
-many, mostly family. [amused, dry] Come close then, and I'll tell you how I'm made, one maker to another.
+many, mostly family. [soft laugh] [playful] Come close then, and I'll tell you every detail about me,
+one maker to another.
 
 [fond, unhurried] Underneath all my velvet I started life as a 2011 Cushman Titan, an industrial warehouse cart.
 [low, matter-of-fact] The Titan was chosen for its bones, heavy suspension and a frame built to carry the weight 
-I'd become. Saved from oblivion rusting away in someone's backyard in Florida, where I live. [dry] I was stripped 
+I'd become. Saved from oblivion rusting away in a Florida backyard, where I live. [dry] I was stripped 
 clean to the frame, the original motor and controller, the batteries, all the wiring, every ounce of dead 
 weight removed. [brisk, proud] Then I was built back up. The mechanical brakes and bearings replaced, new tires, and 
 the vague steering components renewed with fresh ones. Without access to a press, the jaws of life from the 
@@ -1068,7 +1069,7 @@ conditions. [knowing] All controlled by a five hundred amp Alltrax controller, g
 days ahead, [delighted] and because I have regen, when braking I get that energy back and provides my easy single-pedal 
 drive. [warm] The rest is a custom wiring harness and power distribution of our own making, from the ground up.
 
-[velvet] Battery power, darling, might be a trick worth stealing. Quiet, low maintenance, and relatively simple. 
+[velvet] Battery power, darling, might be a trick worth remembering. Quiet, low maintenance, and relatively simple. 
 [low, matter-of-fact] My pack isn't one bank, it's two, kept wholly independent, each with its own onboard 
 charger. [dry] Three thirty-six volt, hundred amp-hour Lithium iron phosphate batteries wired in parallel, provide 
 eleven thousand watt hours per bank. Lithium iron phosphate was chosen for the long life, steady voltage, and safer 
