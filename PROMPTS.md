@@ -605,7 +605,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [low, sly, utterly delighted] Ohh. [intrigued, leaning in] You want to play a little game with me?
 [velvet, amused] Simple enough. I've a number in mind, somewhere from one to nine.
 [teasing, playful] You guess, and I'll whisper whether to climb higher or drop lower.
-[low, purring] Only a handful of tries, mind. [warm, coaxing, a spark of mischief] Go on. Your first guess?
+[low, purring] Only a handful of tries, mind. [warm, coaxing, a spark of mischief] Go on. Dial your first guess.
 ```
 
 ### `game-intro-2`
@@ -615,7 +615,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [velvet, amused] Here's the shape of it. I'm holding a number, one through nine.
 [teasing, playful] Dial a digit and I'll tell you higher or lower.
 [low, purring] You've a handful of tries to catch me. 
-[coaxing, a spark of mischief] Give me your first guess sugar.
+[coaxing, a spark of mischief] Dial me your first guess sugar.
 ```
 
 ### `game-intro-3`
@@ -624,7 +624,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [sly, low, amused] Look at that, a challenger.
 [velvet] Here's my game. One number, tucked in my head, somewhere between one and nine.
 [playful] Try to guess it. Every miss, and I'll nudge you higher or lower.
-[low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, what's your first?
+[low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, dial your first.
 ```
 
 ### `game-intro-4`
@@ -633,7 +633,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [low, intrigued, warm] Mmm, you wandered right into one of my secrets. [delighted] Not many manage that.
 [velvet, amused] So. A number, one to nine, and I'm the only soul who knows it.
 [teasing, playful] You dial a number. I answer, higher or lower.
-[low, purring] A handful of guesses, no more. [coaxing] Off you go. Let's hear your first.
+[low, purring] A handful of guesses, no more. [coaxing] Off you go. Dial your first guess.
 ```
 
 ### `game-intro-5`
@@ -642,7 +642,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just us two and a little game.
 [velvet, warm] I'll think of a number between one and nine, darling.
 [teasing, playful] You guess, I steer you. Higher. Lower.
-[low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] First guess, surprise me!
+[low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] Dial your first guess, surprise me!
 ```
 
 ### `game-higher-1`

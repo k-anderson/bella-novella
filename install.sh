@@ -539,7 +539,8 @@ IVR options:
   2   = listen to messages (newest 10; 1 = next, 2 = previous)
   3   = leave a message (max 60s)
   911 = raise the disco ball
-  411 = lower the disco ball
+  811 = lower the disco ball
+  411 = about the art car
   11  = stop the disco ball
 
 Relay command:

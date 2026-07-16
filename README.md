@@ -61,7 +61,7 @@ screen, or internet dependency:
 5. **Leave a message** — dial `3` to record a message into the store.
 6. **Hidden — Dial a line directly** — dial `101`–`104` to ring that specific phone, or `0` to reach the
    concierge (line 104).
-7. **Hidden — Raise / lower / stop the actuator** — dial `911` to raise, `411` to lower, and `11` to stop
+7. **Hidden — Raise / lower / stop the actuator** — dial `911` to raise, `811` to lower, and `11` to stop
    the "disco ball" (the motorized mirror), via the relay HAT.
 8. **Hidden — branching story** — dial `9` (never announced) for Bella's branching fable.
 9. **Hidden — guess-my-number game** — dial `5` (never announced) to play.
@@ -95,7 +95,7 @@ backstory — they point the caller toward controls the spoken menu never mentio
 
 | Tip | What it points to | Prompt |
 |---|---|---|
-| **The broken mirror / disco ball** | Hints that the mirror salvaged from the fire is "just hidden" and can "scatter light in the darkness once more" if you "listen carefully" — a nudge toward the unspoken disco-ball controls (**911** raise, **411** lower, **11** stop; §4.6). The main-menu greetings (notably short variants 3 and 8) drop the matching hint that an *emergency* number brings the light back. | `game-win-4` |
+| **The broken mirror / disco ball** | Hints that the mirror salvaged from the fire is "just hidden" and can "scatter light in the darkness once more" if you "listen carefully" — a nudge toward the unspoken disco-ball controls (**911** raise, **811** lower, **11** stop; §4.6). The main-menu greetings (notably short variants 3 and 8) drop the matching hint that an *emergency* number brings the light back. | `game-win-4` |
 | **Bella's drawer of secrets** | Tells the winner she keeps *every* message, not just the last ten, and that dialing **9** at the "that's all of the messages I care to share right now" sign-off keeps going into the full archive — the hidden message drawer (§4.4). | `game-win-5` |
 
 A few things worth knowing:
@@ -181,7 +181,7 @@ phone can dial, as opposed to a selection collected inside the menu prompt):
 | *any other digits* | `10_inbound_and_menu.xml` (`all-calls-to-menu`) | Numeric-only catch-all → transferred to the menu (`700`). |
 
 Inside the menu, `play_and_get_digits` additionally collects `0`, `1`, `2`, `3`, `5`, `9`, `11`,
-`411`, `911`, and `101`–`104` (see §4.2) — these are menu selections, not standalone extensions.
+`411`, `811`, `911`, and `101`–`104` (see §4.2) — these are menu selections, not standalone extensions.
 
 **Virtual destinations** — internal `transfer` targets. They are lettered/upper-case so they never
 collide with dialable numbers, and are grouped here by the file that handles them:
@@ -245,7 +245,7 @@ dialed number from the ATA to the menu; it is numeric-only and placed last so it
 lettered internal targets (`CALL_OTHER`, `DISCO_RAISE`, …) or the 101–104 extensions in §4.1.
 
 The menu greets and collects one option with `play_and_get_digits` (1–3 digits, `*` terminator,
-validated to `^(0|1|2|3|5|9|911|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves `1` vs `11`
+validated to `^(0|1|2|3|5|9|911|811|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves `1` vs `11`
 vs `101`–`104`). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the
 call (`menu-first`); every later return plays **one of nine random short greetings**
 (`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages pick main-menu-short-variant`, §5.2), tracked
@@ -261,7 +261,8 @@ transfers away:
 | **101**–**104** | `101`…`104` | Dial that SIP line directly — §4.1 |
 | **0** | `104` | Dial the concierge (line 104) — §4.1 |
 | **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball — §4.6 |
-| **411** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §4.6 |
+| **811** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §4.6 |
+| **411** | `dispatch-about` | *(hidden)* Play the art-car "about" prompt (`about.wav`) — its creators and the build — then return to the menu |
 | **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §4.6 |
 | **9** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
@@ -274,7 +275,8 @@ Completed actions transfer back to `700`.
 
 > **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else is
 > *unannounced*: dialing a line directly (**101**–**104**, or **0** for the concierge), the disco
-> controls (**911** raise, **411** lower, **11** stop), the branching story (**9**), the
+> controls (**911** raise, **811** lower, **11** stop), the art-car "about" prompt (**411**), the
+> branching story (**9**), the
 > guess-my-number game (**5**), and the message drawer reached after listening to everything (§4.4).
 > Bella hints there's more — *"one of the ones I don't say out loud"* — but never names them.
 
@@ -319,7 +321,7 @@ any DTMF digit stops the recording (`playback_terminators=any`). It then runs `b
 rotate` (prunes the oldest **only** when disk space is low — everything is kept otherwise), plays
 `message-saved.wav`, and returns to the menu.
 
-### 4.6 `50_disco_controls.xml` — hidden disco-ball controls (911 / 411 / 11)
+### 4.6 `50_disco_controls.xml` — hidden disco-ball controls (911 / 811 / 11)
 The only "disco" component: three hidden destinations that drive the relay HAT through the `disco_*`
 commands in `vars.xml` (which shell out to `scripts/disco-relay`, §5.1). Each reads the tracked
 position first via `${system($${disco_position})}` (`up` / `down` / `unknown`):
@@ -327,13 +329,17 @@ position first via `${system($${disco_position})}` (`up` / `down` / `unknown`):
 - **911** (`DISCO_RAISE`) raises unless already `up` (then it plays `disco-already-up.wav` and does
   nothing); otherwise it starts `disco_raise` = `disco-relay raise 120 75` and plays
   `disco-raise.wav` over the movement.
-- **411** (`DISCO_LOWER`) lowers unless already `down` (`disco-already-down.wav`); otherwise it
+- **811** (`DISCO_LOWER`) lowers unless already `down` (`disco-already-down.wav`); otherwise it
   starts `disco_lower` = `disco-relay lower 120 5` and plays `disco-lower.wav`.
 - **11** (`DISCO_STOP`) runs `disco_stop` = `disco-relay brake`, cancelling any movement **and
-  resetting the position to `unknown`** so 911 or 411 will run next; plays `disco-stop.wav`.
+  resetting the position to `unknown`** so 911 or 811 will run next; plays `disco-stop.wav`.
 
 Every path returns to the menu. Position is `unknown` at boot and after **11** (it lives on `/run`,
 tmpfs). Tune the drive seconds and spot-light percentages in [`conf/vars.xml`](conf/vars.xml).
+
+The unrelated **411** "about the art car" option (`dispatch-about`) lives in the menu file
+(§4.2): it plays `about.wav` — describing the art car, its creators, and the build — then returns
+to the menu.
 
 ### 4.7 `60_option9_tale.xml` — hidden branching story "The Ember" (option 9)
 Dialing **9** (never announced) opens **"The Ember"**, a branching fable Bella reads aloud. Each

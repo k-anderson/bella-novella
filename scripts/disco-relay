@@ -42,7 +42,7 @@ LOCK_FILE="/run/disco-relay.lock"
 PID_FILE="/run/disco-relay.pid"
 # Tracks whether the ball is up or down. It lives on /run (tmpfs), so it resets
 # each boot. When there is no state (fresh boot, or after brake) the position
-# reads "unknown" so that EITHER raise (911) or lower (411) will run next.
+# reads "unknown" so that EITHER raise (911) or lower (811) will run next.
 STATE_FILE="/run/disco-relay.state"
 LOG_TAG="disco-relay"
 SETTLE_TIME="0.15"
