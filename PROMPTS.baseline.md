@@ -640,7 +640,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 
 ```text
 [sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just us two and a little game.
-[velvet, warm] One number, darling, one to nine, and I've got it hidden away.
+[velvet, warm] I'll think of a number between one and nine, darling.
 [teasing, playful] You guess, I steer you. Higher. Lower.
 [low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] First guess, surprise me!
 ```
