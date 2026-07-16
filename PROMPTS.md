@@ -1100,11 +1100,11 @@ ingest dust. And a 12 inche dual voice coil sub-woofer give me that thump when I
 
 [hushed, delighted] I'm lit underneath on every side as well as the shelves with custom warm white LED strips. 
 Some running at twenty-four volts to get that golden glow only the additional voltage can provide. 
-[soft] And from the center of me a hidden mirror ball can rise out of a hidden compartment, using 
+[soft] And from the center of me a hidden mirror ball can rise out of a compartment, using 
 a linear actuator.  Once up two focused motorcycle headlights scatter little spots everywhere.
 
 [low, confiding] This voice of mine? [dry] There's a Raspberry Pi tucked behind my shelves running a
-custom build of FreeSWITCH, wired through a Grandstream analog telephone adapter so a riders can use a proper handset
+custom build of FreeSWITCH, wired through a Grandstream analog telephone adapter so riders can use a proper handset
 to interact with me. [sly, warm] That same little computer works three relays through the Pi I/O, two relays
 flipping polarity back and forth, to drive the actuator that raises and lowers my mirror ball and another to turn
 on the disco lights as well as spin.  Callers discover hidden features and my backstory by experimenting and playing on
