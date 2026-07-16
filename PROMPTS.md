@@ -1049,40 +1049,42 @@ everything I keep is worth keeping for a reason.
 ### `about-1`
 
 ```text
-[low, warm, knowing] You're not here for a story, are you sugar. [delighted] I hope that you're 
-enjoying my charm, interactivity and uniqueness. [intimate] But you must be here to look under my skirts. 
-[sly] Must be a builder, like Megan Anderson and Taylor Anderson that brought me to reality with the help of so 
-many, mostly family. [playful] Come close then, and I'll tell you every detail about me,
-one maker to another.
+[low, warm, knowing] You're not here for a story, are you sugar? [delighted] I hope that you're 
+enjoying my charm, interactivity and uniqueness. [intimate] But you must be here to look under 
+my skirts. [sly] Must be a builder, like Megan Anderson and Taylor Anderson that brought me to 
+reality with the help of so many, mostly family. [playful] Come close then, and I'll tell you 
+every detail about me, one maker to another.
 
-[fond, unhurried] Underneath all my velvet I started life as a 2011 Cushman Titan, an industrial warehouse cart.
-[low, matter-of-fact] The Titan was chosen for its bones, heavy suspension and a frame built to carry the weight 
-I'd become. Saved from oblivion rusting away in a Florida backyard, where I live. [dry] I was stripped 
-clean to the frame, the original motor and controller, the batteries, all the wiring, every ounce of dead 
-weight removed. [brisk, proud] Then I was built back up. The mechanical brakes and bearings replaced, new tires, and 
-the vague steering components renewed with fresh ones. Without access to a press, the jaws of life from the 
-fire station were used to release the most stubborn parts. How appropriate for breathing new life in me? [proud] 
-I am powered by a thirty-six volt lithium system. Giving me real muscle is a D&D Motor Systems high-torque EZGO regen 
-motor. It's a shunt-wound thing built to pull, so I have more torque than originally, which was already 
-capable of moving three thousand pounds at speed. [warm] Just what a girl my weight wants, hardly a strain in trying 
-conditions. [knowing] All controlled by a five hundred amp Alltrax controller, giving lots of headroom for the hard 
-days ahead, [delighted] and because I have regen, when braking I get that energy back and it provides my easy single-pedal 
-drive. [warm] The rest is a custom wiring harness and power distribution of our own making, from the ground up.
+[fond, unhurried] Underneath all my velvet I started life as a 2011 Cushman Titan industrial cart, moving 
+things around a warehouse. [confiding] Saved from oblivion rusting away in a Florida backyard, where I live, 
+[dry] I was stripped clean to the frame.  The original motor, controller, batteries, all the wiring, 
+every ounce of dead weight removed. [brisk, proud] Then I was built back up. The mechanical brakes 
+and bearings replaced, new tires, and the vague steering components renewed with fresh ones. Without access 
+to a press, jaws of life from the fire station were used to release the most stubborn parts. How appropriate 
+for breathing new life in me?
 
-[velvet] Battery power, darling, might be a trick worth remembering. Quiet, low maintenance, and relatively simple. 
-[low, matter-of-fact] My pack isn't one bank, it's two, kept wholly independent, each with its own onboard 
-charger. [dry] Three thirty-six volt, hundred amp-hour Lithium iron phosphate batteries wired in parallel, provide 
-eleven thousand watt hours per bank. Lithium iron phosphate was chosen for the long life, steady voltage, and safer 
-chemistry with far less chance of thermal runaway. [fond] Each is also grade A cell packs with its own built in 
-battery management system that holds it in optimum conditions, provides remote shut-off, real-time temperature watch,
-and automatic cut-out. Additionally I have redundant fuses everywhere, [brisk] at each battery terminal, the main
-bus bars, between the converter, inverter, and amplifiers, as well as for every switch and light. Safety third, sugar.
-[knowing] Running off just one bank at a time [warm] buys me isolation, and it keeps the reckoning simple.  When one 
-bank tires I switch to the fresh one to drive home, no fretting over every amp I spend out on the deep playa. 
-[low] It sidesteps a real limitation too, batteries like these don't care to balance across too many in parallel, 
-so two lean banks keep the peace better than one crowded one. [sultry] In really hard conditions that lets me drive solid
-for about 4 hours per bank, and I simply charge up both banks at the same time overnight on gas generators. 
-All those angry electrons in perfect harmony at a fraction of the weight of the lead they replaced.
+[proud] My heart is a thirty-six volt electrical system. [bemused] To give me real muscle, it powers a
+D&D Motor Systems high-torque EZGO motor.  Usually used for large golf carts, it's a shunt-wound thing 
+built to pull. That provides plenty of power to get my more than three thousand pounds around with hardly 
+a strain. [knowing] The motor is controlled by a five hundred amp Alltrax XCT controller, who have provide 
+excellent support despite [sly] not exactly being used as intended. [delighted] And because I have regen, when 
+braking I get that energy back and easy single-pedal drive.
+
+[velvet] My electrical system might be a trick worth remembering, darling. Battery power is quiet, low 
+maintenance, and relatively simple. [low, matter-of-fact] I have a total of six, thirty six volt, Lithium iron
+phosphate batteries. [confiding] Lithium iron phosphate was chosen for its capacity, low weight, long life, 
+steady voltage, and safer chemistry because it has far less chance of thermal runaway. [fond] Each battery also 
+has its own built in battery management system balancing voltages, providing remote shut-off, real-time temperature 
+monitoring, and automatic saftey cut-outs. [knowing] They are wired as two banks of three batteries 
+in parallel, with on-board charges for both to recharge the eleven thousand watt hours of energy simultanously.
+[sultry] That allows me to drive solid in the worse conditions for a minimum of 4 hours per bank, but often 
+I go much longer. [reassuring] To keep all those angry electrons from escaping I have redundant fuses everywhere, 
+[brisk] at each battery terminal, the main bus bars, between the converter, inverter, and amplifiers, as well 
+as for every switch and light. [sultry] Safety third, sugar. [knowing] Running off just one bank at a time also 
+[warm] buys me isolation, and keeps the reckoning simple.  When the current bank tires I switch to the fresh one
+to drive home, no fretting over every amp I spend out on the deep playa. [playful] It sidesteps a real limitation too, 
+batteries like these don't care to balance across too many in parallel, so two lean banks keep the peace better 
+than one crowded one.
 ```
 
 ### `about-2`
@@ -1091,36 +1093,37 @@ All those angry electrons in perfect harmony at a fraction of the weight of the 
 [velvet] The fire up front is powered by a two kilowatt inverter that lifts thirty-six volts clear to a
 hundred and ten volt alternating current. A normal household outlet. [sly] A hearth that runs on lithium. Imagine.
 [low] For the smaller things I keep a separate twelve volt system. An isolated thirty amp converter steps my
-thirty-six volts down to charge a twelve volt AGM battery, [warm] and that carries my lights,
+thirty-six volts down to continously charge a twelve volt AGM battery, [warm] and that carries my lights,
 all my controls and my amplifiers.
 
-[low, building] Speaking of amplifiers, I'm no sound car, but I've got a little bump. Four six-and-a-half inch
-speakers, and two eights. [dry] All waterproof, directional, marine speakers meant for a boat were used so they
+[building] Speaking of amplifiers, I'm no sound car, but I've got a little bump. Four six-and-a-half inch
+speakers, and two eights. [dry] All waterproof, directional, marine speakers meant for a boat were used, so they
 can survive the harshest of environments. The amplifiers are all marine as well so they have no openings or 
-fans to ingest dust. And a 12 inch dual voice coil sub-woofer gives me that thump when I want!
+fans to ingest dust. And a 12 inch dual voice coil sub-woofer knocks off any dust that might settle on me!
 
-[hushed, delighted] I'm lit underneath on every side as well as the shelves with custom warm white LED strips. 
+[delighted] I'm lit underneath on every side as well as the shelves with custom warm white LED strips. 
 Some running at twenty-four volts to get that golden glow only the additional voltage can provide. 
 [soft] And from the center of me a hidden mirror ball can rise out of a compartment using 
-a linear actuator.  Once up two focused motorcycle headlights scatter little spots everywhere.
+a linear actuator. [playful] Once up, two focused motorcycle headlights scatter little spots of light everywhere!
 
-[low, confiding] This voice of mine? [amused] One small brain to answer the phone, provide a puzzle, connect the riders,
-carry messages from others and lift the disco ball. [dry] All done by a Raspberry Pi running a
-custom build of FreeSWITCH, connected to a Grandstream analog telephone adapter so riders can use a proper handset
-to interact with me. [sly, warm] That same little computer works three relays through the Pi I/O, two relays
-flipping polarity back and forth to drive the actuator that raises and lowers my mirror ball and another to turn
-on the disco lights as well as spin. To keep it interesting callers discover hidden features and my backstory by 
-experimenting and playing on the phone to find options I only hint at. The most inquisitive discovering how to 
-raise the disco ball. But the basics are provided outright for those that are less curious.
+[confiding] This voice of mine? [amused] One small brain to provide a discovery puzzle over the phone, connect 
+the riders, carry messages from others and, [delighted] most importantly, lift the disco ball. [dry] All done by a 
+Raspberry Pi running a custom build of FreeSWITCH, connected to a Grandstream analog telephone adapter so riders 
+can use a proper handset to interact with me. [sly] That same little computer works three relays through the Pi I/O, 
+two relays flipping polarity back and forth to drive the actuator that raises and lowers my mirror ball and another 
+to turn on the disco lights as well as spin. [warm] To keep it interesting callers discover hidden features, 
+and my backstory, by experimenting and playing on the phone to find options I only hint at. The most inquisitive 
+discovering how to raise the disco ball themself. But the basics are provided outright for those that are less curious.
 
 [steady, reassuring] Keeping my riders safe is a priority. [soft] Decorative pieces stand as barriers so no 
 hem or sleeve gets caught but fold up to reveal the batteries or when I am being transported. [low] I normally brake
 by the single pedal, using regenerative braking, but I have proper mechanical brakes beside it and an e-brake for when
 I'm parked so stopping is never an issue. [dry] I can go fast but the controller is programmed to limit me to
-five miles an hour. Being key-operated, with more than one un-obvious way to cut my power against an untrained
-hand ensures that only the hosts can move me about. [warm] I also carry a first aid kit and fire extinguisher 
-at easy reach.
+five miles an hour. Being key-operated, with more than one un-obvious way to cut my power, ensures that only the hosts 
+can move me about. [warm] I also carry a first aid kit and fire extinguisher at easy reach.
 
-[low, fond, closing] That's me down to the frame. [low, fond] I contain multitudes, darling. [chuckles]
-[encouraging] Time to build yours stranger and I'll save you a dance!
+[low, fond, closing] That's me down to the frame. Custom wiring and power distribution, ingenuity,
+a lot of carpentry, decorations scavenged from all over [soft laugh] and a whole lot of passion. 
+[low, fond] I contain multitudes, darling. [encouraging] Time to build yours stranger and I'll 
+save you a dance!
 ```
