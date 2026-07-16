@@ -1052,7 +1052,7 @@ everything I keep is worth keeping for a reason.
 [low, warm, knowing] You're not here for a story, are you sugar. [delighted] I hope that you are 
 enjoying my charm, interactivity and uniqueness. [intimate] But you must be here to look under my skirts. 
 [sly] Must be a builder, like Megan Anderson and Taylor Anderson that brought me to reality with the help of so 
-many, mostly family. [soft laugh] [playful] Come close then, and I'll tell you every detail about me,
+many, mostly family. [playful] Come close then, and I'll tell you every detail about me,
 one maker to another.
 
 [fond, unhurried] Underneath all my velvet I started life as a 2011 Cushman Titan, an industrial warehouse cart.
@@ -1076,9 +1076,9 @@ eleven thousand watt hours per bank. Lithium iron phosphate was chosen for the l
 chemistry with far less chance of thermal runaway. [fond] Each is also grade A cell packs with its own built in 
 battery management system that holds it in optimum conditions, provides remote shut-off, real-time temperature watch,
 and automatic cut-out. Additionally I have redundant fuses everywhere, [brisk] at each battery terminal, the main
-bus bars, between the converter, between the amplifiers, at every switch and light. Saftey third, sugar. [knowing]
-And I run off just one bank at a time. [warm] It buys me isolation, and it keeps the reckoning simple, when one 
-bank tires I switch to the fresh one and drive home, no fretting over every amp I spend out on the deep playa. 
+bus bars, between the converter, between the amplifiers, as well as for every switch and light. Saftey third, sugar.
+[knowing] Running off just one bank at a time [warm] buys me isolation, and it keeps the reckoning simple.  When one 
+bank tires I switch to the fresh one to drive home, no fretting over every amp I spend out on the deep playa. 
 [low] It sidesteps a real limitation too, batteries like these don't care to balance across too many in parallel, 
 so two lean banks keep the peace better than one crowded one. [sultry] In really hard conditions that lets me drive solid
 for a minimum of 4 hours per bank, and I simply charge up both banks at the same time overnight on gas generators. 
@@ -1104,14 +1104,15 @@ Some running at twenty-four volts to get that golden glow only the additional vo
 [soft] And from the center of me a hidden mirror ball can rise out of a compartment, using 
 a linear actuator.  Once up two focused motorcycle headlights scatter little spots everywhere.
 
-[low, confiding] This voice of mine? [dry] There's a Raspberry Pi tucked behind my shelves running a
-custom build of FreeSWITCH, wired through a Grandstream analog telephone adapter so riders can use a proper handset
+[low, confiding] This voice of mine? [amused] One small brain to answer the phone, provide a puzzle, connect the riders,
+carry messages from others and lift the disco ball. [dry] All done by a Raspberry Pi running a
+custom build of FreeSWITCH, connected to a Grandstream analog telephone adapter so riders can use a proper handset
 to interact with me. [sly, warm] That same little computer works three relays through the Pi I/O, two relays
 flipping polarity back and forth, to drive the actuator that raises and lowers my mirror ball and another to turn
-on the disco lights as well as spin.  Callers discover hidden features and my backstory by experimenting and playing on
-the phone. The most inquisitive discovering how to raise the disco ball. [amused] One small brain to answer the 
-phone, provide a puzzle, connect the riders, carry messages from others and lift the disco ball. [low, fond] I do 
-contain multitudes, darling.
+on the disco lights as well as spin. To keep it interesting callers discover hidden features and my backstory by 
+experimenting and playing on the phone to find options I only hint at. The most inquisitive discovering how to 
+raise the disco ball. But the basics are provided outright for those that are lest curious.
+[low, fond] I do contain multitudes, darling.
 
 [steady, reassuring] Keeping my riders safe is a priority. [soft] Decorative pieces stand as barriers so no 
 hem or sleeve gets caught but fold up to reveal the batteries or when I am being transported. [low] I normally brake
@@ -1119,5 +1120,7 @@ by the single pedal, using regenerative braking, with proper mechanical brakes b
 moment I'm parked so stopping is never an issue. [dry] I can go fast but the controller is programmed to limit me to
 five miles an hour. Key-operated, with more than one un-obvious way to cut my power against an untrained hand ensures
 that only the hosts can move me about. [warm] I also carry a first aid kit and fire extinguisher at easy reach.
-[low, fond, closing] That's me, darling, down to the frame. Build yours as carefuly, and I'll save you a dance!
+
+[low, fond, closing] That's me down to the frame. [low, fond] I contain multitudes, darling.
+[encouraging] Time to build yours stranger and I'll save you a dance!
 ```
