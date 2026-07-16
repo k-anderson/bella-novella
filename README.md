@@ -1120,7 +1120,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now wifi-fallback.timer
 ```
 
-**3. Test it once immediately:**
+**3. Test it:**
 
 ```sh
 sudo systemctl start wifi-fallback.service
