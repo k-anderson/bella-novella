@@ -67,6 +67,7 @@ screen, or internet dependency:
 9. **Hidden — guess-my-number game** — dial `5` (never announced) to play.
 10. **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
     last one) to open the full archive at the current message, where `7` deletes the current message.
+11. **Hidden — about** — dial `411` (never announced) for Bella's technical details.    
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -262,7 +263,7 @@ transfers away:
 | **0** | `104` | Dial the concierge (line 104) — §4.1 |
 | **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball — §4.6 |
 | **811** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §4.6 |
-| **411** | `dispatch-about` | *(hidden)* Play the art-car "about" prompt (`about.wav`) — its creators and the build — then return to the menu |
+| **411** | `dispatch-about` | *(hidden)* Play info about the creators and the build |
 | **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §4.6 |
 | **9** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |

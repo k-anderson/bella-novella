@@ -102,8 +102,10 @@
   <extension name="dispatch-about">
     <condition field="destination_number" expression="^DISPATCH$"/>
     <condition field="${bella_opt}" expression="^411$">
-      <action application="playback" data="$${prompts_dir}/about.wav"/>
-      <action application="sleep" data="1000"/>
+      <action application="playback" data="$${prompts_dir}/about-1.wav"/>
+      <action application="sleep" data="500"/>
+      <action application="playback" data="$${prompts_dir}/about-2.wav"/>
+      <action application="sleep" data="1000"/>      
       <action application="transfer" data="700 XML default"/>
     </condition>
   </extension>

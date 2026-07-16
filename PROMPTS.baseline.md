@@ -605,7 +605,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [low, sly, utterly delighted] Ohh. [intrigued, leaning in] You want to play a little game with me?
 [velvet, amused] Simple enough. I've a number in mind, somewhere from one to nine.
 [teasing, playful] You guess, and I'll whisper whether to climb higher or drop lower.
-[low, purring] Only a handful of tries, mind. [warm, coaxing, a spark of mischief] Go on. Your first guess?
+[low, purring] Only a handful of tries, mind. [warm, coaxing, a spark of mischief] Go on. Dial your first guess.
 ```
 
 ### `game-intro-2`
@@ -615,7 +615,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [velvet, amused] Here's the shape of it. I'm holding a number, one through nine.
 [teasing, playful] Dial a digit and I'll tell you higher or lower.
 [low, purring] You've a handful of tries to catch me. 
-[coaxing, a spark of mischief] Give me your first guess sugar.
+[coaxing, a spark of mischief] Dial me your first guess sugar.
 ```
 
 ### `game-intro-3`
@@ -624,7 +624,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [sly, low, amused] Look at that, a challenger.
 [velvet] Here's my game. One number, tucked in my head, somewhere between one and nine.
 [playful] Try to guess it. Every miss, and I'll nudge you higher or lower.
-[low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, what's your first?
+[low, purring] A handful of tries, that's the lot. [inviting, a spark of mischief] So, dial your first.
 ```
 
 ### `game-intro-4`
@@ -633,7 +633,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [low, intrigued, warm] Mmm, you wandered right into one of my secrets. [delighted] Not many manage that.
 [velvet, amused] So. A number, one to nine, and I'm the only soul who knows it.
 [teasing, playful] You dial a number. I answer, higher or lower.
-[low, purring] A handful of guesses, no more. [coaxing] Off you go. Let's hear your first.
+[low, purring] A handful of guesses, no more. [coaxing] Off you go. Dial your first guess.
 ```
 
 ### `game-intro-5`
@@ -642,7 +642,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just us two and a little game.
 [velvet, warm] I'll think of a number between one and nine, darling.
 [teasing, playful] You guess, I steer you. Higher. Lower.
-[low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] First guess, surprise me!
+[low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] Dial your first guess, surprise me!
 ```
 
 ### `game-higher-1`
@@ -1042,4 +1042,81 @@ haven't found yet to bring it out. [sly] Find that and I'll wake it.
 [dry, teasing] That one stops her cold, and no, there's no prize tucked behind it. [wry] Not 
 everything I keep is worth keeping for a reason.
 [low, warm] Some things I hold onto simply because I always have. [beat] Go on, try another.
+```
+
+## About
+
+### `about-1`
+
+```text
+[low, warm, knowing] Well now. You're not here for a story, are you sugar. [delighted] I hope that are 
+enjoying my charm, interactivity and uniqueness.[intimate] But you must be here to look under my skirts. 
+[sly] Must be a builder, like Megan Anderson and Taylor Anderson that brought me to reality with the help of so 
+many, mostly family. [amused, dry] Come close then, and I'll tell you how I'm made, one maker to another.
+
+[fond, unhurried] Underneath all my velvet I started life as a 2011 Cushman Titan, an industrial warehouse cart.
+[low, matter-of-fact] The Titan was chosen for its bones, heavy suspension and a frame built to carry the weight 
+I'd become.  Saved from oblivion rusting away in someone's backyard in Florida, where I live. [dry] I was stripped 
+clean to the frame, the original motor and controller, the batteries, all the wiring, every ounce of dead 
+weight removed. [brisk, proud] Then I was built back up. The mechanical brakes and bearings replaced, new tires, and 
+the vague steering components renewed with fresh ones. Without access to a press, the jaws of life from the 
+fire station were used to release the most stubborn parts. How appropriate for breathing new life in me? [proud] 
+I am powered by a thirty-six volt lithium system. Giving me real muscle is a D&D Motor Systems high-torque EZGO regen 
+motor. It's a shunt-wound thing built to pull, so I have more torque than the stock unit it replaced which was already 
+capable of moving three thousand pounds at speed. [warm] Just what a girl my weight wants, hardly a strain in trying 
+conditions. [knowing] All controlled by a five hundred amp Alltrax controller, giving lots of headroom for the hard 
+days ahead, [delighted] and because I have regen, when braking I get that energy back and provides my easy single-pedal 
+drive. [warm] The rest is a custom wiring harness and power distribution of our own making, from the ground up.
+
+[smoky] Battery power, darling, might be a trick worth stealing. Quiet, low maintenance, and relatively simple. 
+[low, matter-of-fact] My pack isn't one bank, it's two, kept wholly independent, each with its own onboard 
+charger. [dry] Three thirty-six volt, hundred amp-hour Lithium iron phosphate batteries wired in parallel, provide 
+eleven thousand watt hours per bank. Lithium iron phosphate was chosen for the long life, steady voltage, and safer 
+chemistry with far less chance of thermal runaway. [fond] Each is also grade A cell pack with its own built in 
+battery management system that holds it in optimum conditions, remote shut-off, real-time temperature watch,
+and automatic cut-out. Additionally redundant fuses everywhere, [brisk] at each battery terminal, the main bus bars,
+between the converter, between the amplifiers, at every switch and light. Saftey third, sugar. [knowing] And I run 
+off just one bank at a time. [warm] It buys me isolation, and it keeps the reckoning simple, when one bank tires 
+I switch to the fresh one and drive home, no fretting over every amp I spend out on the deep playa. [low] It 
+sidesteps a real limitation too, batteries like these don't care to balance across too many in parallel, so two 
+lean banks keep the peace better than one crowded one. [sly] In really hard conditions that lets me drive solid
+for a minimum of 4 hours per bank, and I simply charge up both banks at the same time overnight on gas generators. 
+All those angry electrons in perfect harmony at a fraction of the weight of the lead they replaced.
+```
+
+### `about-2`
+
+```text
+[smoky] The fire up front is powered by a two kilowatt inverter that lifts thirty-six volts clear to a
+hundred and ten volt alternating current. [sly] A hearth that runs on lithium. Imagine. [low] For the smaller 
+things I keep a separate twelve volt system. An isolated thirty amp converter steps my
+thirty-six volts down to charge a twelve volt AGM battery, [warm] and that carries my lights, my amplifiers, and
+all my controls. 
+
+[low, building] I'm no sound car, but I've got a little bump. Four six-and-a-half inch speakers, and two
+eights. [dry] All waterproof, directional, marine speakers meant for a boat were used to survive the harshest
+of environments. The amplifiers are all marine as well so they have no openings or fans to ingest dust.
+And a 12 inche dual voice coil sub-woofer give me that thump when I want!
+
+[hushed, delighted] I'm lit underneath on every side and shelves with custom warm white LED strips. 
+Some running at twenty-four volts to get that golden glow only the additional voltage can provide. 
+[soft] And from the center of me a hidden mirror ball can rise out of a hidden compartment, using 
+a linear actuator.  Once up two focused motorcycle headlights scatter little spots across everywhere.
+
+[low, confiding] This voice of mine? [dry] There's a Raspberry Pi tucked behind my shelves running a
+custom build of FreeSWITCH, wired through a Grandstream analog telephone adapter so a riders can use a proper handset
+to interact with me. [sly, warm] That same little computer works three relays through the Pi I/O, two relays
+flipping polarity back and forth, to drive the actuator that raises and lowers my mirror ball and another to turn
+on the lights as well as spin.  Callers discover hidden features and my backstory by experimenting and playing on
+the phone.  The most inquisitive discovering how to raise the disco ball. [amused] One small brain to answer the 
+phone, provide a puzzle, connect the riders, carry messages from others and lift the disco ball. [low, fond] I do 
+contain multitudes, darling.
+
+[steady, reassuring] Keeping my riders safe is a priority. [soft] Decorative pieces stand as barriers so no 
+hem or sleeve gets caught but fold up to reveal the batteries or when I am being transported. [low] I normally brake
+using the single pedal, using regenerative braking, with proper mechanical brakes beside it and an e-brake set the 
+moment I'm parked so stopping is never an issue. [dry] I can go fast but the controller is programmed to limit me to
+five miles an hour. Key-operated, with more than one un-obvious way to cut my power against an untrained hand. [warm] 
+I also carry a first aid kit and fire extinguisher at easy reach. [low, fond, closing] That's me, darling, down to 
+the frame. Build yours as carefuly, and I'll save you a dance!
 ```
