@@ -1142,8 +1142,8 @@ most determined learning to raise that ball themselves. [amused] The rest, [dry]
 [steady, reassuring] Above all I keep my riders safe. [fond] Those pretty shelfs along my sides aren't only for
 show, they keep a stray hem or sleeve from wandering where it shouldn't, [low] then fold away when it's time to
 bare my batteries or load me up to travel. [warm] When I need to stop in a hurry I have real
-mechanical brakes at the ready and a parking brake for when I am hosting a party. [laugh][teasing] My grandmother
-always said it's unbecoming of a lady to run over her guests. [dry, amused] When I want to move I can move quickly, but I'm
+mechanical brakes at the ready and a parking brake for when I am hosting a party. [laughs][teasing] My grandmother
+always said "it's unbecoming of a lady to run over her guests." [dry, amused] When I want to move I can move quickly, but I'm
 automatically held to a ladylike five miles an hour. [sly] And I answer only to my hosts, with a key.
 [warm] First aid and a fire extinguisher always within reach, naturally. [beat]
 
@@ -1165,7 +1165,7 @@ a dance.
 [dry] 3 if you simply can't be bought.
 [knowing] Dial 4 if you carry all you need with you.
 [velvet] 5, if there's a piece of you on display tonight.
-[warm] 6, if you're helping everyone in your group get where they are going.
+[warm] 6, if you're part of why something out here exists at all.
 [low] Dial 7 if you look after everyone in the room.
 [soft] 8, if you leave a place better than you found it.
 [playful] 9 if you'd sooner do than watch.
