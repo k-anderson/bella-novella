@@ -416,7 +416,7 @@ and I'll turn back to it.
 
 ```text
 [dry, amused] That yarn wandered all over, didn't it. [fond] I do adore a rambler.
-[low, private] Pages like that go in a drawer most folk never find. [velvet] Now the third.
+[velvet] Now the third.
 ```
 
 ### `playback-announcement-3-3`
@@ -494,7 +494,7 @@ soft laugh] The fifth chapter is up now.
 
 ```text
 [amused, soft laugh] People are marvellous, aren't they, the tales they'll confess to a telephone.
-[low, private] I've not forgotten a one; that's the curse of a memory like mine. [sly] The seventh's next.
+[sly] The seventh's next.
 ```
 
 ### `playback-announcement-7-2`
