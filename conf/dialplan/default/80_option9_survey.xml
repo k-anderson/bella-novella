@@ -60,6 +60,7 @@
       <action application="set" data="max_forwards=70"/>
       <action application="playback" data="$${prompts_dir}/survey-read-${survey_pick}.wav"/>
       <action application="set" data="survey_bucket=${system($${bella_survey} stats ${survey_pick})}"/>
+      <action application="sleep" data="500"/>
       <action application="transfer" data="SURVEY_STATS XML default"/>
     </condition>
   </extension>
