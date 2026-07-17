@@ -1114,7 +1114,7 @@ motorcycle headlights, equally hidden, to send her light skittering across every
 [confiding] And this voice of mine? [amused] One small brain does it all, sugar. It answers the phone, spins
 you a little puzzle, connects you to the others, relays their messages, [delighted] and, most precious of
 all, lifts my disco ball. [dry] A Raspberry Pi, if you must know, is running a custom build of FreeSWITCH, connected
-to a Grandstream analog adapter so you can hold a proper handset to your ear. [sly] That same little brain works a few
+to an analog telephony adapter so you can hold a proper handset to your ear. [sly] That same little brain works a few
 relays for me, flipping polarity back and forth to raise and lower my mirror ball, as well as waking the disco lights
 and setting it spinning. [warm, knowing] The curious ones tease all my secrets out by playing on the phone, [fond] the
 most determined learning to raise that ball themselves. [amused] The rest, [dry] I hand the basics, no fuss.
@@ -1122,7 +1122,7 @@ most determined learning to raise that ball themselves. [amused] The rest, [dry]
 [steady, reassuring] Above all I keep my riders safe. [fond] Those pretty shelfs along my sides aren't only for
 show, they keep a stray hem or sleeve from wandering where it shouldn't, [low] then fold away when it's time to
 bare my batteries or load me up to travel. [warm] I stop on a single pedal, gentle regen braking, with real
-mechanical brakes at the ready and a parking brake for when I am hosting a party. [joking] My grandmother always said
+mechanical brakes at the ready and a parking brake for when I am hosting a party. [chuckles][teasing] My grandmother always said
 it's unbecoming of a lady to run over her guests. [dry, amused] When I want to move I can move quickly, but I'm
 automatically held to a ladylike five miles an hour. [sly] And I answer only to my hosts, a key, and one or
 two ways to cut my power you'd never think to look for. [warm] First aid and a fire extinguisher always within
