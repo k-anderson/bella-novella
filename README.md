@@ -42,6 +42,7 @@ Other Markdown documents in this repo:
 - [`PROMPTS.baseline.md`](PROMPTS.baseline.md): Baseline snapshot of the prompt text; `bella-regen-prompts` diffs against it to regenerate only what changed.
 - [`STORY.md`](STORY.md): Design notes and the full prompt scripts for the hidden branching story "The Ember" (§4.7).
 - [`GAME.md`](GAME.md): Design notes and the full prompt scripts for the hidden guess-my-number game (§4.8).
+- [`SURVEY.md`](SURVEY.md): Design notes and the prompt scripts for the hidden principles survey (dial `9`).
 - [`CODESPACES.md`](CODESPACES.md): GitHub Codespaces / dev-container usage and its limitations (§6).
 
 ---
@@ -63,11 +64,13 @@ screen, or internet dependency:
    concierge (line 104).
 7. **Hidden — Raise / lower / stop the actuator** — dial `911` to raise, `811` to lower, and `11` to stop
    the "disco ball" (the motorized mirror), via the relay HAT.
-8. **Hidden — branching story** — dial `9` (never announced) for Bella's branching fable.
+8. **Hidden — branching story** — dial `7` (never announced) for Bella's branching fable.
 9. **Hidden — guess-my-number game** — dial `5` (never announced) to play.
-10. **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
+10. **Hidden — principles survey** — dial `9` (never announced) to vote on which of ten
+    outlooks fits you right now, hear Bella's take, and where your pick stands with past callers.
+11. **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
     last one) to open the full archive at the current message, where `7` deletes the current message.
-11. **Hidden — about** — dial `411` (never announced) for Bella's technical details.    
+12. **Hidden — about** — dial `411` (never announced) for Bella's technical details.    
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -89,7 +92,7 @@ discovered secret into a real-world passphrase.
 | **Her real name — Ilaria Kalergis** | The name she went by before "Bella", traded away "before this city, this room, all of it" — and never worn since. | Win the guess-my-number game (dial **5**, §4.8) — `game-win-1`. |
 | **Her grandmother — Despina Novella** | The grandmother who raised her and taught her that the safest place for a secret is a trusted person; the reason she runs the room the way she does. | Win the game (dial **5**, §4.8) — `game-win-2`. |
 | **Her lost love — Tobi** | The owner of "that old phone" she keeps connecting callers to (the intercom line, option 1): a brief, intense romance cut short when she was forced to leave. She still dials it some nights — it's never them. | Win the game (dial **5**, §4.8) — `game-win-3`. |
-| **A city she once visited — Salzburg** | Where she once "burned a book or two"; offered explicitly as a passphrase — *"tell the concierge you once met me in Salzburg, there might be something in it for you."* | Reach the **"revel"** ending of the branching story (dial **9**, §4.7): choose **2** (feed the ember) → **1** (burn the whole book) → `tale-end-revel`. |
+| **A city she once visited — Salzburg** | Where she once "burned a book or two"; offered explicitly as a passphrase — *"tell the concierge you once met me in Salzburg, there might be something in it for you."* | Reach the **"revel"** ending of the branching story (dial **7**, §4.7): choose **2** (feed the ember) → **1** (burn the whole book) → `tale-end-revel`. |
 
 **Hidden phone features a caller can be tipped off to:** two of the winning prompts don't hand over
 backstory — they point the caller toward controls the spoken menu never mentions:
@@ -151,7 +154,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | [`conf/directory/default/102.xml`](conf/directory/default/102.xml) | SIP line **102** — participant. |
 | [`conf/directory/default/103.xml`](conf/directory/default/103.xml) | SIP line **103** — spare / future expansion. |
 | [`conf/directory/default/104.xml`](conf/directory/default/104.xml) | SIP line **104** — concierge (driver/passenger). |
-| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option9_tale.xml`, `70_option5_game.xml`. Each is detailed in [§4](#4-current-dialplan--call-flow). |
+| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option7_tale.xml`, `70_option5_game.xml`. Each is detailed in [§4](#4-current-dialplan--call-flow). |
 | [`conf/autoload_configs/modules.conf.xml`](conf/autoload_configs/modules.conf.xml) | The **13** modules loaded at boot: loggers (`mod_console`/`mod_logfile`/`mod_timerfd`/`mod_posix_timer`), `mod_event_socket`, `mod_sofia`, the dialplan engine (`mod_dialplan_xml`/`mod_commands`/`mod_dptools`), media playback (`mod_native_file`/`mod_sndfile`/`mod_tone_stream`), and `mod_say_en`. |
 | [`conf/autoload_configs/switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core settings: small session caps (`max-sessions=10`, `sessions-per-second=5`), the RTP port range, `info` log level, the `core.db` name plus DB-handle pool (`max-db-handles`/`db-handle-timeout`), and `fs_cli` key-bindings. |
 | [`conf/autoload_configs/sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | Sofia global settings; includes the SIP profiles from `../sip_profiles/*.xml`. |
@@ -219,7 +222,7 @@ collide with dialable numbers, and are grouped here by the file that handles the
   - `DISCO_LOWER` — read the tracked position, then branch to `DISCO_LOWER_GO`.
   - `DISCO_LOWER_GO` — lower unless already `down` (else play "already down").
   - `DISCO_STOP` — brake any movement and reset the position to `unknown`.
-- **Branching story** (`60_option9_tale.xml`):
+- **Branching story** (`60_option7_tale.xml`):
   - `TALE_OPEN` — first fork of the fable; `TALE_OPEN_D` dispatches the chosen digit.
   - `TALE_SHIELD` — "shield the ember" node; `TALE_SHIELD_D` dispatches its choice.
   - `TALE_FEED` — "feed the ember" node; `TALE_FEED_D` dispatches its choice.
@@ -265,7 +268,8 @@ transfers away:
 | **811** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §4.6 |
 | **411** | `dispatch-about` | *(hidden)* Play info about the creators and the build |
 | **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §4.6 |
-| **9** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
+| **7** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
+| **9** | `SURVEY_START` | *(hidden)* principles survey — [SURVEY.md](SURVEY.md) |
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
 
 Anything else falls through to `dispatch-invalid`, which plays **one of ten random "invalid"
@@ -277,7 +281,7 @@ Completed actions transfer back to `700`.
 > **Hidden options.** The spoken greeting only offers **1**, **2**, and **3**. Everything else is
 > *unannounced*: dialing a line directly (**101**–**104**, or **0** for the concierge), the disco
 > controls (**911** raise, **811** lower, **11** stop), the art-car "about" prompt (**411**), the
-> branching story (**9**), the
+> branching story (**7**), the principles survey (**9**), the
 > guess-my-number game (**5**), and the message drawer reached after listening to everything (§4.4).
 > Bella hints there's more — *"one of the ones I don't say out loud"* — but never names them.
 
@@ -342,8 +346,8 @@ The unrelated **411** "about the art car" option (`dispatch-about`) lives in the
 (§4.2): it plays `about.wav` — describing the art car, its creators, and the build — then returns
 to the menu.
 
-### 4.7 `60_option9_tale.xml` — hidden branching story "The Ember" (option 9)
-Dialing **9** (never announced) opens **"The Ember"**, a branching fable Bella reads aloud. Each
+### 4.7 `60_option7_tale.xml` — hidden branching story "The Ember" (option 7)
+Dialing **7** (never announced) opens **"The Ember"**, a branching fable Bella reads aloud. Each
 node narrates and collects one digit, then transfers to a per-node dispatch pass that tests the
 digit in a `<condition>`. The tree:
 

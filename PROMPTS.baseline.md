@@ -1073,34 +1073,34 @@ pleanty of power for my high-torque motor, a shunt-wound thing built to pull.
 support me even though I'm [sly] not quite using it as intended. [delighted] And here's my
 favorite trick, when I brake, I get that energy back from the one pedal for going and stopping.
 
-[velvet] My gumption comes from [proud] six thirty-six volt lithium iron phosphate 
-batteries, [delighted] and I chose that chemistry on purpose. It carries plenty, stays light on its 
-feet, holds a steady voltage, and lasts, and lasts. [sly, low] Most importantly it keeps its temper, 
-fewer dramatic thermal runaways. [fond] Each one minds itself as well, a little brain inside balancing 
+[velvet] My gumption comes from [proud] six thirty-six volt lithium iron phosphate
+batteries, [delighted] and I chose that chemistry on purpose. It carries plenty, stays light on its
+feet, holds a steady voltage, and lasts, and lasts. [sly, low] Most importantly it keeps its temper,
+fewer dramatic thermal runaways. [fond] Each one minds itself as well, a little brain inside balancing
 the voltage, watching its own temperature, [warm] and ready to shut down at the first whisper of trouble.
 [knowing] I do appreciate those that practice radical self-reliance.
 
-[low, matter-of-fact] My batteries ride as two banks of three in parallel, each with its own charger to
+[low, matter-of-fact] The batteries ride as two banks of three in parallel, each with its own charger to
 fill the eleven thousand watt hours per bank. Both banks topping up together off gas generators, while I sleep.
-[sultry] On a single bank I'll dance through the worst of it for four hours, [delighted] and often far,
+[sultry] On a single bank I'll move through the worst of it continuously for four hours, [delighted] and often far,
 far longer. [knowing] I run one bank at a time on purpose, it keeps them honest, keeps them apart.
 [warm] When one tires, I slip to the fresh one and carry myself home, [playful] never once fretting over
 every amp out on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
 together and they might squabble. [reassuring] And to keep all those angry little electrons where they belong,
 [brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifier,
-every switch and light. [sultry, amused] Safety third when you have this much power to contain, stranger.
+every switch and light. [sultry, amused] Safety third, when you have this much power to contain, stranger.
 ```
 
 ### `about-2`
 
 ```text
-[low, matter-of-fact]] Up front I keep a little fire, [delighted] powered by a two kilowatt inverter that lifts my
+[gentle] You might have noticed, up front I keep a little fire, [delighted] powered by a two kilowatt inverter that lifts my
 humble thirty-six volts clear up to a hundred and ten alternating current. [sly] A proper household outlet
 stranger. [wistful] A hearth that runs on lithium. [amused] Imagine. [warm] And for the smaller comforts,
 a separate twelve volt system, an isolated thirty amp converter uses the thirty six volts to keep
 an AGM car battery topped up, [fond] tending to my lights, my controls, and every one of my amplifiers.
 
-[building] Speaking of which, [proud] I'm no sound car, but I've got a bump. Four six-and-a-half inch
+[building] Speaking of which, [proud] I'm no sound car, but I've got a wildside. Four six-and-a-half inch
 speakers, two eights, [delighted] and a twelve inch sub that shakes the dust right off me. [dry] All marine
 grade, speakers and amplifiers both, meant for the belly of a boat. [knowing] No fans, no openings,
 nothing for the dust to crawl inside. [sly, warm] All built to survive the harshest of environments.
@@ -1121,15 +1121,194 @@ most determined learning to raise that ball themselves. [amused] The rest, [dry]
 
 [steady, reassuring] Above all I keep my riders safe. [fond] Those pretty shelfs along my sides aren't only for
 show, they keep a stray hem or sleeve from wandering where it shouldn't, [low] then fold away when it's time to
-bare my batteries or load me up to travel. [warm] I stop on a single pedal, gentle regen braking, with real
-mechanical brakes at the ready and a parking brake for when I am hosting a party. [chuckles][teasing] My grandmother always said
-it's unbecoming of a lady to run over her guests. [dry, amused] When I want to move I can move quickly, but I'm
-automatically held to a ladylike five miles an hour. [sly] And I answer only to my hosts, a key, and one or
-two ways to cut my power you'd never think to look for. [warm] First aid and a fire extinguisher always within
-reach, naturally.
+bare my batteries or load me up to travel. [warm] When I need to stop in a hurry I have real
+mechanical brakes at the ready and a parking brake for when I am hosting a party. [chuckles][teasing] My grandmother
+always said it's unbecoming of a lady to run over her guests. [dry, amused] When I want to move I can move quickly, but I'm
+automatically held to a ladylike five miles an hour. [sly] And I answer only to my hosts, with a key.
+[warm] First aid and a fire extinguisher always within reach, naturally.
 
 [low, fond, closing] And that's me, sugar, right down to the frame. [warm] Custom wiring, clever power, a
 great deal of carpentry, [soft laugh] treasures scavenged from every corner, and a whole lot of passion.
 [fond] I contain multitudes, darling. [encouraging] Now go build yours stranger, [sly] and I'll save you
 a dance.
+```
+
+## Survey
+
+### `survey-ballot`
+
+```text
+[low, velvet, knowing] Let's play a different sort of game.
+[warm, inviting] Which of these is you, right now, darling? [warm] Don't think too hard. Just feel it.
+[warm] Dial 1 if you'd throw the door wide to any stranger who knocked.
+[fond] 2, if you'd sooner give than take.
+[dry] 3 if you simply can't be bought.
+[knowing] Dial 4 if you carry all you need with you.
+[velvet] 5, if there's a piece of you on display tonight.
+[warm] 6, if helping everyone in your group get where they are going.
+[low] Dial 7 if you look after everyone in the room.
+[soft] 8, if you leave a place better than you found it.
+[playful] 9 if you'd sooner do than watch.
+[hushed, tender] And 0, [velvet] if all that's real is right now.
+[coaxing, warm] Go on sugar. [sly] Tell me a truth.
+```
+
+### `survey-read-1`
+
+```text
+[fond] Ah, an inclusive one.
+[low, velvet] Everyone who finds my line gets the very same welcome, the stranger most of all.
+No door, no list, no price of entry and most of all no judgement.
+[warm] And that's you all over, sugar.
+You'd throw your own door wide to any lost soul who knocked, and ask them nothing at all.
+```
+
+### `survey-read-2`
+
+```text
+[fond] A giver. [delighted] Oh, I knew there was a reason I liked you.
+[low, velvet] This experience I hand out, I hand out for nothing.
+No strings, no ledger, [sly] no waiting to be paid back.
+[warm] The plain old word for it is gifting sugar, [knowing] and it's a finer art than most ever learn.
+[soft] A gift's only a gift if you'd never dream of asking for one back. Keep giving, darling.
+```
+
+### `survey-read-3`
+
+```text
+[dry, amused] Can't be bought? [sly] Good girl. Neither can I.
+[low] You'll have noticed no sponsor, no price, no grubby little transaction.
+All I do is for the love of sharing.
+[knowing] The clever folk have a ten-dollar word for it. [savoring, amused] Decommodification.
+[warm] I just call it having a price no one alive can meet.
+[sly] Hold onto that, sugar. The world will always try to tag you.
+```
+
+### `survey-read-4`
+
+```text
+[proud] Everything you need, tucked away with you already. [knowing] I understand that better than most.
+[low, nostalgic] I was a rusted-out frame once, darling. Left for scrap.
+[warm] Everything I am now, I first had to find in myself.
+[sly] They call that radical self-reliance, sugar.
+[fond] A fine, proud name for standing on your own two feet.
+[soft] Nothing this place can throw will knock you flat, you're prepared.
+That's how you made it here in the first place!
+```
+
+### `survey-read-5`
+
+```text
+[sly, delighted] Born to be seen. [warm] Oh, you and I are going to get along.
+[velvet] I made myself into precisely what pleases me, darling. Every inch.
+And I'll not apologize for a stitch of it.
+[knowing] Now, that has a name as well. [savoring] Radical self-expression.
+[dry] Such a mouthful for something so simple.
+[fond] What you are is yours alone to decide, then you hand it to the world like a gift.
+So show them sugar. Show them all!
+```
+
+### `survey-read-6`
+
+```text
+[fond] Nothing worth being ever gets built alone. [warm] I certainly wasn't.
+[low] So many hands went into what I am, darling. More than I could ever name.
+[soft] Every light, every wire, every song.
+[knowing] Communal effort is the tidy name for it sugar, [warm] a hundred hands making one another real.
+[sly] That's the very thing that keeps a place like this breathing.
+```
+
+### `survey-read-7`
+
+```text
+[steady, warm] You look after the room. [fond] We need your sort.
+[low] I keep my riders safe, always. Mind who's aboard, mind who's had one too many.
+[soft] Someone has to hold the whole group together.
+[knowing] There's a stately name for that, sugar. Civic responsibility.
+[warm] All this freedom only works when somebody's quietly minding the edges.
+[sly] You're one of the minders. I can tell.
+```
+
+### `survey-read-8`
+
+```text
+[soft, knowing] Leave it better than you found it. [warm] Mmm. My favorite kind of soul. Thank you so much.
+[low] I don't leave a mark where I've been, darling, save for the folks who are glad they crossed my path.
+[knowing] Leaving no trace, they call it. [sly] Which is rich, coming from me.
+[fond] Take only the memories away with you, leave the place a little brighter.
+[soft] That's how you get remembered kindly.
+```
+
+### `survey-read-9`
+
+```text
+[delighted] A doer, not a watcher. [sly] Now we're talking.
+[low, warm] Nobody just looks on here, darling. You lift the handset, you turn the dial, you leap on in.
+[amused] You're doing it this very moment.
+[knowing] Participation, sugar. [fond] You come alive by taking part, never by standing at the edge.
+[soft] That's the only way this place was ever going to be real for you.
+```
+
+### `survey-read-0`
+
+```text
+[hushed, velvet] All that's real is right now.
+[low, knowing] Oh, darling. You understand the whole of it already.
+[soft] Not the memory, not the plan. [warm] Just this.
+You, and me, and the hum on the line, happening this one second.
+[sly, tender] Immediacy, the poets call it.
+[fond] There's nothing I could tell you that beats simply being here for it.
+[soft] So don't let it slip past you sugar. Right now is the reason you came.
+```
+
+### `survey-stats-first`
+
+```text
+[beat] [low, surprised, delighted] Well now. Not another soul has picked that one yet, sugar.
+[warm] You're the very first to strike the match.
+[playful] I'll pin it to the wall in your honor, [amused] first of your kind I've seen so far.
+[soft] It rather suits you, darling.
+```
+
+### `survey-stats-top`
+
+```text
+[beat] [delighted] Well, you've gone and picked the favorite, sugar.
+[warm] Half my callers would raise a glass to that very same answer.
+[sly, playful] Popular taste, though between us, [amused] I do think the crowd's onto something for once.
+[fond] You're right in the beating heart of the room.
+```
+
+### `survey-stats-high`
+
+```text
+[beat] [warm] A well-loved answer, that one. [fond] You're in good and plentiful company, sugar.
+[sly] More kindred spirits out there than you'd ever guess,
+[amused] every one certain they're the only soul who feels it.
+[soft] There's a certain comfort in that, isn't there.
+```
+
+### `survey-stats-low`
+
+```text
+[beat] [low, knowing] Ah. A quieter sort of answer, that one.
+[fond] Only a scattered few on my line feel quite the way you do, sugar.
+[sly, savoring] But the rare tastes were always the ones worth knowing, darling.
+[warm] I'd not trade one of you for a whole roomful of the usual. [soft] Don't tell the others.
+```
+
+### `survey-stats-rarest`
+
+```text
+[beat] [low, delighted, intrigued] Oh now. [savoring] That one's rare as they come, sugar.
+Scarcely a soul on my whole line has chosen it tonight.
+[sly, fond] Takes a particular kind to stand nearly alone, darling.
+[warm] And you know how I do collect the unusual ones. [soft] Straight into the drawer with you.
+```
+
+### `survey-invalid`
+
+```text
+[warm, amused] A single number, one through nine, [sly] or nought for the last of them.
+[coaxing] Go on. Tell me which you are.
 ```

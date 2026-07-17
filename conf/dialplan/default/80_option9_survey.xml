@@ -1,0 +1,121 @@
+<include>
+  <!-- ===================================================================
+       Hidden option 9: "Which are you?" — Bella's ten-answer survey with a
+       persistent, anonymous tally.
+
+       Entry: 10_inbound_and_menu.xml routes menu option 9 (secret, never
+       announced) to SURVEY_START. Flow:
+
+         SURVEY_START  play the ballot, collect ONE digit (0-9) -> SURVEY_EVAL
+         SURVEY_EVAL   empty/invalid -> nudge (survey-invalid) + re-ask;
+                       else record the vote (bella-survey vote) -> SURVEY_RESULT
+         SURVEY_RESULT play the chosen reading (survey-read-<id>), then ask
+                       bella-survey for the standing bucket -> SURVEY_STATS
+         SURVEY_STATS  play the matching survey-stats-<bucket>, back to 700
+
+       The ballot is played INSIDE SURVEY_START's play_and_get_digits so a key
+       pressed while it plays is taken as the vote (barge-in). scripts/bella-survey
+       keeps the ten counters (keys 0-9) in db/survey.tsv; no caller data is
+       stored. See SURVEY.md for the option map, the buckets, and the prompts.
+
+       Every node resets max_forwards first: the loop chains transfers, which
+       would otherwise exhaust the per-call budget and drop the call with
+       EXCHANGE_ROUTING_ERROR.
+       =================================================================== -->
+
+  <extension name="survey-start">
+    <condition field="destination_number" expression="^SURVEY_START$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="survey_pick="/>
+      <!-- min=1 max=1, one digit 0-9; the ballot is the (barge-in-able) FILE arg
+           so a key pressed while it plays is taken as the vote. -->
+      <action application="play_and_get_digits"
+              data="1 1 1 7000 * $${prompts_dir}/survey-ballot.wav silence_stream://100 survey_pick '^[0-9]$' 2000"/>
+      <action application="transfer" data="SURVEY_EVAL XML default"/>
+    </condition>
+  </extension>
+
+  <!-- No digit (timeout) or rejected key: nudge, then re-offer the ballot. Runs
+       before survey-eval, so a vote is only recorded for a real 0-9 pick. -->
+  <extension name="survey-eval-empty">
+    <condition field="destination_number" expression="^SURVEY_EVAL$"/>
+    <condition field="${survey_pick}" expression="^$">
+      <action application="playback" data="$${prompts_dir}/survey-invalid.wav"/>
+      <action application="transfer" data="SURVEY_START XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Record the anonymous vote (counted before the standing is read, so the
+       caller is included and a brand-new pick reads as "first"). -->
+  <extension name="survey-eval">
+    <condition field="destination_number" expression="^SURVEY_EVAL$">
+      <action application="set" data="survey_total=${system($${bella_survey} vote ${survey_pick})}"/>
+      <action application="transfer" data="SURVEY_RESULT XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Play the chosen reading, then fetch the qualitative standing bucket. -->
+  <extension name="survey-result">
+    <condition field="destination_number" expression="^SURVEY_RESULT$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="playback" data="$${prompts_dir}/survey-read-${survey_pick}.wav"/>
+      <action application="set" data="survey_bucket=${system($${bella_survey} stats ${survey_pick})}"/>
+      <action application="transfer" data="SURVEY_STATS XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="survey-stats-first">
+    <condition field="destination_number" expression="^SURVEY_STATS$"/>
+    <condition field="${survey_bucket}" expression="^first$">
+      <action application="playback" data="$${prompts_dir}/survey-stats-first.wav"/>
+      <action application="sleep" data="1000"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="survey-stats-top">
+    <condition field="destination_number" expression="^SURVEY_STATS$"/>
+    <condition field="${survey_bucket}" expression="^top$">
+      <action application="playback" data="$${prompts_dir}/survey-stats-top.wav"/>
+      <action application="sleep" data="1000"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="survey-stats-high">
+    <condition field="destination_number" expression="^SURVEY_STATS$"/>
+    <condition field="${survey_bucket}" expression="^high$">
+      <action application="playback" data="$${prompts_dir}/survey-stats-high.wav"/>
+      <action application="sleep" data="1000"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="survey-stats-low">
+    <condition field="destination_number" expression="^SURVEY_STATS$"/>
+    <condition field="${survey_bucket}" expression="^low$">
+      <action application="playback" data="$${prompts_dir}/survey-stats-low.wav"/>
+      <action application="sleep" data="1000"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <extension name="survey-stats-rarest">
+    <condition field="destination_number" expression="^SURVEY_STATS$"/>
+    <condition field="${survey_bucket}" expression="^rarest$">
+      <action application="playback" data="$${prompts_dir}/survey-stats-rarest.wav"/>
+      <action application="sleep" data="1000"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Defensive catch-all (helper unavailable / unexpected verdict): play the
+       "high" line and return to the menu. -->
+  <extension name="survey-stats-default">
+    <condition field="destination_number" expression="^SURVEY_STATS$">
+      <action application="playback" data="$${prompts_dir}/survey-stats-high.wav"/>
+      <action application="sleep" data="1000"/>
+      <action application="transfer" data="700 XML default"/>
+    </condition>
+  </extension>
+</include>

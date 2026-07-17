@@ -1,4 +1,4 @@
-# The Ember — Bella's branching fable (hidden menu option `0`)
+# The Ember — Bella's branching fable (hidden menu option `7`)
 
 A choose-your-own-path audio fable that Bella reads to the caller by the fire.
 Bella — the 1920s matriarch — pulling a book off the shelf and
@@ -16,9 +16,9 @@ caller made.
 
 ## How to reach it
 
-It is a **secret**: at the main menu the caller dials **`9`**. Bella never
-announces it in any greeting. Internally, menu option `9` routes to `TALE_OPEN`
-(see [conf/dialplan/default/60_option9_tale.xml](conf/dialplan/default/60_option9_tale.xml) and
+It is a **secret**: at the main menu the caller dials **`7`**. Bella never
+announces it in any greeting. Internally, menu option `7` routes to `TALE_OPEN`
+(see [conf/dialplan/default/60_option7_tale.xml](conf/dialplan/default/60_option7_tale.xml) and
 the `dispatch-story` entry in
 [conf/dialplan/default/10_inbound_and_menu.xml](conf/dialplan/default/10_inbound_and_menu.xml)).
 

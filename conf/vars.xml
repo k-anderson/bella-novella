@@ -46,4 +46,7 @@
   <!-- "Guess my number" game (hidden menu option 5): helper + try cap -->
   <X-PRE-PROCESS cmd="set" data="bella_game=/usr/local/freeswitch/scripts/bella-game"/>
   <X-PRE-PROCESS cmd="set" data="game_tries_max=3"/>
+
+  <!-- Principles survey (hidden menu option 9): anonymous tally helper -->
+  <X-PRE-PROCESS cmd="set" data="bella_survey=/usr/local/freeswitch/scripts/bella-survey"/>
 </include>

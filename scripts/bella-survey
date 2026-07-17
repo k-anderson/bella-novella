@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Helper for the hidden "principles survey" IVR feature (menu option 9).
+#
+# Persistent, anonymous vote tally: the dialplan calls this helper to record a
+# caller's pick and to fetch a qualitative "where your pick stands" bucket. No
+# personal data is stored, only ten counters (one per option, keys 0-9). The
+# tally lives in a small TSV under the db/ directory and survives reboots.
+#
+# It runs as the freeswitch user (db/ is freeswitch-writable), so no sudo is
+# needed. All single-value output is newline-free so it can be used directly in
+# the FreeSWITCH dialplan via ${system(...)}.
+#
+# Commands:
+#   vote <id>     atomically record a vote for option <id> (0-9); print the new
+#                 total number of votes cast across all options.
+#   stats <id>    print ONE bucket keyword describing where <id> stands right
+#                 now, AFTER its own vote has been counted:
+#                   first  = <id> just received its very first vote
+#                   top    = <id> is a most-chosen option
+#                   rarest = <id> is a least-chosen option
+#                   high   = <id> is at or above the average
+#                   low    = <id> is below the average
+#   dump          print every counter and the total (human-readable; for tests).
+#   reset         zero every counter (for tests).
+#
+# Storage: $BELLA_DB_DIR/survey.tsv (default /usr/local/freeswitch/db), one
+# "<id>\t<count>" line per option, guarded by an flock on survey.lock. Writes
+# are atomic (temp file + mv) so a concurrent reader never sees a partial file.
+
+DB_DIR="${BELLA_DB_DIR:-/usr/local/freeswitch/db}"
+TALLY_FILE="$DB_DIR/survey.tsv"
+LOCK_FILE="$DB_DIR/survey.lock"
+
+IDS=(0 1 2 3 4 5 6 7 8 9)
+
+is_id() { case "${1:-}" in [0-9]) return 0 ;; *) return 1 ;; esac; }
+
+# Load counts into the global assoc array `count` (missing file/garbage -> 0).
+load_counts() {
+  declare -gA count
+  local id
+  for id in "${IDS[@]}"; do count["$id"]=0; done
+  [ -f "$TALLY_FILE" ] || return 0
+  local k v
+  while IFS=$'\t' read -r k v; do
+    case "$k" in [0-9]) ;; *) continue ;; esac
+    case "$v" in ''|*[!0-9]*) v=0 ;; esac
+    count["$k"]="$v"
+  done < "$TALLY_FILE"
+}
+
+# Write the global `count` array back atomically (temp file on the same
+# filesystem + mv), so readers always see a complete tally.
+save_counts() {
+  local tmp id
+  tmp="$(mktemp "$TALLY_FILE.XXXXXX")"
+  for id in "${IDS[@]}"; do
+    printf '%s\t%s\n' "$id" "${count[$id]}" >> "$tmp"
+  done
+  mv -f "$tmp" "$TALLY_FILE"
+}
+
+total_votes() {
+  local id sum=0
+  for id in "${IDS[@]}"; do sum=$(( sum + ${count[$id]} )); done
+  printf '%s' "$sum"
+}
+
+# Run "$@" while holding an exclusive lock, serializing all read-modify-write
+# access to the tally across concurrent calls.
+with_lock() {
+  mkdir -p "$DB_DIR"
+  exec 9>"$LOCK_FILE"
+  flock 9
+  "$@"
+}
+
+cmd_vote() {
+  local id="${1:-}"
+  is_id "$id" || { printf ''; return 0; }
+  load_counts
+  count["$id"]=$(( ${count[$id]} + 1 ))
+  save_counts
+  total_votes
+}
+
+cmd_stats() {
+  local id="${1:-}"
+  is_id "$id" || { printf 'low'; return 0; }
+  load_counts
+  local c="${count[$id]}" i total=0 max=0 min=-1
+  for i in "${IDS[@]}"; do
+    total=$(( total + ${count[$i]} ))
+    [ "${count[$i]}" -gt "$max" ] && max="${count[$i]}"
+    if [ "$min" -lt 0 ] || [ "${count[$i]}" -lt "$min" ]; then min="${count[$i]}"; fi
+  done
+  # mean = total/10; compare without floats via c*10 vs total.
+  if [ "$c" -eq 1 ]; then
+    printf 'first'
+  elif [ "$max" -gt "$min" ] && [ "$c" -eq "$max" ]; then
+    printf 'top'
+  elif [ "$max" -gt "$min" ] && [ "$c" -eq "$min" ]; then
+    printf 'rarest'
+  elif [ $(( c * 10 )) -ge "$total" ]; then
+    printf 'high'
+  else
+    printf 'low'
+  fi
+}
+
+cmd_dump() {
+  load_counts
+  local id
+  for id in "${IDS[@]}"; do
+    printf '%s\t%s\n' "$id" "${count[$id]}"
+  done
+  printf 'total\t%s\n' "$(total_votes)"
+}
+
+cmd_reset() {
+  load_counts
+  local id
+  for id in "${IDS[@]}"; do count["$id"]=0; done
+  save_counts
+}
+
+main() {
+  local cmd="${1:-}"
+  case "$cmd" in
+    vote)  with_lock cmd_vote  "${2:-}" ;;
+    stats) with_lock cmd_stats "${2:-}" ;;
+    dump)  with_lock cmd_dump ;;
+    reset) with_lock cmd_reset ;;
+    *)
+      echo "usage: bella-survey {vote <id>|stats <id>|dump|reset}" >&2
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"

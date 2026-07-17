@@ -3,6 +3,9 @@
 # db/ log/ run/ directories are kept (via .gitkeep) so a Pi redeploy has them.
 /db/*.db
 /db/*.db.db
+/db/survey.tsv
+/db/survey.tsv.*
+/db/survey.lock
 /log/*.log
 /log/*.fsxml
 /run/*.pid
