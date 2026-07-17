@@ -68,11 +68,12 @@ screen, or internet dependency:
 9. **Hidden — guess-my-number game** — dial `5` (never announced) to play.
 10. **Hidden — principles survey** — dial `9` (never announced) to vote on which of ten
     outlooks fits you right now, hear Bella's take, and where your pick stands with past callers.
-11. **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
-    last one) to open the full archive at the current message, where `7` deletes the current message.
-12. **Hidden — about** — dial `411` (never announced) for Bella's technical details.    
-13. **Hidden — maintenance codes** — dial `000`–`003` (never announced) to reset the survey tally
+11. **Hidden — about** — dial `411` (never announced) for Bella's technical details.    
+12. **Hidden — maintenance codes** — dial `000`–`003` (never announced) to reset the survey tally
     and/or archive every stored message (so the store reads empty), or toggle the disco codes.
+
+NOTE: **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
+    last one) to open the full archive at the current message, where `7` deletes the current message.
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
