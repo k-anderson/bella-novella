@@ -1145,7 +1145,7 @@ a dance.
 [dry] 3 if you simply can't be bought.
 [knowing] Dial 4 if you carry all you need with you.
 [velvet] 5, if there's a piece of you on display tonight.
-[warm] 6, if helping everyone in your group get where they are going.
+[warm] 6, if you're helping everyone in your group get where they are going.
 [low] Dial 7 if you look after everyone in the room.
 [soft] 8, if you leave a place better than you found it.
 [playful] 9 if you'd sooner do than watch.
