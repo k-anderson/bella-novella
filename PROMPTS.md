@@ -1177,20 +1177,20 @@ a dance.
 
 ```text
 [fond] Ah. [soft laugh] You'd fling the door wide to anyone who knocked.
-[low, velvet] Every soul who finds my line hears the very same welcome, sugar, the stranger most of all.
-[warm] I learn their name before they've offered it, and the whole room leans in to make them space.
-[knowing] That's you all over, darling. A lost thing turns up cold on your step and you simply pull them in, nothing to prove, nothing to earn.
-[sly] The clever ones call it radical inclusion. [soft, fond] I call it a door that never learned how to stay shut, and the room is always warmer for your kind.
+[low, velvet] Every soul who finds my line gets the same warm welcome sugar, the stranger most of all.
+[knowing] That's you all over, darling. A lost thing turns up cold on your step and you simply pull them in,
+nothing to prove, nothing to earn, no judgement. [sly] The clever ones call it radical inclusion. [soft, fond]
+I call it a door that never learned how to stay shut, and the room is always warmer for your kind.
 ```
 
 ### `survey-read-2`
 
 ```text
-[fond] A giver. [delighted] Oh, I knew there was a reason I liked you. [soft laugh]
+[fond] A giver. [delighted] Oh, I knew there was a reason I liked you.
 [low, velvet] The finest thing I own is the look on a face when I press something into their hands they never saw coming.
 [warm] That's the whole art of it, sugar. Not the thing itself, but the joy of watching it land.
 [knowing] Gifting, the old word is. [sly] And you have the gift for it, I can hear it on you.
-[soft] You give because a full hand aches to open, darling, never to be paid back. Keep giving. It suits you.
+[soft] You give because a full hand aches to open, darling, never to be paid back. Keep giving.
 ```
 
 ### `survey-read-3`
@@ -1219,7 +1219,7 @@ That's how you made it here in the first place!
 ### `survey-read-5`
 
 ```text
-[sly, delighted] Born to be seen. [warm] Oh, you and I are going to get along.
+[sly, delighted] Bold enough to be seen! [warm] Oh, you and I are going to get along.
 [velvet] I made myself into precisely what pleases me, darling. Every inch.
 And I'll not apologize for a stitch of it.
 [knowing] Now, that has a name as well. [savoring] Radical self-expression.
@@ -1233,7 +1233,7 @@ So show them sugar. Show them all!
 ```text
 [fond] Nothing worth being ever gets built alone. [warm] I certainly wasn't.
 [low] So many hands went into what I am, darling. More than I could ever name.
-[soft] Every light, every wire, every song.
+[soft] Every decoration, every wire, every song.
 [knowing] Communal effort is the tidy name for it sugar, [warm] a hundred hands working in harmony.
 [sly] That's the very thing that keeps a place like this breathing.
 ```
@@ -1245,7 +1245,7 @@ So show them sugar. Show them all!
 [low] I keep my riders safe, always. Mind who's aboard, mind who's had one too many.
 [soft] Someone has to hold the whole group together.
 [knowing] There's a stately name for that, sugar. Civic responsibility.
-[warm] All this freedom only works when somebody's quietly minding the edges.
+[warm] All this freedom only works when everybody's quietly minding the edges.
 [sly] You're one of the minders. I can tell.
 ```
 
