@@ -1072,28 +1072,28 @@ pleanty of power for my D&D Motor Systems high-torque EZGO motor, a shunt-wound 
 support me even though I'm [sly] not quite using it as intended. [delighted] And here's my
 favorite trick, when I brake, I get that energy back from the one pedal for going and stopping.
 
-[velvet] I get my gumption from [proud] six thirty-six volt lithium iron phosphate 
+[velvet] My gumption comes from [proud] six thirty-six volt lithium iron phosphate 
 batteries, [delighted] and I chose that chemistry on purpose. It carries plenty, stays light on its 
 feet, holds a steady voltage, and lasts, and lasts. [sly, low] Most importantly it keeps its temper, 
-fewier dramatic thermal runaways. [fond] Each one minds itself as well, a little brain inside balancing 
+fewer dramatic thermal runaways. [fond] Each one minds itself as well, a little brain inside balancing 
 the voltage, watching its own temperature, [warm] and ready to shut down at the first whisper of trouble.
 [knowing] I do appreciate those that practice radical self-reliance.
 
 [low, matter-of-fact] My batteries ride as two banks of three in parallel, each with its own charger to
-fill the eleven thousand watt hours per bank. Both banks topping up together while I sleep off gas generators.
+fill the eleven thousand watt hours per bank. Both banks topping up together off gas generators, while I sleep.
 [sultry] On a single bank I'll dance through the worst of it for four hours, [delighted] and often far,
 far longer. [knowing] I run one bank at a time on purpose, it keeps them honest, keeps them apart.
 [warm] When one tires, I slip to the fresh one and carry myself home, [playful] never once fretting over
 every amp out on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
 together and they might squabble. [reassuring] And to keep all those angry little electrons where they belong,
 [brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifier,
-every switch and light. [sultry, amused] Safety third when you have this much power to contain sugar.
+every switch and light. [sultry, amused] Safety third when you have this much power to contain, stranger.
 ```
 
 ### `about-2`
 
 ```text
-[velvet] Up front I keep a little fire, [delighted] powered by a two kilowatt inverter that lifts my
+[silky] Up front I keep a little fire, [delighted] powered by a two kilowatt inverter that lifts my
 humble thirty-six volts clear up to a hundred and ten alternating current. [sly] A proper household outlet
 stranger. [wistful] A hearth that runs on lithium. [amused] Imagine. [warm] And for the smaller comforts,
 a separate twelve volt system, an isolated thirty amp converter uses the thirty six volts to keep
