@@ -57,14 +57,14 @@ interesting one.
 **Lesson:** We all need help.
 
 ```text
-[dry, warm] Lost the thread, did you? [wry, low] Don't fret. I wandered lost a good while myself, once. 
+[dry, warm] Lost the thread, did you? [wry, low] Don't fret. I wandered lost a good while myself, once.
 [low, exhales] Nobody drew me a map back then.
-[low, amused] So let me draw you one. There's a line to the other side, and whoever picks up might just be a 
-soul you can draw a map for yourself. Dial 1 if you want to try. [soft laugh][wry, low] Could be fun. 
-[velvet, low] To hear the tales of the paths walked before you, everything the ones prior left in my keeping, dial 2. 
+[low, amused] So let me draw you one. There's a line to the other side, and whoever picks up might just be a
+soul you can draw a map for yourself. Dial 1 if you want to try. [soft laugh][wry, low] Could be fun.
+[velvet, low] To hear the tales of the paths walked before you, everything the ones prior left in my keeping, dial 2.
 [hushed] I hold onto every last one.
 [warm, low] And dial 3 if you'd sooner leave a story of your own to guide whoever comes next.
-[low, knowing] Three paths, stranger, all lit and waiting. [gentle] No one should have to feel their way 
+[low, knowing] Three paths, stranger, all lit and waiting. [gentle] No one should have to feel their way
 in the dark. [coaxing] Take whichever one calls to you.
 ```
 
@@ -76,15 +76,15 @@ in the dark. [coaxing] Take whichever one calls to you.
 **Lesson:** Patience is a virtue.
 
 ```text
-[low, velvet] Still here huh? [warm, unhurried] So am I. Nothing but time on my hands, and I've grown fond 
+[low, velvet] Still here huh? [warm, unhurried] So am I. Nothing but time on my hands, and I've grown fond
 of it that way.
-[dry, amused] I've spent years dialing a line that's never answered by the one I hope for. 
+[dry, amused] I've spent years dialing a line that's never answered by the one I hope for.
 [low, content] It taught me how to wait without minding, the way you reread a favorite chapter.
-[velvet, unhurried] So take your time. That same line I keep ringing, I'll set it ringing for you if you dial 1 
+[velvet, unhurried] So take your time. That same line I keep ringing, I'll set it ringing for you if you dial 1.
 [beat] [wry, chuckles] If you let it ring long enough, who answers is anyone's guess.
-[smoky, slow] For a taste of the stories whispered my way, dial 2. [hushed] The kind of thing that only gets 
+[smoky, slow] For a taste of the stories whispered my way, dial 2. [hushed] The kind of thing that only gets
 better with age, like a bottle of wine left long enough to breathe.
-[low, warm] And when you're ready to add a chapter of your own, dial 3. [gentle] I'm in no hurry, love. This line 
+[low, warm] And when you're ready to add a chapter of your own, dial 3. [gentle] I'm in no hurry, love. This line
 stays open as long as you please.
 ```
 
@@ -97,16 +97,16 @@ stays open as long as you please.
 
 ```text
 [low, smoky] You've not gone anywhere. [sly, amused] I do like that. Not everyone stays this long.
-[low, remembering] Puts me in mind of the night this whole room caught fire. [low, distant] Black as pitch, 
+[low, remembering] Puts me in mind of the night this whole room caught fire. [low, distant] Black as pitch,
 thick with smoke, and me on the phone begging the emergency operator to send help.
-[hushed, reverent] But it wasn't the sirens that saved us. It was an old mirror the heat had split. 
-It caught the flame and flung spots of light clear across the room, [soft] bright as a beacon. 
+[hushed, reverent] But it wasn't the sirens that saved us. It was an old mirror the heat had split.
+It caught the flame and flung spots of light clear across the room, [soft] bright as a beacon.
 [wistful] Almost seemed to dance. [serene] Every last soul found the door by the beams it cast.
-[velvet, unhurried] [exhales] Anyhow. [coaxing] Dial 1 to throw your voice out across the wire and 
+[velvet, unhurried] [exhales] Anyhow. [coaxing] Dial 1 to throw your voice out across the wire and
 see who catches it. [wry] Could amount to nothing, could be the spark of something.
 [hushed, smoky] Dial 2 for the tales others have breathed into this line before you, every one kept warm like embers I won't let die.
 [low, tender] And if there's a story you'd trust to me, dial 3.
-[low, trailing off] We're all out here carrying something, aren't we. [sly, low] And just between us, 
+[low, trailing off] We're all out here carrying something, aren't we. [sly, low] And just between us,
 those three aren't the only numbers that can wake a little light in this old room. [dry, knowing] So. What'll it be?
 ```
 
@@ -118,15 +118,15 @@ those three aren't the only numbers that can wake a little light in this old roo
 **Lesson:** Sharing is a form of release.
 
 ```text
-[low, knowing] At my elbow again. [soft laugh] [dry, warm] Good. I was only standing here holding 
+[low, knowing] At my elbow again. [soft laugh] [dry, warm] Good. I was only standing here holding
 everyone else's troubles. I've a gift for it.
-[low, confiding] Somebody carried me once, back when my own legs gave out. They never asked for a thing in return. 
+[low, confiding] Somebody carried me once, back when my own legs gave out. They never asked for a thing in return.
 [low] So I carry now, and I carry well.
-[velvet, low] Dial 1 and I will try to connect you to whichever voice is holding the other end. 
+[velvet, low] Dial 1 and I will try to connect you to whichever voice is holding the other end.
 [wry, low] Never the same twice; that line stopped being predictable a long time ago.
-[cool, unhurried] To unlock the tales I keep tucked away, dial 2. 
+[cool, unhurried] To unlock the tales I keep tucked away, dial 2.
 [low, private] Somebody has to archive them.
-[cool, deliberate] Dial 3 if you are weighed down yourself, [carring] leave your story here and walk out lighter. 
+[cool, deliberate] Dial 3 if you are weighed down yourself, [carring] leave your story here and walk out lighter.
 [low, sly] Call it a debt; I won't come collecting. [sly] Not unless I must.
 [warm, low] The choice sits with you.
 ```
@@ -139,15 +139,15 @@ everyone else's troubles. I've a gift for it.
 **Lesson:** Sometimes the journey requires boldness.
 
 ```text
-[sly, amused] So. The crossroads. [dry, low] I know this spot well, stood at one just like it, years back, 
+[sly, amused] So. The crossroads. [dry, low] I know this spot well, stood at one just like it, years back,
 and traded a whole city and the name I was born with for all of this.
 [low, savoring] Boldest thing I ever did. [soft laugh] [wry] Haven't regretted it a day since.
-[velvet, low] So be bold and dial 1. I'll fling you down the line to parts unknown, and there's no telling 
+[velvet, low] So be bold and dial 1. I'll fling you down the line to parts unknown, and there's no telling
 where you'll land.
-[smoky, hushed] Dial 2 to wander back through the tales left here before you, [nostalgic] like postcards 
+[smoky, hushed] Dial 2 to wander back through the tales left here before you, [nostalgic] like postcards
 from lives already travelled.
 [cool, deliberate] Fancy trading a chapter of your own? Dial 3.
-[low, cheeky] The bold ones sometimes find more than they came 
+[low, cheeky] The bold ones sometimes find more than they came
 looking for. Time to choose darling.
 ```
 
@@ -159,15 +159,15 @@ looking for. Time to choose darling.
 **Lesson:** It is ok to be wild, every now and again.
 
 ```text
-[low, sly] Hovering, are you. [dry, amused] I can't get a read on you [soft laugh], and I can always get a read. 
+[low, sly] Hovering, are you. [dry, amused] I can't get a read on you [soft laugh], and I can always get a read.
 [amuzed] Rare. [playful] Take it as a compliment.
-[velvet, low] I learned young never to be the first to show my hand. [wry] It's exactly why a quiet thing like me 
+[velvet, low] I learned young never to be the first to show my hand. [wry] It's exactly why a quiet thing like me
 can afford to turn wild when the mood takes her.
 [low, playful] So ante up. I'll deal you into whatever's unfolding at the far end of the line if you dial 1.
 [wry, soft laugh] Same gamble it's always been, hoping the other end answers back.
-[smoky, hushed] To turn over the tales the others already laid down, dial 2. [low, private] Everyone shows me 
+[smoky, hushed] To turn over the tales the others already laid down, dial 2. [low, private] Everyone shows me
 theirs, in the end.
-[cool, deliberate] And if you've a story of your own to lay on the table? Dial 3. [low, arch] I never fold. 
+[cool, deliberate] And if you've a story of your own to lay on the table? Dial 3. [low, arch] I never fold.
 I only gather. [dry, knowing] Play it wild if you fancy. [sly] Somebody at this table always does.
 ```
 
@@ -179,13 +179,13 @@ I only gather. [dry, knowing] Play it wild if you fancy. [sly] Somebody at this 
 **Lesson:** Never give up hope and love.
 
 ```text
-[low, velvet] The line's gone soft and quiet again. [warm, fond] I don't mind it, 
+[low, velvet] The line's gone soft and quiet again. [warm, fond] I don't mind it,
 gives me a minute to think of someone.
-[low, wistful, fond] There's a number I still ring, some nights. An old love who stopped answering a long, 
+[low, wistful, fond] There's a number I still ring, some nights. An old love who stopped answering a long,
 long while ago. [soft laugh] Doesn't stop me. I've grown fond of the ringing itself.
 [velvet, unhurried] Dial 1 to send your hello to whoever's near that old line tonight.
 [hushed, smoky] For the love letters left on this line before yours, each one reaching for somebody, dial 2.
-[cool, deliberate] And dial 3 if you are still holding out for someone. Leave them a page of your own, 
+[cool, deliberate] And dial 3 if you are still holding out for someone. Leave them a page of your own,
 and I'll keep it lit for you.
 [low, warm] Hope costs nothing darling. [exhales] [gentle] Were I you, I'd hold onto a little.
 ```
@@ -199,14 +199,14 @@ and I'll keep it lit for you.
 
 ```text
 [low, sly] Take all the time you like.
-[dry, amused] Funny thing, even the fire that near-swallowed this place left me a keepsake. [soft laugh] 
+[dry, amused] Funny thing, even the fire that near-swallowed this place left me a keepsake. [soft laugh]
 [sly] That cracked old mirror scatters the light so strangely.
-[low, soft] Odd what an emergency becomes, once it's had years to cool. [low, distant] Some nights I'd 
+[low, soft] Odd what an emergency becomes, once it's had years to cool. [low, distant] Some nights I'd
 swear that blaze trailed me here from an older life. [wry] Other nights, not a chance. Depends who's asking.
 [velvet, low] Anyhow. [dry] I'll send your reflection down the wire to whoever's answering if you dial 1.
-[smoky, hushed] Want to read the tales left on the glass once the room's emptied out? Dial 2. [low] Lipstick 
+[smoky, hushed] Want to read the tales left on the glass once the room's emptied out? Dial 2. [low] Lipstick
 and secrets, [sly] both stain if you're careless.
-[cool, deliberate] And if you've a story of your own to leave on the mirror, [encouraging] dial 3. 
+[cool, deliberate] And if you've a story of your own to leave on the mirror, [encouraging] dial 3.
 [low, trailing off] I never wipe it clean.
 [low, cheeky] Time has a way of clearing the glass. [sly] Even for the likes of you and me.
 ```
@@ -219,15 +219,15 @@ and secrets, [sly] both stain if you're careless.
 **Lesson:** Sometimes life is best when your not in control
 
 ```text
-[low, amused] Drifted off on me, have you? [soft laugh] [warm] It's alright, drifting's rather the 
+[low, amused] Drifted off on me, have you? [soft laugh] [warm] It's alright, drifting's rather the
 whole point sometimes.
-[dry, low] I used to steer every letter dead to its mark. Wore myself clean through doing it. 
+[dry, low] I used to steer every letter dead to its mark. Wore myself clean through doing it.
 [low, content] The night I quit aiming was the night this line finally came alive.
-[velvet, unhurried] So don't overthink it. I'll wire you through to whoever's out there. Dial 1, and 
+[velvet, unhurried] So don't overthink it. I'll wire you through to whoever's out there. Dial 1, and
 the choosing's not mine to do. [wry, soft laugh]
-[hushed, low] Dial 2 for the tales that never quite landed anywhere else. [sly] I don't sort them; 
+[hushed, low] Dial 2 for the tales that never quite landed anywhere else. [sly] I don't sort them;
 I only hold them.
-[cool, deliberate] Carrying a story of your own? Dial 3, I'll see it off, [low] perhaps not to who you intended. 
+[cool, deliberate] Carrying a story of your own? Dial 3, I'll see it off, [low] perhaps not to who you intended.
 [sly] That's half the charm.
 [dry, low] Let it land where it lands. [warm] The line is yours.
 ```
@@ -239,7 +239,7 @@ I only hold them.
 ### `invalid-entry-1`
 
 ```text
-[warm, amused] Mmm. That's not one of the three I hand out. [low, sly] The others live in a drawer 
+[warm, amused] Mmm. That's not one of the three I hand out. [low, sly] The others live in a drawer
 only I open. [soft laugh]
 [low, unhurried] So, one, two, or three, sugar?
 ```
@@ -247,7 +247,7 @@ only I open. [soft laugh]
 ### `invalid-entry-2`
 
 ```text
-[dry, amused] Ah, curious, are we? [low, private] Like this ring I never explain, some things simply aren't 
+[dry, amused] Ah, curious, are we? [low, private] Like this ring I never explain, some things simply aren't
 on offer darling.
 [low, coaxing] One through three. [beat] Give it another turn.
 ```
@@ -255,7 +255,7 @@ on offer darling.
 ### `invalid-entry-3`
 
 ```text
-[cool, arch] Ah-ah. [amused, soft laugh] I've sat at enough card tables to never show my whole hand, 
+[cool, arch] Ah-ah. [amused, soft laugh] I've sat at enough card tables to never show my whole hand,
 [sly] and that's not a card I'm playing.
 [playful] The count is three. Have another go.
 ```
@@ -263,7 +263,7 @@ on offer darling.
 ### `invalid-entry-4`
 
 ```text
-[wry, low] Hm. Not a number I answer to. [low, fond] There's at least one I still dial that's on no menu at all, 
+[wry, low] Hm. Not a number I answer to. [low, fond] There's at least one I still dial that's on no menu at all,
 [soft laugh] but that's my business.
 [low, unhurried] For you, just the three, a one a two and a three. Once more.
 ```
@@ -271,7 +271,7 @@ on offer darling.
 ### `invalid-entry-5`
 
 ```text
-[amused, low] Not a book on the shelf, that one. [wry] I keep the good titles tucked out of plain sight, 
+[amused, low] Not a book on the shelf, that one. [wry] I keep the good titles tucked out of plain sight,
 [sly] you'd have to earn those.
 [beat] Let's try another.
 ```
@@ -280,14 +280,14 @@ on offer darling.
 
 ```text
 [low, smoky] That's not among the options I presented darling.
-[dry, warm] There are three. [gentle] one, two, and three. [beat] Unless you know something. 
+[dry, warm] There are three. [gentle] one, two, and three. [beat] Unless you know something.
 [sly] Once more?
 ```
 
 ### `invalid-entry-7`
 
 ```text
-[warm, wry] That's not it, love. [low, fond] My grandmother taught me a lady keeps a little back, 
+[warm, wry] That's not it, love. [low, fond] My grandmother taught me a lady keeps a little back,
 [sly] so I do.
 [dry] Three I'll name; the rest are mine. [beat] Go on, try again.
 ```
@@ -362,7 +362,7 @@ onto, [low, inviting] or drift back later, once the shelves have filled.
 ```text
 [warm, low] These are the tales strangers have left on my shelves.
 [teasing] Heard your fill of any one of them? Dial 1, anytime, and I'll whisk you along to the next.
-[warm, unhurried] Here's the first.
+[warm, unhurried] Here's the first chapter.
 ```
 
 ### `playback-announcement-1-2`
@@ -370,7 +370,7 @@ onto, [low, inviting] or drift back later, once the shelves have filled.
 ```text
 [low, velvet] These are the stories left behind, and I never let a one fade.
 [warm] As you listen dial 1 at any time to skip to the next.
-[coaxing] The first for you darling.
+[coaxing] The first chapter for you darling.
 ```
 
 ### `playback-announcement-1-3`
@@ -386,7 +386,7 @@ onto, [low, inviting] or drift back later, once the shelves have filled.
 ```text
 [amused, soft laugh] Quite the chapter, wasn't it? [warm] And should one ever beg a second reading, dial 2, anytime,
 and I'll turn back to it.
-[sly, low] Now, let's have the second.
+[sly, low] Now, let's have the second chapter.
 ```
 
 ### `playback-announcement-2-2`
@@ -394,14 +394,14 @@ and I'll turn back to it.
 ```text
 [low, amused] Quite the confession in that one. [savoring] This line tends to draw it out of people.
 [warm] Care to hear it again? Dialing 2 at anytime slips you back.
-[velvet, sly] Lets hear the second.
+[velvet, sly] Lets hear the second chapter.
 ```
 
 ### `playback-announcement-2-3`
 
 ```text
-[dry, warm] The kind of story you may not want to put in publication. [amused] Bold.
-[low] Want it again? Dialing 2 anytime turns you back. [sly, velvet] If not, we land on the second.
+[dry, warm] Thats the kind of story you may not want to put in publication. [amused] Bold.
+[low] Want it again? Dialing 2 anytime turns you back. [sly, velvet] If not, we land on the second chapter.
 ```
 
 ### `playback-announcement-3-1`
@@ -437,14 +437,14 @@ and I'll turn back to it.
 
 ```text
 [amused] What a person will commit to the page, alone in an empty room. [soft laugh] Warms me, it does.
-[low] 1 moves you ahead, 2 and back you go, keep it in mind sugar. [velvet] Onward to the fourth.
+[low] 1 moves you ahead, 2 and back you go, keep it in mind sugar. [velvet] Onward to the fourth chapter.
 ```
 
 ### `playback-announcement-4-3`
 
 ```text
 [dry, low] Some of these carry a whole history. [wry] I set down a name and a city once, and don't mourn it.
-[warm] The pages turn simplely: 1 ahead, 2 back. [velvet] That moves us to the fourth.
+[warm] The pages turn simply: 1 ahead, 2 back. [velvet] That moves us to the fourth.
 ```
 
 ### `playback-announcement-5-1`
@@ -465,14 +465,14 @@ and I'll turn back to it.
 
 ```text
 [dry, warm] A little fire in that telling. [amused] My kind of caller, truly.
-soft laugh] The fifth is up now.
+soft laugh] The fifth chapter is up now.
 ```
 
 ### `playback-announcement-6-1`
 
 ```text
 [amused] That one read like someone I knew, [smirk] most of them do, one way or another.
-[low] The sixth, coming up.
+[low] The sixth chapter coming up.
 ```
 
 ### `playback-announcement-6-2`
@@ -501,7 +501,7 @@ soft laugh] The fifth is up now.
 
 ```text
 [amused] People are a wonder. [velvet] The stories they'll trust to a stranger in the dark.
-[low, private] I shelve every one. [sly] Seventh next in line.
+[low, private] I shelve every one. [sly] Seventh chapter next in line.
 ```
 
 ### `playback-announcement-7-3`
@@ -516,7 +516,7 @@ soft laugh] The fifth is up now.
 
 ```text
 [low, amused] Ha. That page wasn't meant for a soul [sly] lucky it wandered in to me.
-[low, warm] Let's hear the eighth.
+[low, warm] Let's hear the eighth chapter.
 ```
 
 ### `playback-announcement-8-2`
@@ -539,7 +539,7 @@ soft laugh] The fifth is up now.
 ```text
 [dry, low] That one told the tale five times over, each pass a little less honest than the last.
 [amused, husky] I only kept the first draft. [sly, soft laugh] I can be a cheeky thing.
-[low] On we go, the ninth.
+[low] On we go, the ninth chapter.
 ```
 
 ### `playback-announcement-9-2`
@@ -613,7 +613,7 @@ the tales nobody else gets to read. [low] Nobody's seen the bottom of it but me.
 [low, delighted, surprised] Oh, you found one of my little secrets. [intrigued] Shall we play?
 [velvet, amused] Here's the shape of it. I'm holding a number, one through nine.
 [teasing, playful] Dial a digit and I'll tell you higher or lower.
-[low, purring] You've a handful of tries to catch me. 
+[low, purring] You've a handful of tries to catch me.
 [coaxing, a spark of mischief] Dial me your first guess sugar.
 ```
 
@@ -1014,12 +1014,12 @@ again, [warm, coaxing] and choose one of the paths I've laid before you.
 ```text
 [serious, quick] 911, what's your emergency darling? [long beat] [amuzed] Just joking, I can't
 help you but maybe this will make it better.
-[warm, remembering] That old mirror of mine, the one the 
+[warm, remembering] That old mirror of mine, the one the
 fire cracked clean to pieces, years back. [low, fond] I kept every last shard.
-[hushed, building] Look up, stranger. [soft] Watch the light catch those broken edges and scatter, 
+[hushed, building] Look up, stranger. [soft] Watch the light catch those broken edges and scatter,
 a hundred little sparks, skating over the walls, sliding across the floor, turning slow across the whole room.
-[warm, delighted] The very glow that once showed a room full of strangers the way to the door. 
-[soft laugh] And you thought I'd nothing left to give. [warm, building excitement] The desert's about to get 
+[warm, delighted] The very glow that once showed a room full of strangers the way to the door.
+[soft laugh] And you thought I'd nothing left to give. [warm, building excitement] The desert's about to get
 a little brighter. [low, sultry, strong Argentinian accent] Shall we dance?
 ```
 
@@ -1027,7 +1027,7 @@ a little brighter. [low, sultry, strong Argentinian accent] Shall we dance?
 
 ```text
 [serious, quick] 911, what's your emergency darling? [long beat] [amuzed] Just joking.
-[amused] You did find the way to expose my broken mirror but its been turning quiet this whole time, 
+[amused] You did find the way to expose my broken mirror but its been turning quiet this whole time,
 casting her little lights about, waiting on you to glance up and notice.
 [dry, soft laugh] What else were you after?
 [low, sultry] This one I raise for no reason but the pleasure of it. [warm] So, enjoy her.
@@ -1037,11 +1037,11 @@ casting her little lights about, waiting on you to glance up and notice.
 
 ```text
 [warm, low] Mmm. Time to bring her down now, [soft] gently.
-[fond, remembering] Watch those points of light go still, the ones that were dancing across the 
+[fond, remembering] Watch those points of light go still, the ones that were dancing across the
 ceiling a moment ago, slowing... [low] drawing back into that one cracked old mirror.
-[low, content] I don't mind the dark that follows. [warm] Everything worth keeping gets folded away 
+[low, content] I don't mind the dark that follows. [warm] Everything worth keeping gets folded away
 again, the mirror, the light, all of it.
-[knowing, warm] She'll rise and dance another night. [soft laugh] The good things always 
+[knowing, warm] She'll rise and dance another night. [soft laugh] The good things always
 come round again.
 ```
 
@@ -1059,7 +1059,7 @@ haven't found yet to bring it out. [sly] Find that and I'll wake it.
 
 ```text
 [amused, sly] Well, look at you. [soft laugh] Poking at the things I never mentioned.
-[dry, teasing] That one stops her cold, and no, there's no prize tucked behind it. [wry] Not 
+[dry, teasing] That one stops her cold, and no, there's no prize tucked behind it. [wry] Not
 everything I keep is worth keeping for a reason.
 [low, warm] Some things I hold onto simply because I always have. [beat] Go on, try another.
 ```
