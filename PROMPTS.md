@@ -895,7 +895,7 @@ traveler's hands around it. [soft, storyteller's hush] "Carry it till dawn," she
 you."
 [slower, smoky] So they walk. The night comes down cold, and the wind comes looking for that little flame.
 [beat, hushed] It trembles in their hands.
-[low, deliberate, leaning in] First choice, sugar. Dial 1 to cup it close, shield it with your own body, and
+[low, deliberate, leaning in] First choice sugar. Dial 1 to cup it close, shield it with your own body, and
 walk slower. [beat, teasing, delighted] Or dial 2 to feed it, tear a page from the book you carry, and let it
 flare up bright and bold.
 ```
@@ -956,16 +956,17 @@ wish for one.
 give the whole thing to the fire and call it living. [a private laugh, wistful] ...I've burned a book or two
 myself, once. [sultry, savouring] Glorious. [beat, softer, cautioning] Just, mind the ones still holding a
 candle at the window for you. [warm, inviting] You and I should have a drink. [low] The strong kind.
-[sly, conspiratorial] Tell the concierge you once met me in Salzburg, there might be something in it for you.
+[sly, warm] Tell you what, I like you. [low, knowing] Let the concierge know you once met me in Salzburg.
+They'll understand — and they'll likely make it worth your while.
 ```
 
 ### `tale-end-ash`
 
 ```text
 [low, steadying, quietly impressed] ...The map was ash. [low] But the traveler knelt and let the desert teach
-them its bones, [slower] the lean of the dunes, the cold that means north, the stars that never lie. [warm]
+them its secrets, [slower] the lean of the dunes, the cold that means north, the stars that never lie. [warm]
 They walked on by heart, and reached the dawn changed.
-[respect in it, intrigued] You lost the way, sugar... [low] and learned the country. That's the trade the
+[respect in it, intrigued] You lost the way, sugar... [low] and learned the land instead. That's the trade the
 desert offers the bold ones, it takes your map, [warm] and hands you an instinct you'll never lose.
 [sly, amused] Something tells me you never much liked directions anyway.
 ```
@@ -985,7 +986,7 @@ in no hurry. [sly, a soft laugh] Neither, it seems, are you.
 ### `tale-invalid`
 
 ```text
-[low, amused, unbothered, playful] Mmm. That's not a turn this story takes, darling. [beat, teasing] Listen
+[low, amused, unbothered, playful] That's not a turn this story takes, darling. [beat, teasing] Listen
 again, [warm, coaxing] and choose one of the paths I've laid before you.
 ```
 

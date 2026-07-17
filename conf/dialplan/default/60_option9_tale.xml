@@ -58,6 +58,7 @@
   <extension name="tale-open-invalid">
     <condition field="destination_number" expression="^TALE_OPEN_D$">
       <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
+      <action application="sleep" data="500"/>
       <action application="transfer" data="TALE_OPEN XML default"/>
     </condition>
   </extension>
@@ -91,6 +92,7 @@
   <extension name="tale-shield-invalid">
     <condition field="destination_number" expression="^TALE_SHIELD_D$">
       <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
+      <action application="sleep" data="500"/>
       <action application="transfer" data="TALE_SHIELD XML default"/>
     </condition>
   </extension>
@@ -124,6 +126,7 @@
   <extension name="tale-feed-invalid">
     <condition field="destination_number" expression="^TALE_FEED_D$">
       <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
+      <action application="sleep" data="500"/>
       <action application="transfer" data="TALE_FEED XML default"/>
     </condition>
   </extension>
