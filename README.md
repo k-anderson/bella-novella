@@ -343,8 +343,9 @@ and plays the current message, **2** = previous, **7** = delete the current mess
 **full** archive, newest-first — no lead-in announcements, a short tone separating each message —
 where **1** = next, **2** = previous, **7** = **delete** the current message (never announced), any other
 key replays it, and no key auto-advances. Because `bella-messages` re-lists the store on every call, a
-`delete-all` takes effect at once and every index renumbers as if the message never existed; reaching the
-oldest signs off and returns to the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
+`delete-all` takes effect at once and every index renumbers as if the message never existed — though the
+recording is **moved into the `archive/` folder**, not erased; reaching the oldest signs off and returns to
+the menu. Backed by `bella-messages` `resolve-all`/`step-all`/`delete-all`.
 
 ### 4.5 `40_option3_leave.xml` — leave a message (option 3)
 `LEAVE_MESSAGE` answers, plays `message-record.wav` and a beep, then `record`s up to **60 s** to
@@ -457,8 +458,8 @@ message drawer (§4.4) over the full archive.
 
 | Command | Arguments | What it does |
 |---|---|---|
-| `rotate` | — | Reclaim space **only** when disk is low: prune archived recordings first (oldest-first; the dated folders are kept), then the oldest live messages beyond the newest 10. |
-| `archive` | — | Move every live recording into a new dated subfolder (`archived-<UTC>-XXXX/`), so `count`/`count-all` read empty; prints how many moved. Reversible; archived files are pruned by `rotate` only when disk is low. |
+| `rotate` | — | Reclaim space **only** when disk is low: prune archived recordings first (oldest-first; the `archive/` folder is kept), then the oldest live messages beyond the newest 10. |
+| `archive` | — | Move every live recording into the `archive/` folder, so `count`/`count-all` read empty; prints how many moved. Reversible; archived files are pruned by `rotate` only when disk is low. |
 | `count` | — | Number of playable messages (≤ 10). |
 | `resolve` | `<index>` | Absolute path of the 1-based Nth playable message (newest-first). |
 | `announcement` | `<index>` | Lead-in announcement WAV for the Nth message, or empty if none. |
@@ -466,7 +467,7 @@ message drawer (§4.4) over the full archive.
 | `count-all` | — | Total number of stored messages (full archive). |
 | `resolve-all` | `<index>` | Like `resolve`, but over the full archive. |
 | `step-all` | `<index> next\|prev` | Like `step`, but clamped to the full archive. |
-| `delete-all` | `<index>` | Delete the Nth full-archive message; remaining indices renumber at once. |
+| `delete-all` | `<index>` | **Move** the Nth full-archive message into the `archive/` folder (not erased); remaining indices renumber at once. |
 | `drawer-start` | — | Full-archive index just past the playback window (`PLAYBACK_LIMIT+1`), or `0`. |
 | `pick` | `<prefix>` | Next `<prefix>-*.wav` from a per-prefix **shuffle-bag** — every variant plays once, in random order, before repeating (no back-to-back duplicates); empty if none. State on tmpfs (`BELLA_PICK_STATE_DIR`, default `/run/bella-novella/pick`); falls back to a plain random draw if unavailable. |
 

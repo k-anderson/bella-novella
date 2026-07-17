@@ -230,7 +230,8 @@
     </condition>
   </extension>
 
-  <!-- 7 = delete the current message. The store re-lists on every helper call, so
+  <!-- 7 = delete the current message (bella-messages moves it into the archive/
+       folder rather than erasing it). The store re-lists on every helper call, so
        after the delete the same drawer_idx now resolves to the message that was
        next-older (it slides into this slot); if the oldest was deleted, resolve-all
        returns empty and DRAWER_RESOLVE -> DRAWER_PLAY falls through to DRAWER_END. -->

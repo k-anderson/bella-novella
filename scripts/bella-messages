@@ -15,15 +15,13 @@ set -euo pipefail
 #
 # Commands:
 #   rotate                  reclaim disk space ONLY when free space is low: first
-#                           prune archived recordings (oldest-first; the dated
-#                           archive folders themselves are kept), then, if still
-#                           low, the oldest live messages beyond the newest
-#                           PLAYBACK_LIMIT
-#   archive                 move every live recording into a new dated subfolder
-#                           (archived-<UTCstamp>-XXXX/) so count/count-all read an
-#                           empty store; print how many were moved. Reversible
-#                           (move the files back). Archived recordings stay on
-#                           disk until `rotate` needs the space.
+#                           prune archived recordings (oldest-first; the archive/
+#                           folder itself is kept), then, if still low, the oldest
+#                           live messages beyond the newest PLAYBACK_LIMIT
+#   archive                 move every live recording into the archive/ subfolder
+#                           so count/count-all read an empty store; print how many
+#                           were moved. Reversible (move the files back). Archived
+#                           recordings stay on disk until `rotate` needs the space.
 #   count                   print how many messages are playable (<= PLAYBACK_LIMIT)
 #   resolve <index>         print the absolute path of the 1-based Nth playable message
 #   announcement <index>    print a lead-in announcement wav for the Nth message,
@@ -33,7 +31,8 @@ set -euo pipefail
 #   count-all               print the total number of stored messages (unwindowed)
 #   resolve-all <index>     like resolve, but over ALL stored messages, newest-first
 #   step-all <index> next|prev  like step, but clamped to the full archive
-#   delete-all <index>      delete the Nth full-archive message (newest-first); the
+#   delete-all <index>      move the Nth full-archive message (newest-first) into
+#                           the archive/ subfolder (NOT removed from disk); the
 #                           store re-lists on every call so the remaining indices
 #                           renumber at once, as if it had never been stored
 #   drawer-start            print the 1-based full-archive index just past the
@@ -50,6 +49,10 @@ set -euo pipefail
 #                           is unusable. Empty when no such files exist.
 
 MESSAGES_DIR="${BELLA_MESSAGES_DIR:-/usr/local/freeswitch/recordings/messages}"
+# Where `archive` and the playback "delete" move recordings instead of erasing
+# them: a single archive/ subfolder of MESSAGES_DIR. It sits one level down, so
+# the maxdepth-1 live listing never sees it.
+ARCHIVE_DIR="${BELLA_ARCHIVE_DIR:-$MESSAGES_DIR/archive}"
 PLAYBACK_LIMIT="${BELLA_PLAYBACK_LIMIT:-10}"
 # Old messages are pruned only when free space on the messages filesystem drops
 # below this many megabytes.
@@ -82,13 +85,12 @@ full_list() {
   list_messages | tac
 }
 
-# Archived recordings (moved out of the live store by `archive`) live one level
-# down, inside dated archived-* subfolders, so the maxdepth-1 listing above never
-# sees them. This lists them oldest-first by their embedded msg_<timestamp>,
-# across every archive folder, for space reclamation by `rotate`.
+# Archived recordings (moved out of the live store by `archive` or the playback
+# "delete") live in the archive/ subfolder, so the maxdepth-1 listing above never
+# sees them. This lists them oldest-first (name == chronological) for space
+# reclamation by `rotate`.
 list_archived() {
-  find "$MESSAGES_DIR" -mindepth 2 -type f -name 'msg_*.wav' -printf '%f\t%p\n' 2>/dev/null \
-    | sort | cut -f2-
+  find "$ARCHIVE_DIR" -maxdepth 1 -type f -name 'msg_*.wav' 2>/dev/null | sort
 }
 
 # True when free space on the messages filesystem is below MIN_FREE_MB.
@@ -107,10 +109,10 @@ cmd_rotate() {
   # MIN_FREE_MB. No-speech / empty recordings are discarded at record time by
   # the dialplan (record_min_sec).
 
-  # 1) Reclaim from the ARCHIVE first. Recordings moved aside by `archive` were
-  #    intentionally cleared from the live store, so they are the expendable
-  #    space: prune them oldest-first. Only the recordings are removed -- the
-  #    dated archive folders are left in place.
+  # 1) Reclaim from the ARCHIVE first. Recordings moved aside by `archive` (or the
+  #    playback "delete") were intentionally cleared from the live store, so they
+  #    are the expendable space: prune them oldest-first. Only the recordings are
+  #    removed; the archive/ folder itself is left in place.
   local arch
   while disk_low; do
     arch="$(list_archived | head -n 1)"
@@ -130,12 +132,12 @@ cmd_rotate() {
   done
 }
 
-# Move every live recording into a new dated subfolder of MESSAGES_DIR
-# (archived-<UTCstamp>-XXXX/). Because list_messages only looks one level deep
-# (maxdepth 1, -type f), the moved recordings vanish from count AND count-all, so
-# the IVR behaves as if the store were empty -- without deleting anything. The
-# recordings sit in the archive until `rotate` needs the space (see above).
-# Prints the number of recordings moved (0 when the store was already empty).
+# Move every live recording into the archive/ subfolder of MESSAGES_DIR. Because
+# list_messages only looks one level deep (maxdepth 1, -type f), the moved
+# recordings vanish from count AND count-all, so the IVR behaves as if the store
+# were empty -- without deleting anything. The recordings sit in archive/ until
+# `rotate` needs the space (see above). Prints the number of recordings moved
+# (0 when the store was already empty).
 cmd_archive() {
   mkdir -p "$MESSAGES_DIR"
   local files
@@ -143,13 +145,11 @@ cmd_archive() {
   local n="${#files[@]}"
   if [ "$n" -eq 0 ]; then printf '0'; return 0; fi
 
-  local dest
-  dest="$(mktemp -d "$MESSAGES_DIR/archived-$(date -u +%Y%m%d-%H%M%S)-XXXX" 2>/dev/null)" \
-    || { printf '0'; return 0; }
+  mkdir -p "$ARCHIVE_DIR" || { printf '0'; return 0; }
 
   local f moved=0
   for f in "${files[@]}"; do
-    if mv -f "$f" "$dest/" 2>/dev/null; then moved=$(( moved + 1 )); fi
+    if mv -f "$f" "$ARCHIVE_DIR/" 2>/dev/null; then moved=$(( moved + 1 )); fi
   done
   printf '%s' "$moved"
 }
@@ -239,15 +239,16 @@ cmd_step_all() {
   esac
 }
 
-# Delete the Nth full-archive message (1-based, newest-first). Reuses cmd_resolve_all
-# so only an existing msg_*.wav inside MESSAGES_DIR can ever be removed. Because the
-# helpers re-list the directory on every call, the remaining indices renumber
-# immediately, as if the deleted message had never been stored. Newline-free.
+# "Delete" the Nth full-archive message (1-based, newest-first): move it into the
+# archive/ subfolder rather than erasing it from disk. Reuses cmd_resolve_all so
+# only an existing live msg_*.wav can ever be moved. Because the helpers re-list
+# the live store on every call, the remaining indices renumber immediately, as if
+# the message had never been stored (it is preserved in archive/). Newline-free.
 cmd_delete_all() {
   local idx="${1:-0}" file
   file="$(cmd_resolve_all "$idx")"
   [ -n "$file" ] || { printf ''; return 0; }
-  rm -f "$file"
+  mkdir -p "$ARCHIVE_DIR" && mv -f "$file" "$ARCHIVE_DIR/" 2>/dev/null || true
   printf ''
 }
 
