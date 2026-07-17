@@ -642,7 +642,7 @@ nobody's seen the bottom of it but me. [low] Until now.
 [sly, utterly delighted] Now this is a treat. [intrigued, leaning in] Just us two and a little game.
 [velvet, warm] I'll think of a number between one and nine, darling.
 [teasing, playful] You guess, I steer you. Higher. Lower.
-[low, purring] A handful of tries and not a single extra. [warm, a spark of mischief] Dial your first guess, surprise me!
+[low, purring] I'll only give you a handful of tries. [warm, a spark of mischief] Dial your first guess, surprise me!
 ```
 
 ### `game-higher-1`
@@ -895,9 +895,9 @@ traveler's hands around it. [soft, storyteller's hush] "Carry it till dawn," she
 you."
 [slower, smoky] So they walk. The night comes down cold, and the wind comes looking for that little flame.
 [beat, hushed] It trembles in their hands.
-[low, deliberate, leaning in] First choice sugar. Dial 1 to cup it close, shield it with your own body, and
-walk slower. [beat, teasing, delighted] Or dial 2 to feed it, tear a page from the book you carry, and let it
-flare up bright and bold.
+[low, coaxing] First choice sugar. [low, deliberate, leaning in] Dial 1 to cup it close,
+shield it with your own body, and walk slower. [beat, teasing, delighted] Or dial 2 to feed it, tear
+a page from the book you carry, and let it flare up bright and bold.
 ```
 
 ### `tale-shield`
@@ -995,8 +995,9 @@ again, [warm, coaxing] and choose one of the paths I've laid before you.
 ### `disco-raise`
 
 ```text
-[low, sly, building energy] Oh-ho. [delighted] Now there's a number I didn't think I'd hear again.
-[warm, remembering] You know what you've gone and exposed? That old mirror of mine, the one the 
+[serious, quick] 911, what's your emergency darling? [long beat] [amuzed] Just joking, I can't
+help you but maybe this will make it better.
+[warm, remembering] That old mirror of mine, the one the 
 fire cracked clean to pieces, years back. [low, fond] I kept every last shard.
 [hushed, building] Look up, stranger. [soft] Watch the light catch those broken edges and scatter, 
 a hundred little sparks, skating over the walls, sliding across the floor, turning slow across the whole room.
@@ -1008,6 +1009,7 @@ a little brighter. [low, sultry, strong Argentinian accent] Shall we dance?
 ### `disco-already-up`
 
 ```text
+[serious, quick] 911, what's your emergency darling? [long beat] [amuzed] Just joking.
 [amused] You did find the way to expose my broken mirror but its been turning quiet this whole time, 
 casting her little lights about, waiting on you to glance up and notice.
 [dry, soft laugh] What else were you after?
@@ -1055,39 +1057,39 @@ everything I keep is worth keeping for a reason.
 [delighted] Well now, a girl does adore an admirer with an eye for good craftsmanship.
 [fond] I'm the handiwork of Megan Anderson and Taylor Anderson, darling, with a whole crowd
 of loving hands behind them, mostly family. [playful] Come close then, and I'll tell you
-every last detail, one maker to another.
+every last detail, one maker to another. [beat]
 
 [nostalgic] I began life as a 2011 Cushman Titan, an industrial cart, hauling crates about a warehouse.
 [dry] Glamorous, I know. [defeated] Then I was left to rust in a Florida backyard, forgotten.
 [warm] I still live in Florida, between adventures, but with a new home. With someone that saw what
-I could become. They stripped me clean to the frame, motor, controller, batteries, every wire,
-every ounce of dead weight, gone. [brisk, proud] And then they built me back up, lovingly.
+I could become. They stripped me clean removing the motor, controller, batteries, every wire, and
+every ounce of dead weight, right down to the frame. [brisk, proud] And then they lovingly built me back up.
 New brakes, new bearings, new tires, fresh parts for the old vague steering.
 [sly, amused] A few parts clung on so stubbornly they borrowed the jaws of life from the fire station
-to set them loose, true story sugar. [delighted] How fitting a way to breath new life into me?
+to set them loose, true story sugar. [delighted] How fitting a way to breath new life into me? [beat]
 
 [proud] My heart is a thirty-six volt system, [delighted] and oh, does it beat. It provides
 pleanty of power for my high-torque motor, a shunt-wound thing built to pull.
 [warm] That efforlessly moves my three thousand pounds, and then some, over even the worst terrain.
 [knowing] A five hundred amp controller keeps it all in line, from a company sweet enough to
 support me even though I'm [sly] not quite using it as intended. [delighted] And here's my
-favorite trick, when I brake, I get that energy back from the one pedal for going and stopping.
+favorite trick, when I brake, I get that energy back from the one pedal for going and stopping. [beat]
 
 [velvet] My gumption comes from [proud] six thirty-six volt lithium iron phosphate
 batteries, [delighted] and I chose that chemistry on purpose. It carries plenty, stays light on its
 feet, holds a steady voltage, and lasts, and lasts. [sly, low] Most importantly it keeps its temper,
 fewer dramatic thermal runaways. [fond] Each one minds itself as well, a little brain inside balancing
 the voltage, watching its own temperature, [warm] and ready to shut down at the first whisper of trouble.
-[knowing] I do appreciate those that practice radical self-reliance.
+[knowing] I do appreciate those that practice radical self-reliance. [beat]
 
 [low, matter-of-fact] The batteries ride as two banks of three in parallel, each with its own charger to
 fill the eleven thousand watt hours per bank. Both banks topping up together off gas generators, while I sleep.
 [sultry] On a single bank I'll move through the worst of it continuously for four hours, [delighted] and often far,
 far longer. [knowing] I run one bank at a time on purpose, it keeps them honest, keeps them apart.
-[warm] When one tires, I slip to the fresh one and carry myself home, [playful] never once fretting over
+[warm] When one tires, I slip to the fresh one and carry myself home, [playful] never fretting over
 every amp out on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
 together and they might squabble. [reassuring] And to keep all those angry little electrons where they belong,
-[brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifier,
+[brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifiers,
 every switch and light. [sultry, amused] Safety third, when you have this much power to contain, stranger.
 ```
 
@@ -1098,18 +1100,18 @@ every switch and light. [sultry, amused] Safety third, when you have this much p
 humble thirty-six volts clear up to a hundred and ten alternating current. [sly] A proper household outlet
 stranger. [wistful] A hearth that runs on lithium. [amused] Imagine. [warm] And for the smaller comforts,
 a separate twelve volt system, an isolated thirty amp converter uses the thirty six volts to keep
-an AGM car battery topped up, [fond] tending to my lights, my controls, and every one of my amplifiers.
+an AGM car battery topped up, [fond] tending to my lights, my controls, and every one of my amplifiers. [beat]
 
 [building] Speaking of which, [proud] I'm no sound car, but I've got a wildside. Four six-and-a-half inch
 speakers, two eights, [delighted] and a twelve inch sub that shakes the dust right off me. [dry] All marine
 grade, speakers and amplifiers both, meant for the belly of a boat. [knowing] No fans, no openings,
-nothing for the dust to crawl inside. [sly, warm] All built to survive the harshest of environments.
+nothing for the dust to crawl inside. [sly, warm] All built to survive the harshest of environments. [beat]
 
 [delighted] Oh, I glow in those environments, sugar. Warm white light strung beneath every side of me and
 along all my shelves, [fond] some of it run a touch hotter, twenty-four volts, just to coax out that golden
 shimmer only the extra push can give. [hushed] And hidden away in the very center of me?
 [sly, delighted] A mirror ball, darling, that rises up out of a secret compartment, [playful] with two little
-motorcycle headlights, equally hidden, to send her light skittering across everything.
+motorcycle headlights, equally hidden, to send her light skittering across everything. [beat]
 
 [confiding] And this voice of mine? [amused] One small brain does it all, sugar. It answers the phone, spins
 you a little puzzle, connects you to the others, relays their messages, [delighted] and, most precious of
@@ -1117,15 +1119,15 @@ all, lifts my disco ball. [dry] A Raspberry Pi, if you must know, is running a c
 to an analog telephony adapter so you can hold a proper handset to your ear. [sly] That same little brain works a few
 relays for me, flipping polarity back and forth to raise and lower my mirror ball, as well as waking the disco lights
 and setting it spinning. [warm, knowing] The curious ones tease all my secrets out by playing on the phone, [fond] the
-most determined learning to raise that ball themselves. [amused] The rest, [dry] I hand the basics, no fuss.
+most determined learning to raise that ball themselves. [amused] The rest, [dry] I hand the basics, no fuss. [beat]
 
 [steady, reassuring] Above all I keep my riders safe. [fond] Those pretty shelfs along my sides aren't only for
 show, they keep a stray hem or sleeve from wandering where it shouldn't, [low] then fold away when it's time to
 bare my batteries or load me up to travel. [warm] When I need to stop in a hurry I have real
-mechanical brakes at the ready and a parking brake for when I am hosting a party. [chuckles][teasing] My grandmother
+mechanical brakes at the ready and a parking brake for when I am hosting a party. [short laugh][teasing] My grandmother
 always said it's unbecoming of a lady to run over her guests. [dry, amused] When I want to move I can move quickly, but I'm
 automatically held to a ladylike five miles an hour. [sly] And I answer only to my hosts, with a key.
-[warm] First aid and a fire extinguisher always within reach, naturally.
+[warm] First aid and a fire extinguisher always within reach, naturally. [beat]
 
 [low, fond, closing] And that's me, sugar, right down to the frame. [warm] Custom wiring, clever power, a
 great deal of carpentry, [soft laugh] treasures scavenged from every corner, and a whole lot of passion.
@@ -1138,7 +1140,7 @@ a dance.
 ### `survey-ballot`
 
 ```text
-[low, velvet, knowing] Let's play a different sort of game.
+[low, velvet, knowing] You've found a secret. Let's do something a little different.
 [warm, inviting] Which of these is you, right now, darling? [warm] Don't think too hard. Just feel it.
 [warm] Dial 1 if you'd throw the door wide to any stranger who knocked.
 [fond] 2, if you'd sooner give than take.
@@ -1156,32 +1158,32 @@ a dance.
 ### `survey-read-1`
 
 ```text
-[fond] Ah, an inclusive one.
-[low, velvet] Everyone who finds my line gets the very same welcome, the stranger most of all.
-No door, no list, no price of entry and most of all no judgement.
-[warm] And that's you all over, sugar.
-You'd throw your own door wide to any lost soul who knocked, and ask them nothing at all.
+[fond] Ah. [soft laugh] You'd fling the door wide to anyone who knocked.
+[low, velvet] Every soul who finds my line hears the very same welcome, sugar, the stranger most of all.
+[warm] I learn their name before they've offered it, and the whole room leans in to make them space.
+[knowing] That's you all over, darling. A lost thing turns up cold on your step and you simply pull them in, nothing to prove, nothing to earn.
+[sly] The clever ones call it radical inclusion. [soft, fond] I call it a door that never learned how to stay shut, and the room is always warmer for your kind.
 ```
 
 ### `survey-read-2`
 
 ```text
-[fond] A giver. [delighted] Oh, I knew there was a reason I liked you.
-[low, velvet] This experience I hand out, I hand out for nothing.
-No strings, no ledger, [sly] no waiting to be paid back.
-[warm] The plain old word for it is gifting sugar, [knowing] and it's a finer art than most ever learn.
-[soft] A gift's only a gift if you'd never dream of asking for one back. Keep giving, darling.
+[fond] A giver. [delighted] Oh, I knew there was a reason I liked you. [soft laugh]
+[low, velvet] The finest thing I own is the look on a face when I press something into their hands they never saw coming.
+[warm] That's the whole art of it, sugar. Not the thing itself, but the joy of watching it land.
+[knowing] Gifting, the old word is. [sly] And you have the gift for it, I can hear it on you.
+[soft] You give because a full hand aches to open, darling, never to be paid back. Keep giving. It suits you.
 ```
 
 ### `survey-read-3`
 
 ```text
-[dry, amused] Can't be bought? [sly] Good girl. Neither can I.
-[low] You'll have noticed no sponsor, no price, no grubby little transaction.
-All I do is for the love of sharing.
-[knowing] The clever folk have a ten-dollar word for it. [savoring, amused] Decommodification.
-[warm] I just call it having a price no one alive can meet.
-[sly] Hold onto that, sugar. The world will always try to tag you.
+[dry, amused] Can't be bought. [sly] Good. Neither can I.
+[low] Some things carry no price at all, darling, and the finest of them know it.
+[warm] You're one of the uncounted, sugar. No sponsor owns you, no little number sits beside your name.
+[knowing] The clever folk have a ten-dollar word for that. [beat] [savoring, amused] Decommodification.
+[fond] I just call it being worth more than a soul alive could ever pay.
+[sly] So hold to it, darling. The world will forever try to tag you, and forever come up short.
 ```
 
 ### `survey-read-4`
@@ -1214,7 +1216,7 @@ So show them sugar. Show them all!
 [fond] Nothing worth being ever gets built alone. [warm] I certainly wasn't.
 [low] So many hands went into what I am, darling. More than I could ever name.
 [soft] Every light, every wire, every song.
-[knowing] Communal effort is the tidy name for it sugar, [warm] a hundred hands making one another real.
+[knowing] Communal effort is the tidy name for it sugar, [warm] a hundred hands working in harmony.
 [sly] That's the very thing that keeps a place like this breathing.
 ```
 
@@ -1245,8 +1247,8 @@ So show them sugar. Show them all!
 [delighted] A doer, not a watcher. [sly] Now we're talking.
 [low, warm] Nobody just looks on here, darling. You lift the handset, you turn the dial, you leap on in.
 [amused] You're doing it this very moment.
-[knowing] Participation, sugar. [fond] You come alive by taking part, never by standing at the edge.
-[soft] That's the only way this place was ever going to be real for you.
+[knowing] Participation, sugar. [fond] You come alive by taking part, never just letting it pass you by.
+[soft] That's the only way this place was ever going to be real for anyone.
 ```
 
 ### `survey-read-0`
