@@ -14,7 +14,16 @@ set -euo pipefail
 # FreeSWITCH dialplan via ${system(...)}.
 #
 # Commands:
-#   rotate                  prune the oldest messages ONLY when disk space is low
+#   rotate                  reclaim disk space ONLY when free space is low: first
+#                           prune archived recordings (oldest-first; the dated
+#                           archive folders themselves are kept), then, if still
+#                           low, the oldest live messages beyond the newest
+#                           PLAYBACK_LIMIT
+#   archive                 move every live recording into a new dated subfolder
+#                           (archived-<UTCstamp>-XXXX/) so count/count-all read an
+#                           empty store; print how many were moved. Reversible
+#                           (move the files back). Archived recordings stay on
+#                           disk until `rotate` needs the space.
 #   count                   print how many messages are playable (<= PLAYBACK_LIMIT)
 #   resolve <index>         print the absolute path of the 1-based Nth playable message
 #   announcement <index>    print a lead-in announcement wav for the Nth message,
@@ -73,6 +82,15 @@ full_list() {
   list_messages | tac
 }
 
+# Archived recordings (moved out of the live store by `archive`) live one level
+# down, inside dated archived-* subfolders, so the maxdepth-1 listing above never
+# sees them. This lists them oldest-first by their embedded msg_<timestamp>,
+# across every archive folder, for space reclamation by `rotate`.
+list_archived() {
+  find "$MESSAGES_DIR" -mindepth 2 -type f -name 'msg_*.wav' -printf '%f\t%p\n' 2>/dev/null \
+    | sort | cut -f2-
+}
+
 # True when free space on the messages filesystem is below MIN_FREE_MB.
 disk_low() {
   local free_mb
@@ -85,10 +103,23 @@ cmd_rotate() {
   mkdir -p "$MESSAGES_DIR"
 
   # Recordings are NEVER deleted during normal operation. Only when free space
-  # is low do we delete the minimum number of OLDEST messages needed to bring
-  # free space back above MIN_FREE_MB, and we never delete the newest
-  # PLAYBACK_LIMIT (the messages the IVR can still play back). No-speech / empty
-  # recordings are discarded at record time by the dialplan (record_min_sec).
+  # is low do we reclaim the minimum needed to bring free space back above
+  # MIN_FREE_MB. No-speech / empty recordings are discarded at record time by
+  # the dialplan (record_min_sec).
+
+  # 1) Reclaim from the ARCHIVE first. Recordings moved aside by `archive` were
+  #    intentionally cleared from the live store, so they are the expendable
+  #    space: prune them oldest-first. Only the recordings are removed -- the
+  #    dated archive folders are left in place.
+  local arch
+  while disk_low; do
+    arch="$(list_archived | head -n 1)"
+    [ -n "$arch" ] || break
+    rm -f "$arch"
+  done
+
+  # 2) Still low? Fall back to the oldest LIVE messages, never touching the
+  #    newest PLAYBACK_LIMIT (the messages the IVR can still play back).
   local oldest count
   while disk_low; do
     count="$(list_messages | grep -c . || true)"
@@ -97,6 +128,30 @@ cmd_rotate() {
     [ -n "$oldest" ] || break
     rm -f "$oldest"
   done
+}
+
+# Move every live recording into a new dated subfolder of MESSAGES_DIR
+# (archived-<UTCstamp>-XXXX/). Because list_messages only looks one level deep
+# (maxdepth 1, -type f), the moved recordings vanish from count AND count-all, so
+# the IVR behaves as if the store were empty -- without deleting anything. The
+# recordings sit in the archive until `rotate` needs the space (see above).
+# Prints the number of recordings moved (0 when the store was already empty).
+cmd_archive() {
+  mkdir -p "$MESSAGES_DIR"
+  local files
+  mapfile -t files < <(list_messages)
+  local n="${#files[@]}"
+  if [ "$n" -eq 0 ]; then printf '0'; return 0; fi
+
+  local dest
+  dest="$(mktemp -d "$MESSAGES_DIR/archived-$(date -u +%Y%m%d-%H%M%S)-XXXX" 2>/dev/null)" \
+    || { printf '0'; return 0; }
+
+  local f moved=0
+  for f in "${files[@]}"; do
+    if mv -f "$f" "$dest/" 2>/dev/null; then moved=$(( moved + 1 )); fi
+  done
+  printf '%s' "$moved"
 }
 
 cmd_count() {
@@ -296,6 +351,7 @@ main() {
   local cmd="${1:-}"
   case "$cmd" in
     rotate)         cmd_rotate ;;
+    archive)        cmd_archive ;;
     count)          cmd_count ;;
     resolve)        cmd_resolve "${2:-}" ;;
     announcement)   cmd_announcement "${2:-}" ;;
@@ -307,7 +363,7 @@ main() {
     drawer-start)   cmd_drawer_start ;;
     pick)           cmd_pick "${2:-}" ;;
     *)
-      echo "usage: bella-messages {rotate|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|delete-all <index>|drawer-start|pick <prefix>}" >&2
+      echo "usage: bella-messages {rotate|archive|count|resolve <index>|announcement <index>|step <index> next|prev|count-all|resolve-all <index>|step-all <index> next|prev|delete-all <index>|drawer-start|pick <prefix>}" >&2
       exit 2
       ;;
   esac

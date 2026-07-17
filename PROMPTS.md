@@ -1332,3 +1332,38 @@ Scarcely a soul on my whole line has chosen it.
 [warm, amused] A single number, one through nine, [sly] or nought for the last of them.
 [coaxing] Go on. Tell me which you are.
 ```
+
+## Admin
+
+Hidden maintenance codes (`000`–`003`), never announced. Bella plays one of these as a
+quiet confirmation after the code acts, then returns the caller to the menu.
+
+### `admin-reset-all`
+
+```text
+[low, sly] There now, sugar. [velvet] The tally's forgotten, every message tucked away in the dark, and this old phone swears it never heard a thing. [knowing] Clean as a fresh page. [soft, amused] Our little secret.
+```
+
+### `admin-survey-reset`
+
+```text
+[low, knowing] The votes are ash, darling. [velvet] Not a soul on record, the count starts over from nothing. [sly, amused] As if no one ever told me a thing.
+```
+
+### `admin-messages-cleared`
+
+```text
+[velvet, sly] Every message swept off into the dark, sugar. [low] As far as this old phone knows, [knowing] no one ever called. [soft, amused] Tucked away safe, mind you. Nothing's ever truly gone with me.
+```
+
+### `admin-disco-on`
+
+```text
+[warm, sly] There we are, darling. [velvet] The disco answers again, ready to rise and fall at a caller's whim. [knowing] Let them dance.
+```
+
+### `admin-disco-off`
+
+```text
+[dry, amused] Hush now, sugar. [low] The disco's gone quiet, deaf to anyone who comes asking. [sly] Just between us, darling, until you say otherwise.
+```

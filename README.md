@@ -38,7 +38,7 @@ script are all here.
 Other Markdown documents in this repo:
 
 - [`BELLA-NOVELLA.md`](BELLA-NOVELLA.md): Bella's character bible — the personality and backstory every prompt draws from.
-- [`PROMPTS.md`](PROMPTS.md): Source text for every voice prompt, plus how to (re)generate them (§5.7).
+- [`PROMPTS.md`](PROMPTS.md): Source text for every voice prompt, plus how to (re)generate them (§5.8).
 - [`PROMPTS.baseline.md`](PROMPTS.baseline.md): Baseline snapshot of the prompt text; `bella-regen-prompts` diffs against it to regenerate only what changed.
 - [`STORY.md`](STORY.md): Design notes and the full prompt scripts for the hidden branching story "The Ember" (§4.7).
 - [`GAME.md`](GAME.md): Design notes and the full prompt scripts for the hidden guess-my-number game (§4.8).
@@ -71,6 +71,8 @@ screen, or internet dependency:
 11. **Hidden — the message drawer** — dial `9` at any time while messages play (or after the
     last one) to open the full archive at the current message, where `7` deletes the current message.
 12. **Hidden — about** — dial `411` (never announced) for Bella's technical details.    
+13. **Hidden — maintenance codes** — dial `000`–`003` (never announced) to reset the survey tally
+    and/or archive every stored message (so the store reads empty), or toggle the disco codes.
 
 Because everything is local and unauthenticated-by-design, the whole thing works on a closed
 network with just the Pi, the ATA, and the phones.
@@ -110,7 +112,7 @@ A few things worth knowing:
 - **The concierge is the recurring thread.** Nearly every secret closes by pointing back to the
   same concierge; sharing what you found with the team gives them the real prize (a drink, 3D printed bella car, 1 hr with Taylor, ect).
 - **The discoverable lore and tips live entirely in the prompt scripts** in
-  [`PROMPTS.md`](PROMPTS.md). Editing or regenerating those prompts (`bella-regen-prompts`, §5.7)
+  [`PROMPTS.md`](PROMPTS.md). Editing or regenerating those prompts (`bella-regen-prompts`, §5.8)
   changes what — and how much — a caller can find, so keep this list in sync with the `game-win-*`
   and `tale-end-*` scripts.
 
@@ -124,8 +126,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | Path | What it is | Custom? |
 |---|---|---|
 | [`conf/`](conf/) | All FreeSWITCH configuration — the heart of the project (see below). | **Yes** |
-| [`scripts/`](scripts/) | Project bash/Python helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-survey` (principles survey tally), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV), `bella-regen-prompts` (ElevenLabs TTS). Documented per-script in [§5](#5-the-scripts). | **Yes** |
-| [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs — the full menu greeting and its nine short variants, ten invalid-entry scolds, per-message playback announcements, the disco and message prompts, the branching story (`tale-*`), the game (`game-*`, including randomized intro/win/lose and higher/lower variants), and the principles survey (`survey-*`). | **Yes** |
+| [`scripts/`](scripts/) | Project bash/Python helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-survey` (principles survey tally), `bella-flags` (runtime feature toggles), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV), `bella-regen-prompts` (ElevenLabs TTS). Documented per-script in [§5](#5-the-scripts). | **Yes** |
+| [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs — the full menu greeting and its nine short variants, ten invalid-entry scolds, per-message playback announcements, the disco and message prompts, the branching story (`tale-*`), the game (`game-*`, including randomized intro/win/lose and higher/lower variants), the principles survey (`survey-*`), and the hidden maintenance confirmations (`admin-*`). | **Yes** |
 | [`system/`](system/) | Host files installed by `install.sh`: the `freeswitch` and `bella-ring` systemd units, plus sysctl/limits/sudoers/dnsmasq/NetworkManager drop-ins and helper scripts. Also carries the **optional** `wifi-fallback` unit + script (see [§11](#11-optional-wi-fi-fallback-and-hotspot)). | **Yes** |
 | [`build/`](build/) | [`build/modules.conf`](build/modules.conf) — the minimal module list used to (re)build FreeSWITCH from source (see [§10](#10-optional-build-freeswitch-from-scratch)). | **Yes** |
 | [`bin/`](bin/) | FreeSWITCH executables (`freeswitch`, `fs_cli`, …), **aarch64**. | stock |
@@ -148,7 +150,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | File | Purpose |
 |---|---|
 | [`conf/freeswitch.xml`](conf/freeswitch.xml) | Root config. Includes `vars.xml`; the `configuration` section includes `autoload_configs/*.xml`; the `dialplan` section includes `dialplan/default/*.xml` into the `default` context; the `directory` section includes `directory/default/*.xml` inside the `$${domain}` domain (blind auth). |
-| [`conf/vars.xml`](conf/vars.xml) | Global pre-processor variables: install paths, the `192.168.50.1` bind IP and `192.168.50.0/24` CIDR, the RTP port range (16384–16484), `PCMU` codec prefs, the actuator commands (`disco_raise`/`disco_lower`/`disco_stop`/`disco_position`), the message-store helper (`bella_messages`), and the number-game helper (`bella_game`, `game_tries_max=3`). |
+| [`conf/vars.xml`](conf/vars.xml) | Global pre-processor variables: install paths, the `192.168.50.1` bind IP and `192.168.50.0/24` CIDR, the RTP port range (16384–16484), `PCMU` codec prefs, the actuator commands (`disco_raise`/`disco_lower`/`disco_stop`/`disco_position`), the message-store helper (`bella_messages`), the number-game helper (`bella_game`, `game_tries_max=3`), the survey tally helper (`bella_survey`), and the feature-flag helper (`bella_flags`). |
 | [`conf/sip_profiles/ata.xml`](conf/sip_profiles/ata.xml) | The single SIP profile `ata`, bound to `192.168.50.1:5060/udp`. Blind auth/registration, ACL-locked to `bella_ata_only`, PCMU-only media, RFC2833 DTMF, one registration per extension, no NAT/SRV/NAPTR/presence. |
 | [`conf/directory/default/101.xml`](conf/directory/default/101.xml) | SIP line **101** — participant (password unused; `Line 101` caller ID). |
 | [`conf/directory/default/102.xml`](conf/directory/default/102.xml) | SIP line **102** — participant. |
@@ -184,14 +186,16 @@ phone can dial, as opposed to a selection collected inside the menu prompt):
 | `101`–`104` | `00_extensions.xml` | Ring that SIP line directly (matched before the menu catch-all). |
 | *any other digits* | `10_inbound_and_menu.xml` (`all-calls-to-menu`) | Numeric-only catch-all → transferred to the menu (`700`). |
 
-Inside the menu, `play_and_get_digits` additionally collects `0`, `1`, `2`, `3`, `5`, `9`, `11`,
-`411`, `811`, `911`, and `101`–`104` (see §4.2) — these are menu selections, not standalone extensions.
+Inside the menu, `play_and_get_digits` additionally collects `0`, `1`, `2`, `3`, `5`, `7`, `9`,
+`000`–`003`, `11`, `411`, `811`, `911`, and `101`–`104` (see §4.2) — these are menu selections, not
+standalone extensions.
 
 **Virtual destinations** — internal `transfer` targets. They are lettered/upper-case so they never
 collide with dialable numbers, and are grouped here by the file that handles them:
 
 - **Menu dispatch** (`10_inbound_and_menu.xml`):
-  - `DISPATCH` — second routing pass after the menu collects a digit; each `dispatch-*` extension tests `bella_opt` and transfers to the matching handler.
+  - `DISPATCH` — second routing pass after the menu collects a digit; each `dispatch-*` extension tests `bella_opt` and transfers to the matching handler. The `911`/`811` disco handlers additionally require the `disco_ok` flag (read at menu entry from `bella-flags`); while off they fall through to the invalid prompt. The maintenance codes `000`–`003` are handled here too (survey reset / message archive / disco toggle).
+  - `ADMIN_DISCO_ANNOUNCE` — after code `001` toggles the disco flag, play the enabled/disabled confirmation and return to the menu.
   - `DISPATCH_AFTER_INVALID` — re-entry after an "invalid" prompt collects a key: a valid option goes back through `DISPATCH`, silence (empty `bella_opt`) returns to the menu greeting.
 - **Intercom** (`20_option1_intercom.xml`):
   - `CALL_OTHER` — ring the *other* participant line based on the caller's SIP user (101 → 102, 102 → 101); unknown lines get a `no-answer` fallback.
@@ -254,8 +258,8 @@ dialed number from the ATA to the menu; it is numeric-only and placed last so it
 lettered internal targets (`CALL_OTHER`, `DISCO_RAISE`, …) or the 101–104 extensions in §4.1.
 
 The menu greets and collects one option with `play_and_get_digits` (1–3 digits, `*` terminator,
-validated to `^(0|1|2|3|5|9|911|811|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves `1` vs `11`
-vs `101`–`104`). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the
+validated to `^(0|1|2|3|5|7|9|00[0-3]|911|811|411|10[1-4]|11)$`; a 2 s inter-digit timeout resolves
+`1` vs `11` vs `101`–`104` and `0` vs `00[0-3]`). The **full** greeting (`prompts/main-menu.wav`) plays once at the start of the
 call (`menu-first`); every later return plays **one of nine random short greetings**
 (`prompts/main-menu-short-variant-1..9.wav`, via `bella-messages pick main-menu-short-variant`, §5.2), tracked
 by the `menu_greeted` channel variable (`menu-repeat`). The collected option (`bella_opt`) is
@@ -269,13 +273,17 @@ transfers away:
 | **3** | `LEAVE_MESSAGE` | Leave a message (max 60 s) — §4.5 |
 | **101**–**104** | `101`…`104` | Dial that SIP line directly — §4.1 |
 | **0** | `104` | Dial the concierge (line 104) — §4.1 |
-| **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball — §4.6 |
-| **811** | `DISCO_LOWER` | *(hidden)* Lower the disco ball — §4.6 |
+| **911** | `DISCO_RAISE` | *(hidden)* Raise the disco ball (when enabled — see `001`) — §4.6 |
+| **811** | `DISCO_LOWER` | *(hidden)* Lower the disco ball (when enabled — see `001`) — §4.6 |
 | **411** | `dispatch-about` | *(hidden)* Play info about the creators and the build |
 | **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §4.6 |
 | **7** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
 | **9** | `SURVEY_START` | *(hidden)* principles survey — §4.9 |
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
+| **000** | `dispatch-reset-all` | *(hidden)* Reset the survey tally **and** archive all messages |
+| **001** | `dispatch-toggle-disco` | *(hidden)* Toggle whether `911`/`811` are honored |
+| **002** | `dispatch-reset-survey` | *(hidden)* Reset the survey tally only |
+| **003** | `dispatch-archive-messages` | *(hidden)* Archive all messages (store reads empty) |
 
 Anything else falls through to `dispatch-invalid`, which plays **one of ten random "invalid"
 prompts** (`prompts/invalid-entry-1..10.wav`, via `bella-messages pick invalid-entry`) and re-collects
@@ -287,8 +295,18 @@ Completed actions transfer back to `700`.
 > *unannounced*: dialing a line directly (**101**–**104**, or **0** for the concierge), the disco
 > controls (**911** raise, **811** lower, **11** stop), the art-car "about" prompt (**411**), the
 > branching story (**7**), the principles survey (**9**), the
-> guess-my-number game (**5**), and the message drawer reached after listening to everything (§4.4).
+> guess-my-number game (**5**), the maintenance codes (**000**–**003**, see below), and the message
+> drawer reached after listening to everything (§4.4).
 > Bella hints there's more — *"one of the ones I don't say out loud"* — but never names them.
+
+**Maintenance codes (`000`–`003`).** Four unannounced codes handle housekeeping, each acting then
+returning to the menu with a short spoken confirmation (`admin-*.wav`): **000** resets the survey
+tally (`bella-survey reset`, §5.4) *and* archives every message (`bella-messages archive`, §5.2) so
+the store reads empty; **002** resets the survey tally only; **003** archives the messages only; and
+**001** toggles whether the disco codes **911**/**811** are honored. The toggle lives in a tmpfs
+flag (`bella-flags`, §5.5) read into `disco_ok` at each menu render, so it defaults to **enabled**
+and resets to enabled on reboot; while disabled, **911**/**811** fall through to the random invalid
+prompt, and **11** (stop) and **411** (about) are never gated.
 
 ### 4.3 `20_option1_intercom.xml` — intercom (option 1)
 Routes `CALL_OTHER` to the *other* participant line based on the caller's SIP user: from **101** it
@@ -435,7 +453,8 @@ message drawer (§4.4) over the full archive.
 
 | Command | Arguments | What it does |
 |---|---|---|
-| `rotate` | — | Prune the oldest messages **only** when disk space is low (never the newest 10). |
+| `rotate` | — | Reclaim space **only** when disk is low: prune archived recordings first (oldest-first; the dated folders are kept), then the oldest live messages beyond the newest 10. |
+| `archive` | — | Move every live recording into a new dated subfolder (`archived-<UTC>-XXXX/`), so `count`/`count-all` read empty; prints how many moved. Reversible; archived files are pruned by `rotate` only when disk is low. |
 | `count` | — | Number of playable messages (≤ 10). |
 | `resolve` | `<index>` | Absolute path of the 1-based Nth playable message (newest-first). |
 | `announcement` | `<index>` | Lead-in announcement WAV for the Nth message, or empty if none. |
@@ -476,14 +495,33 @@ user (no sudo); all single-value output is newline-free for direct use in dialpl
 
 Environment: `BELLA_DB_DIR` (tally directory, default `/usr/local/freeswitch/db`).
 
-### 5.5 `bella-ring`
+### 5.5 `bella-flags`
+Tiny persistent-flag helper backing runtime feature toggles the IVR can flip and read via
+`${system(...)}`. Each flag is a single small file under `BELLA_FLAGS_DIR` (default
+`/run/bella-novella/flags`), on **tmpfs** — so flags reset to their defaults on every boot (like the
+disco-relay position) and add no SD-card wear. A per-flag `flock` plus atomic writes keep concurrent
+calls consistent. Runs as the `freeswitch` user (no sudo); output is newline-free.
+
+Today's only flag is `disco` (`on`/`off`): whether menu codes **911**/**811** (raise/lower the disco
+ball) are honored. Missing ⇒ `on` (enabled by default, re-enabled each boot). Hidden menu code
+**001** toggles it (§4.2).
+
+| Command | Arguments | What it does |
+|---|---|---|
+| `get` | `<name> [default]` | Print the flag's value, or `<default>` when it has never been set this boot. |
+| `set` | `<name> <value>` | Store `<value>` for the flag. |
+| `toggle` | `<name> [on] [off]` | Flip between the two values (an unset flag counts as the first); print the new value. |
+
+Environment: `BELLA_FLAGS_DIR` (flag directory, default `/run/bella-novella/flags`).
+
+### 5.6 `bella-ring`
 The periodic-ring helper (no arguments). Invoked by the `bella-ring.timer` systemd timer at a
 random interval (15–45 min), it picks one of the two participant lines (**101**/**102**) at
 random and, over the local event socket (`127.0.0.1:8021`), `originate`s a call to it; on answer
 the phone is routed to the menu (`700`). If the chosen line isn't registered it logs and exits
 quietly. Tunable via the environment: `FS_CLI`, `BELLA_DOMAIN`, `BELLA_RING_TIMEOUT`.
 
-### 5.6 `bella-convert-prompts`
+### 5.7 `bella-convert-prompts`
 Rebuilds the prompt **WAVs** (8 kHz mono) from their MP3 sources in `prompts/`. By default it only
 (re)generates WAVs that are missing or older than their MP3; pass `--force` to rebuild every WAV.
 Run by [`install.sh`](install.sh) and by `bella-regen-prompts` after synthesis.
@@ -493,7 +531,7 @@ bella-convert-prompts            # only missing/changed
 bella-convert-prompts --force    # rebuild all
 ```
 
-### 5.7 `bella-regen-prompts`
+### 5.8 `bella-regen-prompts`
 Re-synthesizes the voice prompts from [`PROMPTS.md`](PROMPTS.md) using the custom **Bella Novella**
 voice on ElevenLabs, then rebuilds the WAVs via `bella-convert-prompts`. It diffs each prompt
 against [`PROMPTS.baseline.md`](PROMPTS.baseline.md) so only edited prompts are regenerated.
@@ -521,7 +559,7 @@ bella-regen-prompts --list       # list every parsed prompt
 bella-regen-prompts --all        # regenerate everything
 ```
 
-### 5.8 `install.sh`
+### 5.9 `install.sh`
 The root-level installer/deployer (it lives at the repo root, not in `scripts/`; run as **root**
 from the repo). With **no flags** it runs the *every-invocation* steps — install the host files
 from [`system/`](system/), install/own [`conf/`](conf/), set the relay-script permissions and

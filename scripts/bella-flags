@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Tiny persistent-flag helper for the Bella Novella IVR.
+#
+# Backs runtime feature toggles the dialplan can flip and read via ${system(...)}.
+# Each flag is a single small file under FLAGS_DIR holding its current value.
+# State lives on tmpfs (/run) so it resets to the default on every boot and adds
+# no SD-card wear -- matching the disco-relay position tracker. A per-flag flock
+# plus atomic writes (temp file + mv) keep concurrent IVR calls consistent.
+#
+# It runs as the freeswitch user (the RuntimeDirectory is freeswitch-owned), so
+# no sudo is needed. All output is newline-free so it can be used directly in the
+# FreeSWITCH dialplan.
+#
+# Commands:
+#   get <name> [default]   print the flag's value, or <default> (empty if unset)
+#                          when the flag has never been written this boot
+#   set <name> <value>     store <value> for the flag; prints nothing
+#   toggle <name> [a] [b]  flip the flag between <a> (default "on") and <b>
+#                          (default "off"), treating an unset flag as <a>, and
+#                          print the NEW value
+#
+# The IVR's only flag today is `disco` (on/off): whether menu codes 911/811
+# (raise/lower the disco ball) are honored. Missing => "on" (enabled by default,
+# re-enabled every boot). Hidden menu code 001 toggles it; see
+# 10_inbound_and_menu.xml.
+
+FLAGS_DIR="${BELLA_FLAGS_DIR:-/run/bella-novella/flags}"
+
+# A flag name is one or more safe characters, so the value maps to a single
+# predictable file that can never escape FLAGS_DIR.
+is_name() { case "${1:-}" in ''|*[!A-Za-z0-9_-]*) return 1 ;; *) return 0 ;; esac; }
+
+# Print the flag's stored value; return non-zero (without printing) when the
+# flag file does not exist, so callers can apply their own default.
+read_flag() {
+  local file="$FLAGS_DIR/$1"
+  [ -f "$file" ] || return 1
+  printf '%s' "$(cat "$file" 2>/dev/null || true)"
+}
+
+# Write value atomically (temp file on the same tmpfs + mv), so a concurrent
+# reader never sees a partial value.
+write_flag() {
+  local file="$FLAGS_DIR/$1" tmp
+  mkdir -p "$FLAGS_DIR" 2>/dev/null || return 1
+  tmp="$(mktemp "$file.XXXXXX" 2>/dev/null)" || return 1
+  printf '%s' "$2" > "$tmp"
+  mv -f "$tmp" "$file"
+}
+
+# Run "$@" while holding an exclusive lock on the named flag, serializing the
+# read-modify-write that `toggle` performs against concurrent calls.
+with_lock() {
+  local name="$1"; shift
+  mkdir -p "$FLAGS_DIR" 2>/dev/null || { "$@"; return; }
+  exec 9>"$FLAGS_DIR/.$name.lock" 2>/dev/null || { "$@"; return; }
+  flock 9 2>/dev/null || true
+  "$@"
+}
+
+cmd_get() {
+  local name="${1:-}" default="${2:-}"
+  is_name "$name" || { printf '%s' "$default"; return 0; }
+  read_flag "$name" || printf '%s' "$default"
+}
+
+cmd_set() {
+  local name="${1:-}"
+  is_name "$name" || return 0
+  write_flag "$name" "${2:-}" || true
+}
+
+cmd_toggle() {
+  local name="${1:-}" a="${2:-on}" b="${3:-off}" cur new
+  is_name "$name" || { printf ''; return 0; }
+  cur="$(read_flag "$name" || printf '%s' "$a")"
+  if [ "$cur" = "$a" ]; then new="$b"; else new="$a"; fi
+  write_flag "$name" "$new" || true
+  printf '%s' "$new"
+}
+
+main() {
+  local cmd="${1:-}"
+  case "$cmd" in
+    get)    cmd_get "${2:-}" "${3:-}" ;;
+    set)    with_lock "${2:-_}" cmd_set "${2:-}" "${3:-}" ;;
+    toggle) with_lock "${2:-_}" cmd_toggle "${2:-}" "${3:-}" "${4:-}" ;;
+    *)
+      echo "usage: bella-flags {get <name> [default]|set <name> <value>|toggle <name> [on] [off]}" >&2
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"

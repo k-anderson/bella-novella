@@ -18,7 +18,8 @@ idea itself, like turning over a card, as a small reward for playing along.
 - **Payload:** the chosen key plays a `survey-read-*` reading (Bella embodying
   that idea), then a `survey-stats-*` line placing the pick among all callers.
 - **Tally:** anonymous and persistent. Only ten counters are kept (one per key);
-  no caller data is ever stored.
+  no caller data is ever stored. Reset it with hidden menu code **002** (survey
+  only) or **000** (survey + messages) — both call `bella-survey reset`.
 - **Voice:** same bracketed emotional-cue style as [PROMPTS.md](PROMPTS.md),
   which holds the canonical prompt text.
 
