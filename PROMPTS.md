@@ -1066,9 +1066,9 @@ New brakes, new bearings, new tires, fresh parts for the old vague steering.
 to set them loose, true story sugar. [delighted] How fitting a way to breath new life into me?
 
 [proud] My heart is a thirty-six volt system, [delighted] and oh, does it beat. It provides
-pleanty of power for my D&D Motor Systems high-torque EZGO motor, a shunt-wound thing built to pull.
+pleanty of power for my high-torque motor, a shunt-wound thing built to pull.
 [warm] That efforlessly moves my three thousand pounds, and then some, over even the worst terrain.
-[knowing] A five hundred amp Alltrax XCT controller keeps it all in line, from a company sweet enough to
+[knowing] A five hundred amp controller keeps it all in line, from a company sweet enough to
 support me even though I'm [sly] not quite using it as intended. [delighted] And here's my
 favorite trick, when I brake, I get that energy back from the one pedal for going and stopping.
 
@@ -1093,7 +1093,7 @@ every switch and light. [sultry, amused] Safety third when you have this much po
 ### `about-2`
 
 ```text
-[silky] Up front I keep a little fire, [delighted] powered by a two kilowatt inverter that lifts my
+[low, matter-of-fact]] Up front I keep a little fire, [delighted] powered by a two kilowatt inverter that lifts my
 humble thirty-six volts clear up to a hundred and ten alternating current. [sly] A proper household outlet
 stranger. [wistful] A hearth that runs on lithium. [amused] Imagine. [warm] And for the smaller comforts,
 a separate twelve volt system, an isolated thirty amp converter uses the thirty six volts to keep
@@ -1115,7 +1115,7 @@ you a little puzzle, connects you to the others, relays their messages, [delight
 all, lifts my disco ball. [dry] A Raspberry Pi, if you must know, is running a custom build of FreeSWITCH, connected
 to a Grandstream analog adapter so you can hold a proper handset to your ear. [sly] That same little brain works a few
 relays for me, flipping polarity back and forth to raise and lower my mirror ball, as well as waking the disco lights
-and setting it spinning. [warm, knowing] The curious ones tease all my secrets out by playing on the line, [fond] the
+and setting it spinning. [warm, knowing] The curious ones tease all my secrets out by playing on the phone, [fond] the
 most determined learning to raise that ball themselves. [amused] The rest, [dry] I hand the basics, no fuss.
 
 [steady, reassuring] Above all I keep my riders safe. [fond] Those pretty shelfs along my sides aren't only for
