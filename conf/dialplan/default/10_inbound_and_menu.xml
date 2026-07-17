@@ -166,13 +166,15 @@
 
   <!-- ===== Hidden maintenance codes (000-003), never announced ===== -->
 
-  <!-- 000: wipe the slate. Reset the survey tally AND archive every message
-       (so the store reads empty), then confirm and return to the menu. -->
+  <!-- 000: wipe the slate. Reset the survey tally, archive every message (so the
+       store reads empty), and reset the disco-ball position to "unknown" (brake),
+       then confirm and return to the menu. -->
   <extension name="dispatch-reset-all">
     <condition field="destination_number" expression="^DISPATCH$"/>
     <condition field="${bella_opt}" expression="^000$">
       <action application="set" data="admin_done=${system($${bella_survey} reset)}"/>
       <action application="set" data="admin_done=${system($${bella_messages} archive)}"/>
+      <action application="set" data="admin_done=${system($${disco_stop})}"/>
       <action application="playback" data="$${prompts_dir}/admin-reset-all.wav"/>
       <action application="sleep" data="1000"/>
       <action application="transfer" data="700 XML default"/>

@@ -195,7 +195,7 @@ standalone extensions.
 collide with dialable numbers, and are grouped here by the file that handles them:
 
 - **Menu dispatch** (`10_inbound_and_menu.xml`):
-  - `DISPATCH` — second routing pass after the menu collects a digit; each `dispatch-*` extension tests `bella_opt` and transfers to the matching handler. The `911`/`811` disco handlers additionally require the `disco_ok` flag (read at menu entry from `bella-flags`); while off they fall through to the invalid prompt. The maintenance codes `000`–`003` are handled here too (survey reset / message archive / disco toggle).
+  - `DISPATCH` — second routing pass after the menu collects a digit; each `dispatch-*` extension tests `bella_opt` and transfers to the matching handler. The `911`/`811` disco handlers additionally require the `disco_ok` flag (read at menu entry from `bella-flags`); while off they fall through to the invalid prompt. The maintenance codes `000`–`003` are handled here too (survey reset / message archive / disco reset / disco toggle).
   - `ADMIN_DISCO_ANNOUNCE` — after code `001` toggles the disco flag, play the enabled/disabled confirmation and return to the menu.
   - `DISPATCH_AFTER_INVALID` — re-entry after an "invalid" prompt collects a key: a valid option goes back through `DISPATCH`, silence (empty `bella_opt`) returns to the menu greeting.
 - **Intercom** (`20_option1_intercom.xml`):
@@ -281,7 +281,7 @@ transfers away:
 | **7** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
 | **9** | `SURVEY_START` | *(hidden)* principles survey — §4.9 |
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
-| **000** | `dispatch-reset-all` | *(hidden)* Reset the survey tally **and** archive all messages |
+| **000** | `dispatch-reset-all` | *(hidden)* Reset the survey tally, archive all messages, **and** reset the disco position |
 | **001** | `dispatch-toggle-disco` | *(hidden)* Toggle whether `911`/`811` are honored |
 | **002** | `dispatch-reset-survey` | *(hidden)* Reset the survey tally only |
 | **003** | `dispatch-archive-messages` | *(hidden)* Archive all messages (store reads empty) |
@@ -302,8 +302,8 @@ Completed actions transfer back to `700`.
 
 **Maintenance codes (`000`–`003`).** Four unannounced codes handle housekeeping, each acting then
 returning to the menu with a short spoken confirmation (`admin-*.wav`): **000** resets the survey
-tally (`bella-survey reset`, §5.4) *and* archives every message (`bella-messages archive`, §5.2) so
-the store reads empty; **002** resets the survey tally only; **003** archives the messages only; and
+tally (`bella-survey reset`, §5.4), archives every message (`bella-messages archive`, §5.2) so the
+store reads empty, and resets the disco-ball position to `unknown` (`disco-relay brake`, §5.1); **002** resets the survey tally only; **003** archives the messages only; and
 **001** toggles whether the disco codes **911**/**811** are honored. The toggle lives in a tmpfs
 flag (`bella-flags`, §5.5) read into `disco_ok` at each menu render, so it defaults to **enabled**
 and resets to enabled on reboot; while disabled, **911**/**811** fall through to the random invalid

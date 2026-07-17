@@ -330,7 +330,7 @@ time somebody did that to me either.
 would.
 ```
 
-## Messages
+## Record Announcements
 
 ### `message-record`
 
@@ -352,10 +352,10 @@ like this? [soft laugh] That one stays with me for good.
 ### `playback-no-messages`
 
 ```text
-[low, warm] Mmm. [wry, amused] Nothing waiting in the box tonight sugar. Not a whisper.
-[low, sly] A rare quiet, this. [soft laugh] I keep everything left here, and tonight there's nothing to keep.
-[warm, coaxing] So be the first. Leave me something worth holding onto,
-[low, inviting] or drift back later, once there's more to hear.
+[low, warm] Mmm. [wry, amused] Nothing waiting in the box right now sugar. Not a whisper.
+[low, sly] A rare quiet, this. [soft laugh] I keep everything left here, but at the moment
+there's nothing to keep. [warm, coaxing] So be the first. Leave me something worth holding
+onto, [low, inviting] or drift back later, once there's more to hear.
 ```
 
 ### `playback-announcement-1-1`
@@ -379,7 +379,7 @@ like this? [soft laugh] That one stays with me for good.
 ```text
 [warm, low] Every voice that ever drifted through here, I've kept close.
 [amused] Grown weary of one? Dial 1 whenever it suits and I'll carry you onward.
-[coaxing] We open with the first love.
+[coaxing] We open with the first.
 ```
 
 ### `playback-announcement-2-1`
