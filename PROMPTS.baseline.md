@@ -1264,7 +1264,7 @@ You, and me, and the hum on the line, happening this one second.
 ### `survey-stats-first`
 
 ```text
-[beat] [low, surprised, delighted] Well now. Not another soul has picked that one yet, sugar.
+[beat] [low, surprised, delighted] and did you know, not another soul has picked that one yet?
 [warm] You're the very first to strike the match.
 [playful] I'll pin it to the wall in your honor, [amused] first of your kind I've seen so far.
 [soft] It rather suits you, darling.
@@ -1273,8 +1273,8 @@ You, and me, and the hum on the line, happening this one second.
 ### `survey-stats-top`
 
 ```text
-[beat] [delighted] Well, you've gone and picked the favorite, sugar.
-[warm] Half my callers would raise a glass to that very same answer.
+[beat] [delighted] and would you look at that!
+[warm] Most that I have talked to would raise a glass to that very same answer.
 [sly, playful] Popular taste, though between us, [amused] I do think the crowd's onto something for once.
 [fond] You're right in the beating heart of the room.
 ```
@@ -1282,16 +1282,16 @@ You, and me, and the hum on the line, happening this one second.
 ### `survey-stats-high`
 
 ```text
-[beat] [warm] A well-loved answer, that one. [fond] You're in good and plentiful company, sugar.
-[sly] More kindred spirits out there than you'd ever guess,
-[amused] every one certain they're the only soul who feels it.
-[soft] There's a certain comfort in that, isn't there.
+[beat] [warm] and that is a well-loved answer.
+[fond] You're in good and plentiful company, sugar.
+[sly] More kindred spirits out there than you'd ever guess.
+[soft] There's a certain comfort in that, isn't there?
 ```
 
 ### `survey-stats-low`
 
 ```text
-[beat] [low, knowing] Ah. A quieter sort of answer, that one.
+[beat] [low, knowing] and wouldn't you know it, thats less selected among my callers.
 [fond] Only a scattered few on my line feel quite the way you do, sugar.
 [sly, savoring] But the rare tastes were always the ones worth knowing, darling.
 [warm] I'd not trade one of you for a whole roomful of the usual. [soft] Don't tell the others.
@@ -1300,9 +1300,9 @@ You, and me, and the hum on the line, happening this one second.
 ### `survey-stats-rarest`
 
 ```text
-[beat] [low, delighted, intrigued] Oh now. [savoring] That one's rare as they come, sugar.
-Scarcely a soul on my whole line has chosen it tonight.
-[sly, fond] Takes a particular kind to stand nearly alone, darling.
+[beat] [low, delighted, intrigued] and what a rare selection too.
+Scarcely a soul on my whole line has chosen it.
+[sly, fond] Takes a particular kind to stand out, darling.
 [warm] And you know how I do collect the unusual ones. [soft] Straight into the drawer with you.
 ```
 
