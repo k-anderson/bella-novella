@@ -45,8 +45,9 @@ graph TD
 | `TALE_FEED` | `tale-feed.wav` | burn the book & dance → **REVEL** | press on by remaining light → **ASH** | — |
 
 Any invalid key (or no choice) at a node plays `tale-invalid.wav` — a
-story-specific nudge in Bella's voice — then re-offers the same node, keeping the
-caller inside the story. Endings play their prompt and return to the main menu.
+story-specific nudge in Bella's voice — then re-offers just that node's choices
+(an options-only reprompt, `tale-*-options.wav`), keeping the caller inside the
+story. Endings play their prompt and return to the main menu.
 
 ## Endings & their morals
 

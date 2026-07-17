@@ -6,8 +6,9 @@
        announced) to TALE_OPEN. Each node narrates, then collects a single
        digit and transfers to a per-node dispatch pass (a fresh routing pass so
        the chosen digit can be tested in a <condition>). Invalid input or no
-       choice plays a story-specific prompt (tale-invalid.wav) and re-offers the
-       same node, keeping the caller inside the story. Endings play their close
+       choice plays a story-specific prompt (tale-invalid.wav) and re-offers
+       just that node's options (an options-only reprompt, TALE_*_R), keeping
+       the caller inside the story. Endings play their close
        and return to the main menu (700). See STORY.md for the tree, the choice
        table, and the prompt scripts.
 
@@ -54,12 +55,24 @@
     </condition>
   </extension>
 
-  <!-- Invalid / no choice: story-specific nudge, then re-offer this node. -->
+  <!-- Invalid / no choice: story-specific nudge, then re-offer just the choices. -->
   <extension name="tale-open-invalid">
     <condition field="destination_number" expression="^TALE_OPEN_D$">
       <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
       <action application="sleep" data="500"/>
-      <action application="transfer" data="TALE_OPEN XML default"/>
+      <action application="transfer" data="TALE_OPEN_R XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Re-offer: replay only the options (not the full narration); loop here on
+       further invalids. Mirrors tale-open's collect with the options-only prompt. -->
+  <extension name="tale-open-reprompt">
+    <condition field="destination_number" expression="^TALE_OPEN_R$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="tale_pick="/>
+      <action application="play_and_get_digits"
+              data="1 1 1 5000 * $${prompts_dir}/tale-open-options.wav silence_stream://100 tale_pick '^(1|2|3)$' 100"/>
+      <action application="transfer" data="TALE_OPEN_D XML default"/>
     </condition>
   </extension>
 
@@ -93,7 +106,18 @@
     <condition field="destination_number" expression="^TALE_SHIELD_D$">
       <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
       <action application="sleep" data="500"/>
-      <action application="transfer" data="TALE_SHIELD XML default"/>
+      <action application="transfer" data="TALE_SHIELD_R XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Re-offer: replay only the options; loop here on further invalids. -->
+  <extension name="tale-shield-reprompt">
+    <condition field="destination_number" expression="^TALE_SHIELD_R$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="tale_pick="/>
+      <action application="play_and_get_digits"
+              data="1 1 1 5000 * $${prompts_dir}/tale-shield-options.wav silence_stream://100 tale_pick '^(1|2)$' 100"/>
+      <action application="transfer" data="TALE_SHIELD_D XML default"/>
     </condition>
   </extension>
 
@@ -127,7 +151,18 @@
     <condition field="destination_number" expression="^TALE_FEED_D$">
       <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
       <action application="sleep" data="500"/>
-      <action application="transfer" data="TALE_FEED XML default"/>
+      <action application="transfer" data="TALE_FEED_R XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Re-offer: replay only the options; loop here on further invalids. -->
+  <extension name="tale-feed-reprompt">
+    <condition field="destination_number" expression="^TALE_FEED_R$">
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="tale_pick="/>
+      <action application="play_and_get_digits"
+              data="1 1 1 5000 * $${prompts_dir}/tale-feed-options.wav silence_stream://100 tale_pick '^(1|2)$' 100"/>
+      <action application="transfer" data="TALE_FEED_D XML default"/>
     </condition>
   </extension>
 

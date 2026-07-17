@@ -38,7 +38,7 @@ script are all here.
 Other Markdown documents in this repo:
 
 - [`BELLA-NOVELLA.md`](BELLA-NOVELLA.md): Bella's character bible — the personality and backstory every prompt draws from.
-- [`PROMPTS.md`](PROMPTS.md): Source text for every voice prompt, plus how to (re)generate them (§5.6).
+- [`PROMPTS.md`](PROMPTS.md): Source text for every voice prompt, plus how to (re)generate them (§5.7).
 - [`PROMPTS.baseline.md`](PROMPTS.baseline.md): Baseline snapshot of the prompt text; `bella-regen-prompts` diffs against it to regenerate only what changed.
 - [`STORY.md`](STORY.md): Design notes and the full prompt scripts for the hidden branching story "The Ember" (§4.7).
 - [`GAME.md`](GAME.md): Design notes and the full prompt scripts for the hidden guess-my-number game (§4.8).
@@ -110,7 +110,7 @@ A few things worth knowing:
 - **The concierge is the recurring thread.** Nearly every secret closes by pointing back to the
   same concierge; sharing what you found with the team gives them the real prize (a drink, 3D printed bella car, 1 hr with Taylor, ect).
 - **The discoverable lore and tips live entirely in the prompt scripts** in
-  [`PROMPTS.md`](PROMPTS.md). Editing or regenerating those prompts (`bella-regen-prompts`, §5.6)
+  [`PROMPTS.md`](PROMPTS.md). Editing or regenerating those prompts (`bella-regen-prompts`, §5.7)
   changes what — and how much — a caller can find, so keep this list in sync with the `game-win-*`
   and `tale-end-*` scripts.
 
@@ -124,8 +124,8 @@ This is a standard FreeSWITCH install tree. The **project-specific** parts are `
 | Path | What it is | Custom? |
 |---|---|---|
 | [`conf/`](conf/) | All FreeSWITCH configuration — the heart of the project (see below). | **Yes** |
-| [`scripts/`](scripts/) | Project bash/Python helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV), `bella-regen-prompts` (ElevenLabs TTS). Documented per-script in [§5](#5-the-scripts). | **Yes** |
-| [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs — the full menu greeting and its nine short variants, ten invalid-entry scolds, per-message playback announcements, the disco and message prompts, the branching story (`tale-*`), and the game (`game-*`, including randomized intro/win/lose and higher/lower variants). | **Yes** |
+| [`scripts/`](scripts/) | Project bash/Python helpers: `disco-relay` (relay HAT), `bella-messages` (message store), `bella-game` (hidden number game), `bella-survey` (principles survey tally), `bella-ring` (periodic ring), `bella-convert-prompts` (MP3→WAV), `bella-regen-prompts` (ElevenLabs TTS). Documented per-script in [§5](#5-the-scripts). | **Yes** |
+| [`prompts/`](prompts/) | Custom Bella voice prompts: MP3 sources plus the generated 8 kHz mono WAVs — the full menu greeting and its nine short variants, ten invalid-entry scolds, per-message playback announcements, the disco and message prompts, the branching story (`tale-*`), the game (`game-*`, including randomized intro/win/lose and higher/lower variants), and the principles survey (`survey-*`). | **Yes** |
 | [`system/`](system/) | Host files installed by `install.sh`: the `freeswitch` and `bella-ring` systemd units, plus sysctl/limits/sudoers/dnsmasq/NetworkManager drop-ins and helper scripts. Also carries the **optional** `wifi-fallback` unit + script (see [§11](#11-optional-wi-fi-fallback-and-hotspot)). | **Yes** |
 | [`build/`](build/) | [`build/modules.conf`](build/modules.conf) — the minimal module list used to (re)build FreeSWITCH from source (see [§10](#10-optional-build-freeswitch-from-scratch)). | **Yes** |
 | [`bin/`](bin/) | FreeSWITCH executables (`freeswitch`, `fs_cli`, …), **aarch64**. | stock |
@@ -154,7 +154,7 @@ document; it pulls in the rest via `X-PRE-PROCESS` includes — `vars.xml`, ever
 | [`conf/directory/default/102.xml`](conf/directory/default/102.xml) | SIP line **102** — participant. |
 | [`conf/directory/default/103.xml`](conf/directory/default/103.xml) | SIP line **103** — spare / future expansion. |
 | [`conf/directory/default/104.xml`](conf/directory/default/104.xml) | SIP line **104** — concierge (driver/passenger). |
-| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option7_tale.xml`, `70_option5_game.xml`. Each is detailed in [§4](#4-current-dialplan--call-flow). |
+| [`conf/dialplan/default/`](conf/dialplan/default/) | Call routing and the IVR — one file per feature: `00_extensions.xml`, `10_inbound_and_menu.xml`, `20_option1_intercom.xml`, `30_option2_listen.xml`, `40_option3_leave.xml`, `50_disco_controls.xml`, `60_option7_tale.xml`, `70_option5_game.xml`, `80_option9_survey.xml`. Each is detailed in [§4](#4-current-dialplan--call-flow). |
 | [`conf/autoload_configs/modules.conf.xml`](conf/autoload_configs/modules.conf.xml) | The **13** modules loaded at boot: loggers (`mod_console`/`mod_logfile`/`mod_timerfd`/`mod_posix_timer`), `mod_event_socket`, `mod_sofia`, the dialplan engine (`mod_dialplan_xml`/`mod_commands`/`mod_dptools`), media playback (`mod_native_file`/`mod_sndfile`/`mod_tone_stream`), and `mod_say_en`. |
 | [`conf/autoload_configs/switch.conf.xml`](conf/autoload_configs/switch.conf.xml) | Core settings: small session caps (`max-sessions=10`, `sessions-per-second=5`), the RTP port range, `info` log level, the `core.db` name plus DB-handle pool (`max-db-handles`/`db-handle-timeout`), and `fs_cli` key-bindings. |
 | [`conf/autoload_configs/sofia.conf.xml`](conf/autoload_configs/sofia.conf.xml) | Sofia global settings; includes the SIP profiles from `../sip_profiles/*.xml`. |
@@ -223,9 +223,9 @@ collide with dialable numbers, and are grouped here by the file that handles the
   - `DISCO_LOWER_GO` — lower unless already `down` (else play "already down").
   - `DISCO_STOP` — brake any movement and reset the position to `unknown`.
 - **Branching story** (`60_option7_tale.xml`):
-  - `TALE_OPEN` — first fork of the fable; `TALE_OPEN_D` dispatches the chosen digit.
-  - `TALE_SHIELD` — "shield the ember" node; `TALE_SHIELD_D` dispatches its choice.
-  - `TALE_FEED` — "feed the ember" node; `TALE_FEED_D` dispatches its choice.
+  - `TALE_OPEN` — first fork of the fable; `TALE_OPEN_D` dispatches the chosen digit, `TALE_OPEN_R` re-offers just the options after an invalid key.
+  - `TALE_SHIELD` — "shield the ember" node; `TALE_SHIELD_D` dispatches its choice, `TALE_SHIELD_R` replays only the options on an invalid key.
+  - `TALE_FEED` — "feed the ember" node; `TALE_FEED_D` dispatches its choice, `TALE_FEED_R` replays only the options on an invalid key.
   - `TALE_END_SHARE`, `TALE_END_HIDE`, `TALE_END_REVEL`, `TALE_END_ASH`, `TALE_END_STILL` — the five endings; each plays its close and returns to the menu.
 - **Guess-my-number game** (`70_option5_game.xml`):
   - `GAME_START` — pick the secret (1–9), reset the try counter, queue the intro.
@@ -233,6 +233,11 @@ collide with dialable numbers, and are grouped here by the file that handles the
   - `GAME_EVAL` — nudge on empty/invalid input; otherwise ask `bella-game` for a verdict.
   - `GAME_VERDICT` — branch on `hit` → win, `lose` → lose, or `high`/`low` → hint and re-ask.
   - `GAME_WIN` / `GAME_LOSE` — play the closing prompt and return to the menu.
+- **Principles survey** (`80_option9_survey.xml`):
+  - `SURVEY_START` — play the ten-answer ballot and collect one digit (`0`–`9`, barge-in-able).
+  - `SURVEY_EVAL` — empty/invalid → nudge (`survey-invalid`) and re-ask; otherwise record the anonymous vote (`bella-survey vote`).
+  - `SURVEY_RESULT` — play the chosen reading (`survey-read-<id>`), then fetch the standing bucket (`bella-survey stats`).
+  - `SURVEY_STATS` — play the matching `survey-stats-<bucket>` line and return to the menu.
 
 ### 4.1 `00_extensions.xml` — dial a SIP line (101–104)
 Explicit extensions for the four lines: dialing **101**–**104** bridges to that phone with a
@@ -269,7 +274,7 @@ transfers away:
 | **411** | `dispatch-about` | *(hidden)* Play info about the creators and the build |
 | **11** | `DISCO_STOP` | *(hidden)* Stop the disco ball — §4.6 |
 | **7** | `TALE_OPEN` | *(hidden)* branching story — §4.7 |
-| **9** | `SURVEY_START` | *(hidden)* principles survey — [SURVEY.md](SURVEY.md) |
+| **9** | `SURVEY_START` | *(hidden)* principles survey — §4.9 |
 | **5** | `GAME_START` | *(hidden)* guess-my-number game — §4.8 |
 
 Anything else falls through to `dispatch-invalid`, which plays **one of ten random "invalid"
@@ -357,7 +362,8 @@ digit in a `<condition>`. The tree:
 
 That yields **five endings** (`tale-end-{share,hide,revel,ash,still}.wav`), each a small moral;
 endings play their close and return to the menu. An invalid key at any node plays `tale-invalid.wav`
-and re-offers the same node, keeping the caller inside the story. Every node resets `max_forwards`.
+and re-offers just that node's choices (an options-only reprompt, `tale-*-options.wav`), keeping the
+caller inside the story. Every node resets `max_forwards`.
 The tree, choice table, and full prompt scripts are in [`STORY.md`](STORY.md); prompts:
 `prompts/tale-*.wav`.
 
@@ -372,6 +378,20 @@ intro, win, lose, and higher/lower prompts each have several interchangeable var
 random per call (`bella-messages pick`, §5.2). The secret is never spoken and never revealed on
 a loss. Win/lose play their close and return to the menu; see [`GAME.md`](GAME.md). Prompts:
 `prompts/game-*.wav`.
+
+### 4.9 `80_option9_survey.xml` — hidden "which are you?" principles survey (option 9)
+Dialing **9** (never announced) opens a one-question, ten-answer survey with a persistent,
+anonymous tally. `SURVEY_START` plays the ballot (`survey-ballot.wav`) inside a barge-in-able
+`play_and_get_digits` and collects one digit **0–9**. `SURVEY_EVAL` runs first on an empty or
+invalid entry — it plays `survey-invalid.wav` and re-asks — so a vote is only recorded for a real
+pick; otherwise it records the vote (`bella-survey vote <id>`, §5.4) **before** the standing is
+read, so the caller is counted and a brand-new pick reads as `first`. `SURVEY_RESULT` plays the
+chosen reading (`survey-read-<id>.wav`), then asks `bella-survey stats <id>` for a one-word
+standing **bucket** (`first`/`top`/`high`/`low`/`rarest`); `SURVEY_STATS` plays the matching
+`survey-stats-<bucket>.wav` and returns to the menu (a defensive catch-all falls back to the
+`high` line if the helper is unavailable). Every node resets `max_forwards`. The ten counters
+(keys `0`–`9`) live in `db/survey.tsv`; no caller data is stored. The option map, buckets, and
+full prompt scripts are in [`SURVEY.md`](SURVEY.md); prompts: `prompts/survey-*.wav`.
 
 ---
 
@@ -439,14 +459,31 @@ and the counter bump. Runs as the `freeswitch` user. The game's random prompt va
 | `verdict` | `<min> <max> <secret> <guess> <tries> <maxtries>` | One of `bad` / `hit` / `high` / `low` / `lose`. |
 | `incr` | `<n>` | Print `n+1` (missing/invalid `n` treated as 0). |
 
-### 5.4 `bella-ring`
+### 5.4 `bella-survey`
+Backs the hidden **"which are you?"** principles survey (menu option 9, §4.9): a persistent,
+anonymous vote tally. The dialplan calls it via `${system(...)}` to record a pick and to fetch a
+qualitative standing. It keeps ten counters (keys `0`–`9`) in `$BELLA_DB_DIR/survey.tsv` (default
+`db/`), guarded by an `flock` with atomic writes (temp file + `mv`), so it survives reboots and
+concurrent calls never see a partial tally. No caller data is stored. Runs as the `freeswitch`
+user (no sudo); all single-value output is newline-free for direct use in dialplan variables.
+
+| Command | Arguments | What it does |
+|---|---|---|
+| `vote` | `<id>` | Atomically record a vote for option `<id>` (`0`–`9`); print the new total votes cast. |
+| `stats` | `<id>` | Print one standing bucket for `<id>` **after** its vote is counted: `first` (first-ever vote), `top` (a most-chosen option), `rarest` (a least-chosen option), `high` (at/above the mean), or `low` (below it). |
+| `dump` | — | Print every counter and the total (human-readable; for tests). |
+| `reset` | — | Zero every counter (for tests). |
+
+Environment: `BELLA_DB_DIR` (tally directory, default `/usr/local/freeswitch/db`).
+
+### 5.5 `bella-ring`
 The periodic-ring helper (no arguments). Invoked by the `bella-ring.timer` systemd timer at a
 random interval (15–45 min), it picks one of the two participant lines (**101**/**102**) at
 random and, over the local event socket (`127.0.0.1:8021`), `originate`s a call to it; on answer
 the phone is routed to the menu (`700`). If the chosen line isn't registered it logs and exits
 quietly. Tunable via the environment: `FS_CLI`, `BELLA_DOMAIN`, `BELLA_RING_TIMEOUT`.
 
-### 5.5 `bella-convert-prompts`
+### 5.6 `bella-convert-prompts`
 Rebuilds the prompt **WAVs** (8 kHz mono) from their MP3 sources in `prompts/`. By default it only
 (re)generates WAVs that are missing or older than their MP3; pass `--force` to rebuild every WAV.
 Run by [`install.sh`](install.sh) and by `bella-regen-prompts` after synthesis.
@@ -456,7 +493,7 @@ bella-convert-prompts            # only missing/changed
 bella-convert-prompts --force    # rebuild all
 ```
 
-### 5.6 `bella-regen-prompts`
+### 5.7 `bella-regen-prompts`
 Re-synthesizes the voice prompts from [`PROMPTS.md`](PROMPTS.md) using the custom **Bella Novella**
 voice on ElevenLabs, then rebuilds the WAVs via `bella-convert-prompts`. It diffs each prompt
 against [`PROMPTS.baseline.md`](PROMPTS.baseline.md) so only edited prompts are regenerated.
@@ -484,7 +521,7 @@ bella-regen-prompts --list       # list every parsed prompt
 bella-regen-prompts --all        # regenerate everything
 ```
 
-### 5.7 `install.sh`
+### 5.8 `install.sh`
 The root-level installer/deployer (it lives at the repo root, not in `scripts/`; run as **root**
 from the repo). With **no flags** it runs the *every-invocation* steps — install the host files
 from [`system/`](system/), install/own [`conf/`](conf/), set the relay-script permissions and

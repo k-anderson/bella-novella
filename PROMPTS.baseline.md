@@ -120,7 +120,7 @@ those three aren't the only numbers that can wake a little light in this old roo
 ```text
 [low, knowing] At my elbow again. [soft laugh] [dry, warm] Good. I was only standing here holding 
 everyone else's troubles. I've a gift for it.
-[low, confiding] Somebody carried me once, back when my own legs gave out. Never asked a thing in return. 
+[low, confiding] Somebody carried me once, back when my own legs gave out. They never asked for a thing in return. 
 [low] So I carry now, and I carry well.
 [velvet, low] Dial 1 and I will try to connect you to whichever voice is holding the other end. 
 [wry, low] Never the same twice; that line stopped being predictable a long time ago.
@@ -379,7 +379,7 @@ like this? [soft laugh] That one stays with me for good.
 ```text
 [warm, low] Every voice that ever drifted through here, I've kept close.
 [amused] Grown weary of one? Dial 1 whenever it suits and I'll carry you onward.
-[coaxing] We open with the first, love.
+[coaxing] We open with the first love.
 ```
 
 ### `playback-announcement-2-1`
@@ -900,6 +900,12 @@ shield it with your own body, and walk slower. [beat, teasing, delighted] Or dia
 a page from the book you carry, and let it flare up bright and bold.
 ```
 
+### `tale-open-options`
+
+```text
+[low, coaxing] So, which is it, sugar. [low, deliberate, leaning in] Dial 1 to cup the flame close, shield it with your own body, and walk the slower road. [beat, teasing, delighted] Or dial 2 to feed it a torn page from your book, and let it flare up bright and bold.
+```
+
 ### `tale-shield`
 
 ```text
@@ -913,6 +919,12 @@ They don't ask but they need something.
 [beat, lower, sly] Or dial 2 to keep it close, keep walking, and leave the night to sort itself.
 ```
 
+### `tale-shield-options`
+
+```text
+[velvet, coaxing] Dial 1 to stop a moment, touch your flame to theirs, and light every lantern in the dark. [beat, lower, sly] Or dial 2 to hold it close, keep walking, and leave the night to sort its own.
+```
+
 ### `tale-feed`
 
 ```text
@@ -923,6 +935,12 @@ shadow ten feet tall. [beat, awed] For a moment the whole desert is yours.
 Somewhere in them was the way you came. Your map.
 [deliberate, sultry, tempting] Dial 1 to throw the rest on, burn the whole book, call the dark in close, and
 dance. [beat, softer, cautioning] Or dial 2 to stop your hand, breathe, and press on by what light remains.
+```
+
+### `tale-feed-options`
+
+```text
+[deliberate, sultry, tempting] Dial 1 to throw the rest on the fire, burn the whole book, call the dark in close, and dance. [beat, softer, cautioning] Or dial 2 to still your hand, take a breath, and press on by what light remains.
 ```
 
 ### `tale-end-share`
@@ -1070,7 +1088,7 @@ to set them loose, true story sugar. [delighted] How fitting a way to breath new
 
 [proud] My heart is a thirty-six volt system, [delighted] and oh, does it beat. It provides
 pleanty of power for my high-torque motor, a shunt-wound thing built to pull.
-[warm] That efforlessly moves my three thousand pounds, and then some, over even the worst terrain.
+[warm] It efforlessly moves my three thousand pounds, and then some, over even the worst terrain.
 [knowing] A five hundred amp controller keeps it all in line, from a company sweet enough to
 support me even though I'm [sly] not quite using it as intended. [delighted] And here's my
 favorite trick, when I brake, I get that energy back from the one pedal for going and stopping. [beat]
@@ -1087,7 +1105,7 @@ fill the eleven thousand watt hours per bank. Both banks topping up together off
 [sultry] On a single bank I'll move through the worst of it continuously for four hours, [delighted] and often far,
 far longer. [knowing] I run one bank at a time on purpose, it keeps them honest, keeps them apart.
 [warm] When one tires, I slip to the fresh one and carry myself home, [playful] never fretting over
-every amp out on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
+every amp used on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
 together and they might squabble. [reassuring] And to keep all those angry little electrons where they belong,
 [brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifiers,
 every switch and light. [sultry, amused] Safety third, when you have this much power to contain, stranger.
@@ -1107,7 +1125,7 @@ speakers, two eights, [delighted] and a twelve inch sub that shakes the dust rig
 grade, speakers and amplifiers both, meant for the belly of a boat. [knowing] No fans, no openings,
 nothing for the dust to crawl inside. [sly, warm] All built to survive the harshest of environments. [beat]
 
-[delighted] Oh, I glow in those environments, sugar. Warm white light strung beneath every side of me and
+[delighted] Oh, do I glow in those environments, sugar. Warm white light strung beneath every side of me and
 along all my shelves, [fond] some of it run a touch hotter, twenty-four volts, just to coax out that golden
 shimmer only the extra push can give. [hushed] And hidden away in the very center of me?
 [sly, delighted] A mirror ball, darling, that rises up out of a secret compartment, [playful] with two little
@@ -1124,7 +1142,7 @@ most determined learning to raise that ball themselves. [amused] The rest, [dry]
 [steady, reassuring] Above all I keep my riders safe. [fond] Those pretty shelfs along my sides aren't only for
 show, they keep a stray hem or sleeve from wandering where it shouldn't, [low] then fold away when it's time to
 bare my batteries or load me up to travel. [warm] When I need to stop in a hurry I have real
-mechanical brakes at the ready and a parking brake for when I am hosting a party. [short laugh][teasing] My grandmother
+mechanical brakes at the ready and a parking brake for when I am hosting a party. [laugh][teasing] My grandmother
 always said it's unbecoming of a lady to run over her guests. [dry, amused] When I want to move I can move quickly, but I'm
 automatically held to a ladylike five miles an hour. [sly] And I answer only to my hosts, with a key.
 [warm] First aid and a fire extinguisher always within reach, naturally. [beat]
