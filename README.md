@@ -201,13 +201,14 @@ collide with dialable numbers, and are grouped here by the file that handles the
 - **Intercom** (`20_option1_intercom.xml`):
   - `CALL_OTHER` — ring the *other* participant line based on the caller's SIP user (101 → 102, 102 → 101); unknown lines get a `no-answer` fallback.
 - **Listen & drawer** (`30_option2_listen.xml`):
-  - `LISTEN_MESSAGES` — entry point; start curated playback at the newest message.
+  - `LISTEN_MESSAGES` — entry point; count the box, then start curated playback at the newest message.
+  - `LISTEN_START` — empty box → play `playback-no-messages` and return to the menu (skipping the lead-in announcement); otherwise fall through to the announce/play flow.
   - `MESSAGE_ANNOUNCE` — resolve the lead-in announcement file for the current index.
   - `MESSAGE_ANNOUNCE_PLAY` — play that announcement (any key skips straight to the message; `9` opens the drawer).
   - `MESSAGE_ANNOUNCE_KEY` — route a key pressed during the announcement: `9` → open the drawer at the current message, else skip to the message.
   - `MESSAGE_RESOLVE` — map the current index to a message file (resets `max_forwards`).
   - `MESSAGE_PLAY` — play the message and collect one navigation key.
-  - `MESSAGE_END` — end of the curated set: reflective sign-off, or the empty-store prompt.
+  - `MESSAGE_END` — end of the curated set: reflective sign-off after hearing everything (with a defensive empty-store fallback).
   - `MESSAGE_KEY_PREV` / `MESSAGE_KEY_NEXT` — handle `2` = previous / `1` = next (announcement skipped).
   - `MESSAGE_KEY_DRAWER` — handle `9` = open the drawer at the current message (keeps the index).
   - `MESSAGE_KEY_DEFAULT` — no key = auto-advance *with* announcement; any other key = replay.
@@ -327,11 +328,13 @@ with no key it **auto-advances** to the next *with* its announcement. Pressing *
 during a message or its announcement — opens the drawer (below) at the **current** message. The browse loop
 (`MESSAGE_ANNOUNCE → MESSAGE_ANNOUNCE_PLAY → MESSAGE_RESOLVE → MESSAGE_PLAY →` the
 `MESSAGE_KEY_PREV`/`_NEXT`/`_DRAWER`/`_DEFAULT` chain) uses `bella-messages announcement`/`resolve`/`step` to
-map the index to files, and resets `max_forwards` each cycle.
+map the index to files, and resets `max_forwards` each cycle. When the box is **empty** (`count` 0),
+entry short-circuits at `LISTEN_START`: it skips the lead-in announcement and plays only
+`playback-no-messages.wav`, then returns to the menu.
 
 **End sign-off & the hidden drawer.** After the last curated message, `MESSAGE_END` plays a
-reflective sign-off (`prompts/playback-end.wav`); if the store was empty it instead plays
-`playback-no-messages.wav` and returns to the menu. The drawer — **"Bella's drawer of secrets"** —
+reflective sign-off (`prompts/playback-end.wav`) and returns to the menu; an empty box is caught
+earlier at entry (`LISTEN_START`), which plays only `playback-no-messages.wav` and skips the lead-in. The drawer — **"Bella's drawer of secrets"** —
 is opened either by pressing **9** during the sign-off (`PLAYBACK_END_KEY` → `DRAWER_OPEN`, starting
 at `drawer-start` = `PLAYBACK_LIMIT+1`, i.e. just past the curated window) **or** by pressing **9**
 any time during playback (`MESSAGE_KEY_DRAWER`/`MESSAGE_ANNOUNCE_KEY` → `DRAWER_OPEN`, starting at the

@@ -17,12 +17,28 @@
        Flow: ANNOUNCE -> ANNOUNCE_PLAY -> RESOLVE -> PLAY, then the pressed key is
        handled by the MESSAGE_KEY_PREV -> _NEXT -> _DEFAULT chain, which loops back. -->
 
-  <!-- Entry (from the menu): start at the newest message. -->
+  <!-- Entry (from the menu): start at the newest message. If the box is empty
+       (count 0), skip the lead-in announcement and play only the "no messages"
+       prompt (see listen-start-empty). -->
   <extension name="listen-messages">
     <condition field="destination_number" expression="^LISTEN_MESSAGES$">
       <action application="answer"/>
       <action application="set" data="msg_idx=1"/>
-      <action application="transfer" data="MESSAGE_ANNOUNCE XML default"/>
+      <action application="set" data="msg_count=${system($${bella_messages} count)}"/>
+      <action application="transfer" data="LISTEN_START XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Empty box: no lead-in announcement, just the "nothing here" prompt, then
+       back to the menu. A non-empty box falls through to the normal
+       announce/play flow, starting at the newest message. -->
+  <extension name="listen-start-empty">
+    <condition field="destination_number" expression="^LISTEN_START$"/>
+    <condition field="${msg_count}" expression="^0$">
+      <action application="playback" data="$${prompts_dir}/playback-no-messages.wav"/>
+      <action application="sleep" data="1500"/>
+      <action application="transfer" data="700 XML default"/>
+      <anti-action application="transfer" data="MESSAGE_ANNOUNCE XML default"/>
     </condition>
   </extension>
 
@@ -94,8 +110,9 @@
            reflective playback-end sign-off. While it plays, 9 = "keep going":
            continue newest-first into the full archive past the curated window
            (see PLAYBACK_END_KEY / DRAWER_*). Any other key or none -> menu.
-         - msg_idx >= 1: resolve found nothing at the very first index, i.e. the
-           store was empty -> keep the original "nothing here, come back" prompt. -->
+         - msg_idx >= 1: resolve found nothing at the first index. An empty box is
+           normally caught at entry (LISTEN_START), so this is a defensive fallback
+           that plays the "nothing here, come back" prompt. -->
   <extension name="message-end">
     <condition field="destination_number" expression="^MESSAGE_END$"/>
     <condition field="${msg_idx}" expression="^0$">
