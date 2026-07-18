@@ -321,12 +321,9 @@ or are you hunting for something I haven't offered? [low, content] either way, t
 [low, wry, amused] Mmm. Rang and rang, stranger. [beat] Out there in the dark, somewhere, but nobody's picking
 up.
 [low, wistful] Could be they're dancing. [dry, low] Could be they wandered off with someone more interesting
-than a ringing phone. [dry, soft laugh] Out here, that happens more than you'd think, wouldn't be the first
-time somebody did that to me either.
-[low, unhurried] Either way, [beat] that line's gone quiet on me tonight. [sighs]
-[low, dry] Try again later sugar. [teasing] Or leave a little something behind for whoever it is.
-[low, private] The desert keeps its own accounts darling. Everybody answers eventually. [low, soft] I know I
-would.
+than a ringing phone.
+[low, unhurried] Either way, [beat] that line's gone quiet on me. [sighs]
+[low, dry] Try again later sugar.
 ```
 
 ## Record Announcements
@@ -1093,7 +1090,7 @@ pleanty of power for my high-torque motor, a shunt-wound thing built to pull.
 support me even though I'm [sly] not quite using it as intended. [delighted] And here's my
 favorite trick, when I brake, I get that energy back from the one pedal for going and stopping. [beat]
 
-[velvet] My gumption comes from [proud] six thirty-six volt lithium iron phosphate
+[velvet] My gumption comes from [proud]six thirty-six volt lithium iron phosphate
 batteries, [delighted] and I chose that chemistry on purpose. It carries plenty, stays light on its
 feet, holds a steady voltage, and lasts, and lasts. [sly, low] Most importantly it keeps its temper,
 fewer dramatic thermal runaways. [fond] Each one minds itself as well, a little brain inside balancing
@@ -1108,7 +1105,7 @@ far longer. [knowing] I run one bank at a time on purpose, it keeps them honest,
 every amp used on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
 together and they might squabble. [reassuring] And to keep all those angry little electrons where they belong,
 [brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifiers,
-every switch and light. [sultry, amused] Safety third, when you have this much power to contain, stranger.
+every switch and light. [sultry, amused] When you have this much power to contain, safety third, stranger.
 ```
 
 ### `about-2`
