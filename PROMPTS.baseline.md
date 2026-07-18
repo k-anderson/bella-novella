@@ -218,8 +218,8 @@ stories are written in lipstick.
 ```text
 [low, amused] Drifted off on me, have you? [soft laugh] [warm] It's alright, drifting's rather the
 whole point sometimes.
-[dry, low] I used to steer every letter dead to its mark. Wore myself clean through doing it.
-[low, content] The night I quit aiming was the night this line finally came alive.
+[dry, low] I used to try to steer every tale to the ending I wanted. Wore myself clean through doing it.
+[low, content] The night I quit aiming was the night they started to get really good.
 [velvet, unhurried] So don't overthink it. I'll wire you through to whoever's out there. Dial 1, and
 the choosing's not mine to do. [wry, soft laugh]
 [hushed, low] Dial 2 for the tales that never quite landed anywhere else. [sly] I don't sort them;
