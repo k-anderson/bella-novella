@@ -60,7 +60,7 @@ interesting one.
 [dry, warm] Lost the thread, did you? [wry, low] Don't fret. I wandered lost a good while myself, once.
 [low, exhales] Nobody drew me a map back then.
 [low, amused] So let me draw you one. There's a line to the other side, and whoever picks up might just be a
-soul needing a map themself. Dial 1 if you want to try to give them a path. [soft laugh][wry, low] Could be fun.
+soul needing a map themself. Dial 1 if you want to try to give them a compass. [soft laugh][wry, low] Could be fun.
 [velvet, low] To hear the tales of the paths walked before you, everything the ones prior left in my keeping, dial 2.
 [hushed] I hold onto every last one.
 [warm, low] And dial 3 if you'd sooner leave a story of your own to guide whoever comes next.
@@ -144,7 +144,7 @@ and traded a whole city and the name I was born with for all of this.
 where you'll land.
 [smoky, hushed] Dial 2 to wander back through the tales left here before you, [nostalgic] like postcards
 from lives already travelled.
-[cool, deliberate] Fancy trading a chapter of your own? Dial 3.
+[cool, deliberate] Fancy writting a chapter of your own? Dial 3.
 [low, cheeky] The bold ones sometimes find more than they came
 looking for. Time to choose darling.
 ```
