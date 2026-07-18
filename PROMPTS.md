@@ -140,7 +140,7 @@ everyone else's troubles. I've a gift for it.
 [sly, amused] So. The crossroads. [dry, low] I know this spot well, stood at one just like it, years back,
 and traded a whole city and the name I was born with for all of this.
 [low, savoring] Boldest thing I ever did. [soft laugh] [wry] Haven't regretted it a day since.
-[velvet, low] So be bold and dial 1. I'll fling you down the line to parts unknown, and there's no telling
+[velvet, low] So be bold and dial 1, I'll fling you down the line to parts unknown, and there's no telling
 where you'll land.
 [smoky, hushed] Dial 2 to wander back through the tales left here before you, [nostalgic] like postcards
 from lives already travelled.
