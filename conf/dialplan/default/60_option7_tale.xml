@@ -6,9 +6,10 @@
        announced) to TALE_OPEN. Each node narrates, then collects a single
        digit and transfers to a per-node dispatch pass (a fresh routing pass so
        the chosen digit can be tested in a <condition>). Invalid input or no
-       choice plays a story-specific prompt (tale-invalid.wav) and re-offers
-       just that node's options (an options-only reprompt, TALE_*_R), keeping
-       the caller inside the story. Endings play their close
+       choice plays a barge-in-able story-specific scold (tale-invalid.wav): a
+       valid choice pressed over it is dispatched at once (TALE_*_AI); otherwise
+       we re-offer just that node's options (an options-only reprompt, TALE_*_R),
+       keeping the caller inside the story. Endings play their close
        and return to the main menu (700). See STORY.md for the tree, the choice
        table, and the prompt scripts.
 
@@ -55,12 +56,28 @@
     </condition>
   </extension>
 
-  <!-- Invalid / no choice: story-specific nudge, then re-offer just the choices. -->
+  <!-- Invalid / no choice: story-specific nudge. Like the main menu's invalid
+       prompt, the scold is barge-in-able (play_and_get_digits, not playback): a
+       valid choice pressed while it plays, or in the 500ms after, is taken at
+       once and dispatched via TALE_OPEN_AI. Otherwise tale_pick stays empty and
+       we fall through to re-offer just this node's options (TALE_OPEN_R). -->
   <extension name="tale-open-invalid">
     <condition field="destination_number" expression="^TALE_OPEN_D$">
-      <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
-      <action application="sleep" data="500"/>
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="tale_pick="/>
+      <action application="play_and_get_digits"
+              data="1 1 1 500 * $${prompts_dir}/tale-invalid.wav silence_stream://100 tale_pick '^(1|2|3)$' 100"/>
+      <action application="transfer" data="TALE_OPEN_AI XML default"/>
+    </condition>
+  </extension>
+
+  <!-- After the barge-in scold: a valid pick (tale_pick set) dispatches at once
+       through TALE_OPEN_D; empty (no barge-in) re-offers the options (TALE_OPEN_R). -->
+  <extension name="tale-open-after-invalid">
+    <condition field="destination_number" expression="^TALE_OPEN_AI$"/>
+    <condition field="${tale_pick}" expression="^$">
       <action application="transfer" data="TALE_OPEN_R XML default"/>
+      <anti-action application="transfer" data="TALE_OPEN_D XML default"/>
     </condition>
   </extension>
 
@@ -102,11 +119,24 @@
     </condition>
   </extension>
 
+  <!-- Invalid / no choice: barge-in-able scold (see tale-open-invalid). A valid
+       1/2 pressed over it dispatches at once via TALE_SHIELD_AI; else re-offer. -->
   <extension name="tale-shield-invalid">
     <condition field="destination_number" expression="^TALE_SHIELD_D$">
-      <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
-      <action application="sleep" data="500"/>
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="tale_pick="/>
+      <action application="play_and_get_digits"
+              data="1 1 1 500 * $${prompts_dir}/tale-invalid.wav silence_stream://100 tale_pick '^(1|2)$' 100"/>
+      <action application="transfer" data="TALE_SHIELD_AI XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Valid barge-in pick dispatches (TALE_SHIELD_D); empty re-offers (TALE_SHIELD_R). -->
+  <extension name="tale-shield-after-invalid">
+    <condition field="destination_number" expression="^TALE_SHIELD_AI$"/>
+    <condition field="${tale_pick}" expression="^$">
       <action application="transfer" data="TALE_SHIELD_R XML default"/>
+      <anti-action application="transfer" data="TALE_SHIELD_D XML default"/>
     </condition>
   </extension>
 
@@ -147,11 +177,24 @@
     </condition>
   </extension>
 
+  <!-- Invalid / no choice: barge-in-able scold (see tale-open-invalid). A valid
+       1/2 pressed over it dispatches at once via TALE_FEED_AI; else re-offer. -->
   <extension name="tale-feed-invalid">
     <condition field="destination_number" expression="^TALE_FEED_D$">
-      <action application="playback" data="$${prompts_dir}/tale-invalid.wav"/>
-      <action application="sleep" data="500"/>
+      <action application="set" data="max_forwards=70"/>
+      <action application="set" data="tale_pick="/>
+      <action application="play_and_get_digits"
+              data="1 1 1 500 * $${prompts_dir}/tale-invalid.wav silence_stream://100 tale_pick '^(1|2)$' 100"/>
+      <action application="transfer" data="TALE_FEED_AI XML default"/>
+    </condition>
+  </extension>
+
+  <!-- Valid barge-in pick dispatches (TALE_FEED_D); empty re-offers (TALE_FEED_R). -->
+  <extension name="tale-feed-after-invalid">
+    <condition field="destination_number" expression="^TALE_FEED_AI$"/>
+    <condition field="${tale_pick}" expression="^$">
       <action application="transfer" data="TALE_FEED_R XML default"/>
+      <anti-action application="transfer" data="TALE_FEED_D XML default"/>
     </condition>
   </extension>
 

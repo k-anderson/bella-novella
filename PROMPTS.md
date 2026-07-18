@@ -60,12 +60,11 @@ interesting one.
 [dry, warm] Lost the thread, did you? [wry, low] Don't fret. I wandered lost a good while myself, once.
 [low, exhales] Nobody drew me a map back then.
 [low, amused] So let me draw you one. There's a line to the other side, and whoever picks up might just be a
-soul you can draw a map for yourself. Dial 1 if you want to try. [soft laugh][wry, low] Could be fun.
+soul needing a map themself. Dial 1 if you want to try to give them a path. [soft laugh][wry, low] Could be fun.
 [velvet, low] To hear the tales of the paths walked before you, everything the ones prior left in my keeping, dial 2.
 [hushed] I hold onto every last one.
 [warm, low] And dial 3 if you'd sooner leave a story of your own to guide whoever comes next.
-[low, knowing] Three paths, stranger, all lit and waiting. [gentle] No one should have to feel their way
-in the dark. [coaxing] Take whichever one calls to you.
+[low, knowing] Three paths, stranger, all lit and waiting. [coaxing] Take whichever one calls to you.
 ```
 
 ### `main-menu-short-variant-2`
@@ -82,7 +81,7 @@ of it that way.
 [low, content] It taught me how to wait without minding, the way you reread a favorite chapter.
 [velvet, unhurried] So take your time. That same line I keep ringing, I'll set it ringing for you if you dial 1.
 [beat] [wry, chuckles] If you let it ring long enough, who answers is anyone's guess.
-[smoky, slow] For a taste of the stories whispered my way, dial 2. [hushed] The kind of thing that only gets
+[smoky, slow] For a taste of the stories whispered my way, dial 2. [hushed] Tales that only get
 better with age, like a bottle of wine left long enough to breathe.
 [low, warm] And when you're ready to add a chapter of your own, dial 3. [gentle] I'm in no hurry, love. This line
 stays open as long as you please.
@@ -125,9 +124,8 @@ everyone else's troubles. I've a gift for it.
 [velvet, low] Dial 1 and I will try to connect you to whichever voice is holding the other end.
 [wry, low] Never the same twice; that line stopped being predictable a long time ago.
 [cool, unhurried] To unlock the tales I keep tucked away, dial 2.
-[low, private] Somebody has to archive them.
 [cool, deliberate] Dial 3 if you are weighed down yourself, [carring] leave your story here and walk out lighter.
-[low, sly] Call it a debt; I won't come collecting. [sly] Not unless I must.
+[low, sly] I'll consider it a debt; but I won't come collecting. [sly] Not unless I must.
 [warm, low] The choice sits with you.
 ```
 
@@ -165,10 +163,9 @@ looking for. Time to choose darling.
 can afford to turn wild when the mood takes her.
 [low, playful] So ante up. I'll deal you into whatever's unfolding at the far end of the line if you dial 1.
 [wry, soft laugh] Same gamble it's always been, hoping the other end answers back.
-[smoky, hushed] To turn over the tales the others already laid down, dial 2. [low, private] Everyone shows me
-theirs, in the end.
+[smoky, hushed] To turn over the tales the others already laid down, dial 2.
 [cool, deliberate] And if you've a story of your own to lay on the table? Dial 3. [low, arch] I never fold.
-I only gather. [dry, knowing] Play it wild if you fancy. [sly] Somebody at this table always does.
+I only gather. [dry, knowing] Play it wild if you like but its your go now stranger.
 ```
 
 ### `main-menu-short-variant-7`
@@ -186,8 +183,8 @@ long while ago. [soft laugh] Doesn't stop me. I've grown fond of the ringing its
 [velvet, unhurried] Dial 1 to send your hello to whoever's near that old line tonight.
 [hushed, smoky] For the love letters left on this line before yours, each one reaching for somebody, dial 2.
 [cool, deliberate] And dial 3 if you are still holding out for someone. Leave them a page of your own,
-and I'll keep it lit for you.
-[low, warm] Hope costs nothing darling. [exhales] [gentle] Were I you, I'd hold onto a little.
+and I'll keep it safe for you.
+[low, warm] Hope costs nothing darling. [exhales] [gentle] So what are you hoping for?
 ```
 
 ### `main-menu-short-variant-8`
@@ -204,8 +201,8 @@ and I'll keep it lit for you.
 [low, soft] Odd what an emergency becomes, once it's had years to cool. [low, distant] Some nights I'd
 swear that blaze trailed me here from an older life. [wry] Other nights, not a chance. Depends who's asking.
 [velvet, low] Anyhow. [dry] I'll send your reflection down the wire to whoever's answering if you dial 1.
-[smoky, hushed] Want to read the tales left on the glass once the room's emptied out? Dial 2. [low] Lipstick
-and secrets, [sly] both stain if you're careless.
+[smoky, hushed] Want to read the tales left on the glass once the room's emptied out? Dial 2. [low] The best
+stories are written in lipstick.
 [cool, deliberate] And if you've a story of your own to leave on the mirror, [encouraging] dial 3.
 [low, trailing off] I never wipe it clean.
 [low, cheeky] Time has a way of clearing the glass. [sly] Even for the likes of you and me.
@@ -240,8 +237,8 @@ I only hold them.
 
 ```text
 [warm, amused] Mmm. That's not one of the three I hand out. [low, sly] The others live in a drawer
-only I open. [soft laugh]
-[low, unhurried] So, one, two, or three, sugar?
+I only open for those closest to me. [soft laugh]
+[low, unhurried] So, one, two, or three?
 ```
 
 ### `invalid-entry-2`
