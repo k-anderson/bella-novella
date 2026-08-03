@@ -1067,7 +1067,7 @@ everything I keep is worth keeping for a reason.
 [low, warm, knowing] you're here for the real story, are you sugar?
 [soft laugh] [amused] You want to look under my skirts!
 [delighted] Well now, a girl does adore an admirer with an eye for good craftsmanship.
-[fond] I'm the handiwork of Megan Anderson and Taylor Anderson, darling, with a whole crowd
+[fond] I'm the handiwork of Maegan Anderson, and Taylor Anderson, darling, with a whole crowd
 of loving hands behind them, mostly family. [playful] Come close then, and I'll tell you
 every last detail, one maker to another. [beat]
 
@@ -1100,9 +1100,7 @@ fill the eleven thousand watt hours per bank. Both banks topping up together off
 far longer. [knowing] I run one bank at a time on purpose, it keeps them honest, keeps them apart.
 [warm] When one tires, I slip to the fresh one and carry myself home, [playful] never fretting over
 every amp used on the deep playa. [sly] Two lean banks also keep the peace, darling. Crowd too many batteries
-together and they might squabble. [reassuring] And to keep all those angry little electrons where they belong,
-[brisk] I'm fused everywhere, every terminal, every bus bar, between converter, inverter and amplifiers,
-every switch and light. [sultry, amused] When you have this much power to contain, safety third, stranger.
+together and they might squabble. [sultry, amused] When you have this much power to contain, safety third, stranger.
 ```
 
 ### `about-2`
